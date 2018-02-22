@@ -1,0 +1,34 @@
+---
+galaxy_info:
+  author: Ansible Network
+  description: This role is developed and maintained by the Ansible Network team
+  company: Red Hat
+
+  issue_tracker_url: http://github.com/ansible-network/network-engine/issues
+
+  license: GPLv3
+
+  min_ansible_version: 1.2
+
+  # If this a Container Enabled role, provide the minimum Ansible Container version.
+  # min_ansible_container_version:
+
+  # Optionally specify the branch Galaxy will use when accessing the GitHub
+  # repo for this role. During role install, if no tags are available,
+  # Galaxy will use this branch. During import Galaxy will access files on
+  # this branch. If Travis integration is configured, only notifications for this
+  # branch will be accepted. Otherwise, in all cases, the repo's default branch
+  # (usually master) will be used.
+  #github_branch:
+
+  platforms:
+    all
+
+  galaxy_tags:
+    - ansible-network
+    - networking
+    - core
+    - supported
+    - cli
+
+dependencies: []
