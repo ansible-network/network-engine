@@ -48,60 +48,99 @@ class ActionModule(ActionBase):
         result = super(ActionModule, self).run(tmp, task_vars)
 
         try:
-            src = self._task.args['src']
+            source_dir = self._task.args.get('source_dir')
+            src = self._task.args.get('src')
             contents = self._task.args['contents']
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        if not os.path.exists(src) and not os.path.isfile(src):
-            raise AnsibleError("src is either missing or invalid")
+        if src and not source_dir:
+            return {'failed': True, 'msg': '`src` and `source_dir` are mutually exclusive arguments'}
+
+        if src and not source_dir:
+            source_dir = to_list(src)
+        else:
+            source_dir = to_list(source_dir)
 
         self.ds = {'contents': contents}
         self.ds.update(task_vars)
 
-        tasks = self._loader.load_from_file(src)
+        source_dir = self.included_files(source_dir)
 
-        for task in tasks:
-            name = task.pop('name', None)
-            register = task.pop('register', None)
+        for src in source_dir:
+            if not os.path.exists(src) and not os.path.isfile(src):
+                raise AnsibleError("src is either missing or invalid")
 
-            display.vvvv('processing directive: %s' % name)
+            tasks = self._loader.load_from_file(src)
 
-            when = task.pop('when', None)
-            if when is not None:
-                if not self._check_conditional(when, task_vars):
-                    warning('skipping task due to conditional check failure')
-                    continue
+            for task in tasks:
+                name = task.pop('name', None)
+                register = task.pop('register', None)
 
-            loop = task.pop('loop', None)
-            if loop:
-                loop = self.template(loop, self.ds)
+                display.vvvv('processing directive: %s' % name)
 
-            if isinstance(loop, collections.Mapping):
-                loop_result = list()
-                for loop_key, loop_value in iteritems(loop):
-                    self.ds['item'] = {'key': loop_key, 'value': loop_value}
+                when = task.pop('when', None)
+                if when is not None:
+                    if not self._check_conditional(when, task_vars):
+                        warning('skipping task due to conditional check failure')
+                        continue
+
+                loop = task.pop('loop', None)
+                if loop:
+                    loop = self.template(loop, self.ds)
+
+                if isinstance(loop, collections.Mapping):
+                    loop_result = list()
+                    for loop_key, loop_value in iteritems(loop):
+                        self.ds['item'] = {'key': loop_key, 'value': loop_value}
+                        res = self._process_directive(task)
+                        loop_result.append(res)
+                    self.ds[register] = loop_result
+
+                elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+                    loop_result = list()
+                    for loop_item in loop:
+                        self.ds['item'] = loop_item
+                        res = self._process_directive(task)
+                        loop_result.extend(to_list(res))
+                    self.ds[register] = loop_result
+
+                else:
                     res = self._process_directive(task)
-                    loop_result.append(res)
-                self.ds[register] = loop_result
+                    if register:
+                        self.ds[register] = res
 
-            elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
-                loop_result = list()
-                for loop_item in loop:
-                    self.ds['item'] = loop_item
-                    res = self._process_directive(task)
-                    loop_result.extend(to_list(res))
-                self.ds[register] = loop_result
+            if 'ansible_facts' not in result:
+                result['ansible_facts'] = {}
 
-            else:
-                res = self._process_directive(task)
-                if register:
-                    self.ds[register] = res
-
-        if 'facts' in self.ds:
-            result['ansible_facts'] = {'network_facts': self.ds['facts']}
+            if 'facts' in self.ds:
+                result['ansible_facts'].update(self.ds['facts'])
 
         return result
+
+    def included_files(self, source_dirs):
+        include_files = list()
+        _processed = set()
+
+        for source_dir in source_dirs:
+            if not os.path.isdir(source_dir):
+                raise AnsibleError('%s does not appear to be a valid directory' % source_dir)
+
+            for filename in os.listdir(source_dir):
+                fn, fext = os.path.splitext(filename)
+                if fn not in _processed:
+                    _processed.add(fn)
+
+                    filename = os.path.join(source_dir, filename)
+
+                    if not os.path.isfile(filename) or fext not in self.VALID_FILE_EXTENSIONS:
+                        continue
+
+                    else:
+                        include_files.append(filename)
+
+        return include_files
+
 
     def do_block(self, block):
 
