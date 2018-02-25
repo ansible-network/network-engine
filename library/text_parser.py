@@ -24,11 +24,20 @@ description:
     added to the inventory host facts.
 version_added: "2.5"
 options:
-  src:
+  dir:
+    description:
+      - The path to the directory that contains the parsers.  The module will
+        load all parsers found in this directory and pass the contents through
+        the them.  This argument is mutually exclusive with C(file).
+    required: false
+    default: null
+  file:
     description:
       - The path to the parser to load from disk on the Ansible
         controller.  This can be either the absolute path or relative path.
-    required: true
+        This argument is mutually exclusive with C(dir).
+    required: false
+    default: null
   contents:
     description:
       - The text contents to pass to the parser engine.  This argument provides

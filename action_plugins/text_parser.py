@@ -48,26 +48,28 @@ class ActionModule(ActionBase):
         result = super(ActionModule, self).run(tmp, task_vars)
 
         try:
-            source_dir = self._task.args.get('source_dir')
-            src = self._task.args.get('src')
+            source_dir = self._task.args.get('dir')
+            source_file = self._task.args.get('file')
             contents = self._task.args['contents']
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        if src and not source_dir:
-            return {'failed': True, 'msg': '`src` and `source_dir` are mutually exclusive arguments'}
-
-        if src and not source_dir:
-            source_dir = to_list(src)
-        else:
-            source_dir = to_list(source_dir)
+        if not source_dir and not source_file:
+            return {'failed': True, 'msg': 'one of `dir` or `file` must be specified'}
+        elif source_dir and source_file:
+            return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
         self.ds = {'contents': contents}
         self.ds.update(task_vars)
 
-        source_dir = self.included_files(source_dir)
+        if source_dir:
+            sources = self.get_files(source_dir)
+        else:
+            sources = to_list(source_file)
 
-        for src in source_dir:
+        result['ansible_facts'] = {}
+
+        for src in sources:
             if not os.path.exists(src) and not os.path.isfile(src):
                 raise AnsibleError("src is either missing or invalid")
 
@@ -110,15 +112,12 @@ class ActionModule(ActionBase):
                     if register:
                         self.ds[register] = res
 
-            if 'ansible_facts' not in result:
-                result['ansible_facts'] = {}
-
             if 'facts' in self.ds:
                 result['ansible_facts'].update(self.ds['facts'])
 
         return result
 
-    def included_files(self, source_dirs):
+    def get_files(self, source_dirs):
         include_files = list()
         _processed = set()
 
@@ -140,7 +139,6 @@ class ActionModule(ActionBase):
                         include_files.append(filename)
 
         return include_files
-
 
     def do_block(self, block):
 
@@ -259,13 +257,14 @@ class ActionModule(ActionBase):
         contents = self.template(contents, self.ds)
 
         if match_all:
-            match = re.findall(pattern, contents, re.M)
+            match = self.re_matchall(pattern, contents)
             if match:
                 return match
         else:
-            match = re.search(pattern, contents, re.M)
+            match = self.re_search(pattern, contents)
             if match:
-                return list(match.groups())
+                #return list(match.groups())
+                return match
 
         return None
 
@@ -277,9 +276,6 @@ class ActionModule(ActionBase):
         :return: the templated data
         """
         return self._process_items(template)
-
-    def do_line_template(self, args):
-        pass
 
     def _process_items(self, template, variables=None):
 
@@ -483,3 +479,30 @@ class ActionModule(ActionBase):
     def _check_conditional(self, when, variables):
         conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
         return self.template(conditional % when, variables)
+
+    def re_search(self, regex, value):
+        obj = {}
+        regex = re.compile(regex, re.M)
+        match = regex.search(value)
+        if match:
+            items = list(match.groups())
+            if regex.groupindex:
+                for name, index in iteritems(regex.groupindex):
+                    obj[name] = items[index - 1]
+            obj['matches'] = items
+        return obj or None
+
+    def re_matchall(self, regex, value):
+        objects = list()
+        regex = re.compile(regex, re.M)
+        for match in re.findall(regex.pattern, value):
+            obj = {}
+            obj['matches'] = match
+            if regex.groupindex:
+                for name, index in iteritems(regex.groupindex):
+                    if len(regex.groupindex) == 1:
+                        obj[name] = match
+                    else:
+                        obj[name] = match[index - 1]
+            objects.append(obj)
+        return objects
