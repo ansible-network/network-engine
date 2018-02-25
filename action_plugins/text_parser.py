@@ -48,18 +48,18 @@ class ActionModule(ActionBase):
         result = super(ActionModule, self).run(tmp, task_vars)
 
         try:
-            parser = self._task.args['parser']
+            src = self._task.args['src']
             contents = self._task.args['contents']
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        if not os.path.exists(parser) and not os.path.isfile(parser):
-            raise AnsibleError("parser is either missing or invalid")
+        if not os.path.exists(src) and not os.path.isfile(src):
+            raise AnsibleError("src is either missing or invalid")
 
         self.ds = {'contents': contents}
         self.ds.update(task_vars)
 
-        tasks = self._loader.load_from_file(parser)
+        tasks = self._loader.load_from_file(src)
 
         for task in tasks:
             name = task.pop('name', None)
