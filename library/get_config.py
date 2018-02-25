@@ -32,6 +32,12 @@ options:
     choices:
       - running
       - startup
+  format:
+    description:
+      - Changes the format of the returned configuration from the remote device
+        to another format.  The value for this argument is device dependent.
+    required: false
+    default: null
 author:
   - Ansible Network Team
 """
@@ -57,16 +63,18 @@ def main():
     """main entry point for module execution
     """
     argument_spec = dict(
-        source=dict(default='running', choices=['running', 'startup'])
+        source=dict(default='running', choices=['running', 'startup']),
+        format=dict()
     )
 
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
 
     source = module.params['source']
+    format = module.params['format']
 
     connection = Connection(module._socket_path)
-    output = connection.get_config(source=source)
+    output = connection.get_config(source=source, format=format)
 
     result = {
         'changed': False,
