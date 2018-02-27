@@ -59,21 +59,21 @@ class ActionModule(ActionBase):
         elif source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
-        self.ds = {'contents': contents}
-        self.ds.update(task_vars)
-
         if source_dir:
-            sources = self.get_files(source_dir)
+            sources = self.get_files(to_list(source_dir))
         else:
             sources = to_list(source_file)
 
-        result['ansible_facts'] = {}
+        self.facts = {}
 
         for src in sources:
             if not os.path.exists(src) and not os.path.isfile(src):
                 raise AnsibleError("src is either missing or invalid")
 
             tasks = self._loader.load_from_file(src)
+
+            self.ds = {'contents': contents}
+            self.ds.update(task_vars)
 
             for task in tasks:
                 name = task.pop('name', None)
@@ -90,37 +90,38 @@ class ActionModule(ActionBase):
                         continue
 
                 loop = task.pop('loop', None)
+
                 if loop:
                     loop = self.template(loop, self.ds)
+                    res = list()
 
-                if isinstance(loop, collections.Mapping):
-                    loop_result = list()
-                    for loop_key, loop_value in iteritems(loop):
-                        self.ds['item'] = {'key': loop_key, 'value': loop_value}
-                        res = self._process_directive(task)
-                        loop_result.append(res)
-                    self.ds[register] = loop_result
+                    # loop is a hash so break out key and value
+                    if isinstance(loop, collections.Mapping):
+                        for loop_key, loop_value in iteritems(loop):
+                            self.ds['item'] = {'key': loop_key, 'value': loop_value}
+                            resp = self._process_directive(task)
+                            res.append(resp)
 
-                elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
-                    loop_result = list()
-                    for loop_item in loop:
-                        self.ds['item'] = loop_item
-                        res = self._process_directive(task)
-                        loop_result.extend(to_list(res))
-                    self.ds[register] = loop_result
+                    # loop is either a list or a string
+                    else:
+                        for loop_item in loop:
+                            self.ds['item'] = loop_item
+                            resp = self._process_directive(task)
+                            res.append(resp)
 
                 else:
                     res = self._process_directive(task)
-                    if register:
-                        self.ds[register] = res
 
-                if export:
-                    kwargs = {register: res}
-                    self.do_export_facts(**kwargs)
+                if register:
+                    self.ds[register] = res
+                    if export:
+                        kwargs = {register: res}
+                        self.do_export_facts(**kwargs)
 
             if 'facts' in self.ds:
-                result['ansible_facts'].update(self.ds['facts'])
+                self.facts.update(self.ds['facts'])
 
+        result['ansible_facts'] = self.facts
         return result
 
     def get_files(self, source_dirs):
@@ -500,9 +501,10 @@ class ActionModule(ActionBase):
         return obj or None
 
     def re_matchall(self, regex, value):
+        #import epdb; epdb.serve()
         objects = list()
-        regex = re.compile(regex, re.M)
-        for match in re.findall(regex.pattern, value):
+        regex = re.compile(regex)
+        for match in re.findall(regex.pattern, value, re.M):
             obj = {}
             obj['matches'] = match
             if regex.groupindex:
