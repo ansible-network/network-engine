@@ -70,6 +70,15 @@ outside of the parser context.  Any values registered are only availalbe within
 the scope of the parser activities.  If you want to provide values back to the
 playbook, use the [export-facts](#export_facts) directive.
 
+### export
+This option will short circuit the export of facts to the playbook.  The
+```export``` option accepts a boolean value and when configured to True, it
+will cause the registered value to be exported to the playbook.  When setting
+```export``` to True, no additional call to [export-facts](#export_facts) is
+required.  
+
+The default value for ```export``` is False.
+
 ### loop
 Sometimes it is necessary to loop over a directive in order to process values.
 Using the ```loop``` option, the parser will iterate over the directive and

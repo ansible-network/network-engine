@@ -77,7 +77,9 @@ class ActionModule(ActionBase):
 
             for task in tasks:
                 name = task.pop('name', None)
+
                 register = task.pop('register', None)
+                export = task.pop('export', False)
 
                 display.vvvv('processing directive: %s' % name)
 
@@ -111,6 +113,10 @@ class ActionModule(ActionBase):
                     res = self._process_directive(task)
                     if register:
                         self.ds[register] = res
+
+                if export:
+                    kwargs = {register: res}
+                    self.do_export_facts(**kwargs)
 
             if 'facts' in self.ds:
                 result['ansible_facts'].update(self.ds['facts'])
@@ -201,7 +207,9 @@ class ActionModule(ActionBase):
                     return meth(**args)
 
     def do_export_facts(self, **kwargs):
-        self.ds['facts'] = self.template(kwargs, self.ds)
+        if 'facts' not in self.ds:
+            self.ds['facts'] = {}
+        self.ds['facts'].update(self.template(kwargs, self.ds))
 
     def _greedy_match(self, contents, start, end=None, match_all=None):
         """ Filter a section of the contents text for matching
@@ -263,7 +271,6 @@ class ActionModule(ActionBase):
         else:
             match = self.re_search(pattern, contents)
             if match:
-                #return list(match.groups())
                 return match
 
         return None
