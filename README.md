@@ -27,6 +27,7 @@ The following is a list of modules that are provided by this role.
 
 * text_parser [[source]](library/text_parser.py)
 * get_config [[source]](library/get_config.py)
+* cli_get [[source]](library/cli_get.py)
 
 ## Plugins
 The following is a list of plugins that are provided by this role.
