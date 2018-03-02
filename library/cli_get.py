@@ -64,9 +64,15 @@ def main():
 
     output = connection.get(command)
 
+    try:
+        json_out = module.from_json(output)
+    except:
+        json_out = None
+
     result = {
         'changed': False,
-        'output': output
+        'output': output,
+        'json': json_out
     }
 
     module.exit_json(**result)
