@@ -43,6 +43,9 @@ RETURN = """
 output:
   description: returns the output from the command
   returned: always
+json:
+  description: the output converted from json to a hash
+  returned: always
 """
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.connection import Connection
@@ -71,7 +74,7 @@ def main():
 
     result = {
         'changed': False,
-        'output': output,
+        'stdout': output,
         'json': json_out
     }
 
