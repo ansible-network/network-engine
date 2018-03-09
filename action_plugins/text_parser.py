@@ -377,7 +377,7 @@ class ActionModule(ActionBase):
 
         context_end = re.search(context_end_re, contents[end:])
         if not context_end:
-            return (string_start, -1)
+            return (string_start, None)
 
         if include_end:
             string_end = end + context_end.end()
