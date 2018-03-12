@@ -1,4 +1,4 @@
-# (c) 2017, Ansible by Red Hat, inc
+# (c) 2018, Ansible by Red Hat, inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #
 # You should have received a copy of the GNU General Public License
@@ -6,6 +6,7 @@
 #
 import os
 import re
+import sys
 import copy
 import json
 import collections
@@ -16,6 +17,7 @@ from ansible.module_utils.network.common.utils import to_list
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_bytes, to_text
 from ansible.errors import AnsibleError, AnsibleUndefinedVariable, AnsibleFileNotFound
+
 
 try:
     from __main__ import display
@@ -30,16 +32,11 @@ def warning(msg):
 
 class ActionModule(ActionBase):
 
-    NAMED_PATTERNS = {
-        'ALPHAS': '(\w+)',
-        'NUMS': '(\d+)',
-        'IPV4': '(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-    }
-
     VALID_FILE_EXTENSIONS = ('.yaml', '.yml', '.json')
-    VALID_GROUP_DIRECTIVES = ('context', 'block')
-    VALID_ACTION_DIRECTIVES = ('pattern_match', 'export_facts', 'lines_template', 'json_template')
+    VALID_GROUP_DIRECTIVES = ('pattern_group', 'block')
+    VALID_ACTION_DIRECTIVES = ('pattern_match', 'set_facts', 'json_template')
     VALID_DIRECTIVES = VALID_GROUP_DIRECTIVES + VALID_ACTION_DIRECTIVES
+    VALID_EXPORT_AS = ('list', 'elements', 'dict', 'object', 'hash')
 
     def run(self, tmp=None, task_vars=None):
         if task_vars is None:
@@ -64,7 +61,7 @@ class ActionModule(ActionBase):
         else:
             sources = to_list(source_file)
 
-        self.facts = {}
+        facts = {}
 
         for src in sources:
             if not os.path.exists(src) and not os.path.isfile(src):
@@ -77,51 +74,73 @@ class ActionModule(ActionBase):
 
             for task in tasks:
                 name = task.pop('name', None)
+                display.vvvv('processing directive: %s' % name)
 
                 register = task.pop('register', None)
-                export = task.pop('export', False)
 
-                display.vvvv('processing directive: %s' % name)
+                export = task.pop('export', False)
+                export_as = task.pop('export_as', 'list')
+                if export_as not in self.VALID_EXPORT_AS:
+                    raise AnsibleError('invalid value for export_as, got %s' % export_as)
+
+                if export and not register:
+                    warning('entry will not be exported due to missing register option')
 
                 when = task.pop('when', None)
                 if when is not None:
                     if not self._check_conditional(when, task_vars):
-                        warning('skipping task due to conditional check failure')
+                        warning('skipping task [%s] due to conditional check' % name)
                         continue
 
                 loop = task.pop('loop', None)
 
-                if loop:
+                if loop is not None:
                     loop = self.template(loop, self.ds)
                     res = list()
 
-                    # loop is a hash so break out key and value
-                    if isinstance(loop, collections.Mapping):
-                        for loop_key, loop_value in iteritems(loop):
-                            self.ds['item'] = {'key': loop_key, 'value': loop_value}
-                            resp = self._process_directive(task)
-                            res.append(resp)
+                    if loop:
+                        # loop is a hash so break out key and value
+                        if isinstance(loop, collections.Mapping):
+                            for loop_key, loop_value in iteritems(loop):
+                                self.ds['item'] = {'key': loop_key, 'value': loop_value}
+                                resp = self._process_directive(task)
+                                res.append(resp)
 
-                    # loop is either a list or a string
-                    else:
-                        for loop_item in loop:
-                            self.ds['item'] = loop_item
-                            resp = self._process_directive(task)
-                            res.append(resp)
+                        # loop is either a list or a string
+                        else:
+                            for loop_item in loop:
+                                self.ds['item'] = loop_item
+                                resp = self._process_directive(task)
+                                res.append(resp)
+
+                        if register:
+                            self.ds[register] = res
+
+                            if export:
+                                if register not in facts:
+                                    facts[register] = {}
+
+                                if export_as in ('dict', 'hash', 'object'):
+                                    for item in res:
+                                        facts[register].update(item)
+                                elif export_as in ('list', 'elements'):
+                                    facts[register] = res
+
 
                 else:
                     res = self._process_directive(task)
+                    if res and register:
+                        self.ds[register] = res
 
-                if register:
-                    self.ds[register] = res
-                    if export:
-                        kwargs = {register: res}
-                        self.do_export_facts(**kwargs)
+                        if export:
+                            if register:
+                                facts[register] = res
+                            else:
+                                for r in to_list(res):
+                                    for k, v in iteritems(r):
+                                        facts.update({to_text(k): v})
 
-            if 'facts' in self.ds:
-                self.facts.update(self.ds['facts'])
-
-        result['ansible_facts'] = self.facts
+        result['ansible_facts'] = facts
         return result
 
     def get_files(self, source_dirs):
@@ -141,13 +160,12 @@ class ActionModule(ActionBase):
 
                     if not os.path.isfile(filename) or fext not in self.VALID_FILE_EXTENSIONS:
                         continue
-
                     else:
                         include_files.append(filename)
 
         return include_files
 
-    def do_block(self, block):
+    def do_pattern_group(self, block):
 
         results = list()
         registers = {}
@@ -169,7 +187,14 @@ class ActionModule(ActionBase):
                 loop = self.template(loop, self.ds)
 
             if 'block' in task:
-                res = self.do_block(task['block'])
+                display.deprecated('`block` is not longer supported, use `pattern_group` instead')
+                task['pattern_group'] = task.pop('block')
+
+            if not set(task).issubset(('pattern_group', 'pattern_match')):
+                raise AnsibleError('invalid directive specified')
+
+            if 'pattern_group' in task:
+                res = self.do_block(task['pattern_group'])
                 if res:
                     results.append(res)
                 if register:
@@ -207,46 +232,6 @@ class ActionModule(ActionBase):
                 elif directive in self.VALID_ACTION_DIRECTIVES:
                     return meth(**args)
 
-    def do_export_facts(self, **kwargs):
-        if 'facts' not in self.ds:
-            self.ds['facts'] = {}
-        self.ds['facts'].update(self.template(kwargs, self.ds))
-
-    def _greedy_match(self, contents, start, end=None, match_all=None):
-        """ Filter a section of the contents text for matching
-
-        :args contents: The contents to match against
-        :args start: The start of the section data
-        :args end: The end of the section data
-        :args match_all: Whether or not to match all of the instances
-
-        :returns: a list object of all matches
-        """
-        ds = self.ds if isinstance(self.ds['contents'], string_types) else self.ds['contents']
-
-        contents = self.template(contents, ds)
-        section_data = list()
-
-        if match_all:
-            while True:
-                section_range = self._get_section_range(contents, start, end)
-                if not section_range:
-                    break
-
-                sidx, eidx = section_range
-
-                if eidx is not None:
-                    section_data.append(contents[sidx: eidx])
-                    contents = contents[eidx:]
-                else:
-                    section_data.append(contents[sidx:])
-                    break
-
-        else:
-            section_data.append(contents)
-
-        return section_data
-
     def do_pattern_match(self, regex, contents=None, match_all=None, match_until=None, match_greedy=None):
         """ Perform the regular expression match against the contents
 
@@ -257,24 +242,17 @@ class ActionModule(ActionBase):
 
         :returns: list object of matches or None if there where no matches found
         """
-        contents = contents or "{{ contents }}"
+        # FIXME why does contents need to be templated twice?
+        contents = contents or self.template("{{ contents }}", self.ds)
+        if not match_greedy:
+            contents = self.template(contents, self.ds)
 
         if match_greedy:
             return self._greedy_match(contents, regex, end=match_until, match_all=match_all)
-
-        pattern = self.template(regex, self.NAMED_PATTERNS)
-        contents = self.template(contents, self.ds)
-
-        if match_all:
-            match = self.re_matchall(pattern, contents)
-            if match:
-                return match
+        elif match_all:
+            return self._match_all(contents, regex)
         else:
-            match = self.re_search(pattern, contents)
-            if match:
-                return match
-
-        return None
+            return self._match(contents, regex)
 
     def do_json_template(self, template):
         """ Handle the json_template directive
@@ -355,6 +333,92 @@ class ActionModule(ActionBase):
 
         return templated_items
 
+    def do_set_facts(self, **kwargs):
+        return self.template(kwargs, self.ds)
+
+    def template(self, data, variables, convert_bare=False):
+
+        if isinstance(data, collections.Mapping):
+            templated_data = {}
+            for key, value in iteritems(data):
+                templated_key = self.template(key, variables, convert_bare=convert_bare)
+                templated_value = self.template(value, variables, convert_bare=convert_bare)
+                templated_data[templated_key] = templated_value
+            return templated_data
+
+        elif isinstance(data, collections.Iterable) and not isinstance(data, string_types):
+            return [self.template(i, variables, convert_bare=convert_bare) for i in data]
+
+        else:
+            data = data or {}
+            tmp_avail_vars = self._templar._available_variables
+            self._templar.set_available_variables(variables)
+            try:
+                resp = self._templar.template(data, convert_bare=convert_bare)
+                resp = self._coerce_to_native(resp)
+            except AnsibleUndefinedVariable:
+                resp = None
+                pass
+            finally:
+                self._templar.set_available_variables(tmp_avail_vars)
+            return resp
+
+    def _coerce_to_native(self, value):
+        if not isinstance(value, bool):
+            try:
+                value = int(value)
+            except Exception as exc:
+                if value is None or len(value) == 0:
+                    return None
+                pass
+        return value
+
+    def _check_conditional(self, when, variables):
+        conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
+        return self.template(conditional % when, variables)
+
+    def _match_all(self, contents, pattern):
+        match = self.re_matchall(pattern, contents)
+        if match:
+            return match
+
+    def _match(self, contents, pattern):
+        match = self.re_search(pattern, contents)
+        if match:
+            return match
+
+    def _greedy_match(self, contents, start, end=None, match_all=None):
+        """ Filter a section of the contents text for matching
+
+        :args contents: The contents to match against
+        :args start: The start of the section data
+        :args end: The end of the section data
+        :args match_all: Whether or not to match all of the instances
+
+        :returns: a list object of all matches
+        """
+        section_data = list()
+
+        if match_all:
+            while True:
+                section_range = self._get_section_range(contents, start, end)
+                if not section_range:
+                    break
+
+                sidx, eidx = section_range
+
+                if eidx is not None:
+                    section_data.append(contents[sidx: eidx])
+                    contents = contents[eidx:]
+                else:
+                    section_data.append(contents[sidx:])
+                    break
+
+        else:
+            section_data.append(contents)
+
+        return section_data
+
     def _get_section_range(self, contents, start, end=None):
 
         try:
@@ -420,12 +484,12 @@ class ActionModule(ActionBase):
             variables = {'matches': list()}
 
             for match in entry['matches']:
-                when = entry.get('when')
-
-                if when is not None:
-                    if not self._check_conditional(when, variables):
-                        warning('skipping match statement due to conditional check')
-                        continue
+                # FIXME
+                #when = entry.get('when')
+                #if when is not None:
+                #    if not self._check_conditional(when, variables):
+                #        warning('skipping match statement due to conditional check')
+                #        continue
 
                 pattern = self.template(match['pattern'], self.NAMED_PATTERNS)
                 match_var = match.get('match_var')
@@ -448,46 +512,6 @@ class ActionModule(ActionBase):
             matches.append(variables)
         return matches
 
-    def template(self, data, variables, convert_bare=False):
-
-        if isinstance(data, collections.Mapping):
-            templated_data = {}
-            for key, value in iteritems(data):
-                templated_key = self.template(key, variables, convert_bare=convert_bare)
-                templated_data[templated_key] = self.template(value, variables, convert_bare=convert_bare)
-            return templated_data
-
-        elif isinstance(data, collections.Iterable) and not isinstance(data, string_types):
-            return [self.template(i, variables, convert_bare=convert_bare) for i in data]
-
-        else:
-            data = data or {}
-            tmp_avail_vars = self._templar._available_variables
-            self._templar.set_available_variables(variables)
-            try:
-                resp = self._templar.template(data, convert_bare=convert_bare)
-                resp = self._coerce_to_native(resp)
-            except AnsibleUndefinedVariable:
-                resp = None
-                pass
-            finally:
-                self._templar.set_available_variables(tmp_avail_vars)
-            return resp
-
-    def _coerce_to_native(self, value):
-        if not isinstance(value, bool):
-            try:
-                value = int(value)
-            except Exception as exc:
-                if value is None or len(value) == 0:
-                    return None
-                pass
-        return value
-
-    def _check_conditional(self, when, variables):
-        conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
-        return self.template(conditional % when, variables)
-
     def re_search(self, regex, value):
         obj = {}
         regex = re.compile(regex, re.M)
@@ -501,7 +525,6 @@ class ActionModule(ActionBase):
         return obj or None
 
     def re_matchall(self, regex, value):
-        #import epdb; epdb.serve()
         objects = list()
         regex = re.compile(regex)
         for match in re.findall(regex.pattern, value, re.M):
@@ -515,3 +538,4 @@ class ActionModule(ActionBase):
                         obj[name] = match[index - 1]
             objects.append(obj)
         return objects
+
