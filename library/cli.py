@@ -14,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = """
 ---
-module: cli_get
+module: cli
 author: Ansible Network Team
 short_description: Runs the specific command and returns the output
 description:
@@ -31,55 +31,42 @@ options:
         the ouput returned.
     required: yes
     default: null
+  parser:
+    description:
+      - The parser file to pass the output from the command through to
+        generate Ansible facts.  If this argument is specified, the output
+        from the command will be parsed based on the rules in the
+        specified parser.
+    required: no
+    default: null
+  engine:
+    description:
+      - Defines the engine to use when parsing the output.  This arugment
+        accepts one of two valid values, c(text_parser) or c(textfsm).  The
+        default is C(text_parser)
+    required: no
+    default: text_parser
+    choices:
+      - text_parser
+      - textfsm
 """
 
 EXAMPLES = """
 - name: return show version
-  cli_get:
+  cli:
     command: show version
+
+- name: return parsed command output
+  cli:
+    command: show version
+    parser: parsers/show_version.yaml
 """
 
 RETURN = """
-output:
+stdout:
   description: returns the output from the command
   returned: always
 json:
   description: the output converted from json to a hash
   returned: always
 """
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.connection import Connection
-
-
-def main():
-    """main entry point for module execution
-    """
-    argument_spec = dict(
-        command=dict(required=True),
-    )
-
-    module = AnsibleModule(argument_spec=argument_spec,
-                           supports_check_mode=True)
-
-    command = module.params['command']
-
-    connection = Connection(module._socket_path)
-
-    output = connection.get(command)
-
-    try:
-        json_out = module.from_json(output)
-    except:
-        json_out = None
-
-    result = {
-        'changed': False,
-        'stdout': output,
-        'json': json_out
-    }
-
-    module.exit_json(**result)
-
-
-if __name__ == '__main__':
-    main()

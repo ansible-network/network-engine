@@ -25,7 +25,7 @@ None
 ## Modules
 The following is a list of modules that are provided by this role.
 
-* cli_get [[source]](library/cli_get.py)
+* cli [[source]](library/cli.py)
 * get_config [[source]](library/get_config.py)
 * text_parser [[source]](library/text_parser.py)
 * textfsm [[source]](library/textfsm.py)
