@@ -13,11 +13,15 @@ import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.network.common.utils import to_list
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_bytes, to_text
 from ansible.errors import AnsibleError, AnsibleUndefinedVariable, AnsibleFileNotFound
 
+try:
+    from ansible.module_utils.network.common.utils import to_list
+except ImportError:
+    # keep role compatible with Ansible 2.4
+    from ansible.module_utils.network_common import to_list
 
 try:
     from __main__ import display
