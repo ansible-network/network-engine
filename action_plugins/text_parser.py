@@ -313,7 +313,7 @@ class ActionModule(ActionBase):
                                 templated_items[key] = {}
 
                             for t in templated_value:
-                                templated_items[key].update(t)
+                                templated_items[key] = self._update(templated[key], t)
                     else:
                         templated_items[key] = []
 
@@ -372,6 +372,14 @@ class ActionModule(ActionBase):
                     return None
                 pass
         return value
+
+    def _update(self, d, u):
+        for k, v in u.iteritems():
+            if isinstance(v, collections.Mapping):
+                d[k] = self._update(d.get(k, {}), v)
+            else:
+                d[k] = v
+        return d
 
     def _check_conditional(self, when, variables):
         conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
