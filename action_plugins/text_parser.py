@@ -144,7 +144,11 @@ class ActionModule(ActionBase):
                                     for k, v in iteritems(r):
                                         facts.update({to_text(k): v})
 
-        result['ansible_facts'] = facts
+        result.update({
+            'ansible_facts': facts,
+            'included': sources
+        })
+
         return result
 
     def get_files(self, source_dirs):
