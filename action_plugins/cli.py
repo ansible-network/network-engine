@@ -17,14 +17,12 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import os
-import shutil
-import tempfile
+import json
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.module_utils.connection import Connection, ConnectionError
-from ansible.module_utils._text import to_bytes, to_text
+from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
 
 
@@ -47,7 +45,11 @@ class ActionModule(ActionBase):
         socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
         connection = Connection(socket_path)
 
-        output = connection.get(command)
+        try:
+            output = connection.get(command)
+        except ConnectionError as exc:
+            raise AnsibleError(to_text(exc))
+
         result['stdout'] = output
 
         try:
