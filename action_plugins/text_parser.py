@@ -194,10 +194,6 @@ class ActionModule(ActionBase):
             if loop:
                 loop = self.template(loop, self.ds)
 
-            if 'block' in task:
-                display.deprecated('`block` is not longer supported, use `pattern_group` instead')
-                task['pattern_group'] = task.pop('block')
-
             if not set(task).issubset(('pattern_group', 'pattern_match')):
                 raise AnsibleError('invalid directive specified')
 
@@ -231,6 +227,9 @@ class ActionModule(ActionBase):
 
     def _process_directive(self, task):
         for directive, args in iteritems(task):
+            if directive == 'block':
+                display.deprecated('`block` is not longer supported, use `pattern_group` instead')
+                directive = 'pattern_group'
             if directive not in self.VALID_DIRECTIVES:
                 raise AnsibleError('invalid directive in parser: %s' % directive)
             meth = getattr(self, 'do_%s' % directive)
