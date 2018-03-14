@@ -249,10 +249,9 @@ class ActionModule(ActionBase):
 
         :returns: list object of matches or None if there where no matches found
         """
-        # FIXME why does contents need to be templated twice?
-        contents = contents or self.template("{{ contents }}", self.ds)
-        if not match_greedy:
-            contents = self.template(contents, self.ds)
+        contents = contents or "{{ contents }}"
+        contents = self.template(contents, self.ds)
+        regex = self.template(regex, self.ds)
 
         if match_greedy:
             return self._greedy_match(contents, regex, end=match_until, match_all=match_all)
@@ -320,7 +319,7 @@ class ActionModule(ActionBase):
                                 templated_items[key] = {}
 
                             for t in templated_value:
-                                templated_items[key] = self._update(templated[key], t)
+                                templated_items[key] = self._update(templated_items[key], t)
                     else:
                         templated_items[key] = []
 
