@@ -268,8 +268,6 @@ class ActionModule(ActionBase):
         contents = self.template(contents, self.ds)
         regex = self.template(regex, self.ds)
 
-        regex = self.template(regex, self.ds)
-
         if match_greedy:
             return self._greedy_match(contents, regex, end=match_until, match_all=match_all)
         elif match_all:
