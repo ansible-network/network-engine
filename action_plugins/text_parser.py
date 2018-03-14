@@ -38,7 +38,7 @@ class ActionModule(ActionBase):
 
     VALID_FILE_EXTENSIONS = ('.yaml', '.yml', '.json')
     VALID_GROUP_DIRECTIVES = ('pattern_group', 'block')
-    VALID_ACTION_DIRECTIVES = ('pattern_match', 'set_facts', 'json_template')
+    VALID_ACTION_DIRECTIVES = ('parser_metadata', 'pattern_match', 'export_facts', 'json_template')
     VALID_DIRECTIVES = VALID_GROUP_DIRECTIVES + VALID_ACTION_DIRECTIVES
     VALID_EXPORT_AS = ('list', 'elements', 'dict', 'object', 'hash')
 
@@ -90,6 +90,9 @@ class ActionModule(ActionBase):
                 if export and not register:
                     warning('entry will not be exported due to missing register option')
 
+                if 'export_facts' in task and any((export, register)):
+                    warning('export_facts will ignore export and/or register options')
+
                 when = task.pop('when', None)
                 if when is not None:
                     if not self._check_conditional(when, task_vars):
@@ -120,6 +123,9 @@ class ActionModule(ActionBase):
                         if register:
                             self.ds[register] = res
 
+                            if 'export_facts' in task:
+                                facts.update(res)
+
                             if export:
                                 if register not in facts:
                                     facts[register] = {}
@@ -137,6 +143,8 @@ class ActionModule(ActionBase):
                         self.ds[register] = res
 
                         if export:
+                            if 'export_facts' in task:
+                                facts.update(res)
                             if register:
                                 facts[register] = res
                             else:
@@ -230,14 +238,21 @@ class ActionModule(ActionBase):
             if directive == 'block':
                 display.deprecated('`block` is not longer supported, use `pattern_group` instead')
                 directive = 'pattern_group'
+
             if directive not in self.VALID_DIRECTIVES:
                 raise AnsibleError('invalid directive in parser: %s' % directive)
+
             meth = getattr(self, 'do_%s' % directive)
             if meth:
                 if directive in self.VALID_GROUP_DIRECTIVES:
                     return meth(args)
                 elif directive in self.VALID_ACTION_DIRECTIVES:
                     return meth(**args)
+            else:
+                raise AnsibleError('invalid directive: %s' % directive)
+
+    def do_parser_metadata(self, **kwargs):
+        pass
 
     def do_pattern_match(self, regex, contents=None, match_all=None, match_until=None, match_greedy=None):
         """ Perform the regular expression match against the contents
@@ -251,6 +266,8 @@ class ActionModule(ActionBase):
         """
         contents = contents or "{{ contents }}"
         contents = self.template(contents, self.ds)
+        regex = self.template(regex, self.ds)
+
         regex = self.template(regex, self.ds)
 
         if match_greedy:
@@ -339,7 +356,7 @@ class ActionModule(ActionBase):
 
         return templated_items
 
-    def do_set_facts(self, **kwargs):
+    def do_export_facts(self, **kwargs):
         return self.template(kwargs, self.ds)
 
     def template(self, data, variables, convert_bare=False):
