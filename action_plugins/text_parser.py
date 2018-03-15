@@ -120,11 +120,10 @@ class ActionModule(ActionBase):
                                 resp = self._process_directive(task)
                                 res.append(resp)
 
-                        if register:
+                        if 'export_facts' in task:
+                            facts.update(res)
+                        elif register:
                             self.ds[register] = res
-
-                            if 'export_facts' in task:
-                                facts.update(res)
 
                             if export:
                                 if register not in facts:
@@ -139,12 +138,12 @@ class ActionModule(ActionBase):
 
                 else:
                     res = self._process_directive(task)
-                    if res and register:
+                    if 'export_facts' in task:
+                        facts.update(res)
+                    elif res and register:
                         self.ds[register] = res
 
                         if export:
-                            if 'export_facts' in task:
-                                facts.update(res)
                             if register:
                                 facts[register] = res
                             else:
