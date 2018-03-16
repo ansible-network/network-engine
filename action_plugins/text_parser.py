@@ -100,6 +100,7 @@ class ActionModule(ActionBase):
                         continue
 
                 loop = task.pop('loop', None)
+                loop_var = task.pop('loop_control', {}).get('loop_var') or 'item'
 
                 if loop is not None:
                     loop = self.template(loop, self.ds)
@@ -109,14 +110,14 @@ class ActionModule(ActionBase):
                         # loop is a hash so break out key and value
                         if isinstance(loop, collections.Mapping):
                             for loop_key, loop_value in iteritems(loop):
-                                self.ds['item'] = {'key': loop_key, 'value': loop_value}
+                                self.ds[loop_var] = {'key': loop_key, 'value': loop_value}
                                 resp = self._process_directive(task)
                                 res.append(resp)
 
                         # loop is either a list or a string
                         else:
                             for loop_item in loop:
-                                self.ds['item'] = loop_item
+                                self.ds[loop_var] = loop_item
                                 resp = self._process_directive(task)
                                 res.append(resp)
 
@@ -201,6 +202,8 @@ class ActionModule(ActionBase):
             if loop:
                 loop = self.template(loop, self.ds)
 
+            loop_var = task.pop('loop_control', {}).get('loop_var') or 'item'
+
             if not set(task).issubset(('pattern_group', 'pattern_match')):
                 raise AnsibleError('invalid directive specified')
 
@@ -215,7 +218,7 @@ class ActionModule(ActionBase):
                 loop_result = list()
 
                 for loop_item in loop:
-                    self.ds['item'] = loop_item
+                    self.ds[loop_var] = loop_item
                     loop_result.append(self._process_directive(task))
 
                 results.append(loop_result)
