@@ -208,7 +208,14 @@ class ActionModule(ActionBase):
                 raise AnsibleError('invalid directive specified')
 
             if 'pattern_group' in task:
-                res = self.do_pattern_group(task['pattern_group'])
+                if loop and isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+                    res = list()
+                    for loop_item in loop:
+                        self.ds[loop_var] = loop_item
+                        res.append(self.do_pattern_group(task['pattern_group']))
+                else:
+                    res = self.do_pattern_group(task['pattern_group'])
+
                 if res:
                     results.append(res)
                 if register:
