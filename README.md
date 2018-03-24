@@ -1,4 +1,4 @@
-# Role Name: network-engine
+# network-engine
 This role provides the foundation for building network roles by providing 
 modules and plugins that are common to all Ansible Network roles.  All of
 the artifacts in this role can be used independent of the platform that is 
@@ -11,13 +11,13 @@ Interested in contributing to this role, please see [CONTRIBUTING](CONTRIBUTING.
 ## Requirements
 None
 
-## Role Tasks
+## Tasks
 The following are the available tasks provided by this role for use in
 playbooks.
 
 None
 
-## Role Variables
+## Variables
 The following are the list of variables this role accepts
 
 None

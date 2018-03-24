@@ -24,46 +24,53 @@ except ImportError:
 class ActionModule(ActionBase):
 
     def run(self, tmp=None, task_vars=None):
+        ''' handler for textfsm action '''
+
         if task_vars is None:
             task_vars = dict()
 
-        if not HAS_TEXTFSM:
-            raise AnsibleError('textfsm engine requires the TextFSM library to be installed')
-
         result = super(ActionModule, self).run(tmp, task_vars)
+        del tmp  # tmp no longer has any effect
 
         try:
-            filename = self._task.args.get('file')
-            src = self._task.args.get('src')
-            contents = self._task.args['contents']
-            name = self._task.args.get('name')
-        except KeyError as exc:
-            raise AnsibleError('missing required argument: %s' % exc)
+            if not HAS_TEXTFSM:
+                raise AnsibleError('textfsm engine requires the TextFSM library to be installed')
 
-        if src and filename:
-            raise AnsibleError('`src` and `file` are mutually exclusive arguments')
+            try:
+                filename = self._task.args.get('file')
+                src = self._task.args.get('src')
+                contents = self._task.args['contents']
+                name = self._task.args.get('name')
+            except KeyError as exc:
+                raise AnsibleError('missing required argument: %s' % exc)
 
-        if filename:
-            tmpl = open(filename)
-        else:
-            tmpl = StringIO.StringIO()
-            tmpl.write(src.strip())
-            tmpl.seek(0)
+            if src and filename:
+                raise AnsibleError('`src` and `file` are mutually exclusive arguments')
 
-        try:
-            re_table = textfsm.TextFSM(tmpl)
-            fsm_results = re_table.ParseText(contents)
+            if filename:
+                tmpl = open(filename)
+            else:
+                tmpl = StringIO.StringIO()
+                tmpl.write(src.strip())
+                tmpl.seek(0)
 
-        except Exception as exc:
-            raise AnsibleError(str(exc))
+            try:
+                re_table = textfsm.TextFSM(tmpl)
+                fsm_results = re_table.ParseText(contents)
 
-        facts = {}
-        for item in fsm_results:
-            facts.update(dict(zip(re_table.header, item)))
+            except Exception as exc:
+                raise AnsibleError(str(exc))
 
-        if name:
-            result['ansible_facts'] = {name: facts}
-        else:
-            result['ansible_facts'] = facts
+            facts = {}
+            for item in fsm_results:
+                facts.update(dict(zip(re_table.header, item)))
+
+            if name:
+                result['ansible_facts'] = {name: facts}
+            else:
+                result['ansible_facts'] = facts
+
+        finally:
+            self._remove_tmp_path(self._connection._shell.tmpdir)
 
         return result

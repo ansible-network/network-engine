@@ -29,56 +29,62 @@ from ansible.errors import AnsibleError
 class ActionModule(ActionBase):
 
     def run(self, tmp=None, task_vars=None):
+        ''' handler for cli operations '''
 
         if task_vars is None:
             task_vars = dict()
 
         result = super(ActionModule, self).run(tmp, task_vars)
+        del tmp  # tmp no longer has any effect
 
         try:
-            command = self._task.args['command']
-            parser = self._task.args.get('parser')
-            engine = self._task.args.get('engine', 'text_parser')
-        except KeyError as exc:
-            raise AnsibleError(to_text(exc))
+            try:
+                command = self._task.args['command']
+                parser = self._task.args.get('parser')
+                engine = self._task.args.get('engine', 'text_parser')
+            except KeyError as exc:
+                raise AnsibleError(to_text(exc))
 
-        socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
-        connection = Connection(socket_path)
+            socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
+            connection = Connection(socket_path)
 
-        try:
-            output = connection.get(command)
-        except ConnectionError as exc:
-            raise AnsibleError(to_text(exc))
+            try:
+                output = connection.get(command)
+            except ConnectionError as exc:
+                raise AnsibleError(to_text(exc))
 
-        result['stdout'] = output
+            result['stdout'] = output
 
-        try:
-            json_data = json.loads(output)
-        except:
-            json_data = None
+            # try to convert the cli output to native json
+            try:
+                json_data = json.loads(output)
+            except:
+                json_data = None
 
-        result['json'] = json_data
+            result['json'] = json_data
 
-        if parser:
-            if engine not in (None, 'text_parser', 'textfsm'):
-                raise AnsibleError('missing or invalid value for argument engine')
+            if parser:
+                if engine not in ('text_parser', 'textfsm'):
+                    raise AnsibleError('missing or invalid value for argument engine')
 
-            new_task = self._task.copy()
-            new_task.args = {
-                'file': parser,
-                'contents': output
-            }
+                new_task = self._task.copy()
+                new_task.args = {
+                    'file': parser,
+                    'contents': output
+                }
 
-            kwargs = {
-                'task': new_task,
-                'connection': self._connection,
-                'play_context': self._play_context,
-                'loader': self._loader,
-                'templar': self._templar,
-                'shared_loader_obj': self._shared_loader_obj
-            }
+                kwargs = {
+                    'task': new_task,
+                    'connection': self._connection,
+                    'play_context': self._play_context,
+                    'loader': self._loader,
+                    'templar': self._templar,
+                    'shared_loader_obj': self._shared_loader_obj
+                }
 
-            task_parser = self._shared_loader_obj.action_loader.get(engine, **kwargs)
-            result.update(task_parser.run(task_vars=task_vars))
+                task_parser = self._shared_loader_obj.action_loader.get(engine, **kwargs)
+                result.update(task_parser.run(task_vars=task_vars))
+        finally:
+            self._remove_tmp_path(self._connection._shell.tmpdir)
 
         return result

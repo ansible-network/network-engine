@@ -9,15 +9,9 @@ __metaclass__ = type
 
 from ansible.plugins.action.cli import ActionModule as ActionBase
 
-try:
-    from __main__ import display
-except ImportError:
-    from ansible.utils.display import Display
-    display = Display()
-
 
 class ActionModule(ActionBase):
 
     def run(self, tmp=None, task_vars=None):
-        display.deprecated('the `cli_get` module has been deprecated, please use `cli` instead')
+        self._display.deprecated('the `cli_get` module has been deprecated, please use `cli` instead')
         return super(ActionModule, self).run(tmp, task_vars)
