@@ -23,6 +23,10 @@ except ImportError:
     # keep role compatible with Ansible 2.4
     from ansible.module_utils.network_common import to_list
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
+from network_engine.plugins import template_loader, parser_loader
+
+
 try:
     from __main__ import display
 except ImportError:
@@ -38,7 +42,7 @@ class ActionModule(ActionBase):
 
     VALID_FILE_EXTENSIONS = ('.yaml', '.yml', '.json')
     VALID_GROUP_DIRECTIVES = ('pattern_group', 'block')
-    VALID_ACTION_DIRECTIVES = ('parser_metadata', 'pattern_match', 'export_facts', 'json_template')
+    VALID_ACTION_DIRECTIVES = ('parser_metadata', 'pattern_match', 'set_vars', 'json_template')
     VALID_DIRECTIVES = VALID_GROUP_DIRECTIVES + VALID_ACTION_DIRECTIVES
     VALID_EXPORT_AS = ('list', 'elements', 'dict', 'object', 'hash')
 
@@ -67,9 +71,11 @@ class ActionModule(ActionBase):
 
         facts = {}
 
+        self.template = template_loader.get('json_template', self._templar)
+
         for src in sources:
             if not os.path.exists(src) and not os.path.isfile(src):
-                raise AnsibleError("src is either missing or invalid")
+                raise AnsibleError("src [%s] is either missing or invalid" % src)
 
             tasks = self._loader.load_from_file(src)
 
@@ -87,16 +93,17 @@ class ActionModule(ActionBase):
                 if export_as not in self.VALID_EXPORT_AS:
                     raise AnsibleError('invalid value for export_as, got %s' % export_as)
 
-                if export and not register:
-                    warning('entry will not be exported due to missing register option')
-
-                if 'export_facts' in task and any((export, register)):
-                    warning('export_facts will ignore export and/or register options')
+                if 'export_facts' in task:
+                    task['set_vars'] = task.pop('export_facts')
+                    export = True
+                elif 'set_vars' not in task:
+                    if export and not register:
+                        warning('entry will not be exported due to missing register option')
 
                 when = task.pop('when', None)
                 if when is not None:
-                    if not self._check_conditional(when, task_vars):
-                        warning('skipping task [%s] due to conditional check' % name)
+                    if not self._check_conditional(when, self.ds):
+                        display.vvv('text_parser: skipping task [%s] due to conditional check' % name)
                         continue
 
                 loop = task.pop('loop', None)
@@ -104,6 +111,8 @@ class ActionModule(ActionBase):
 
                 if loop is not None:
                     loop = self.template(loop, self.ds)
+                    if not loop:
+                        display.vvv('text_parser: loop option was defined but no loop data found')
                     res = list()
 
                     if loop:
@@ -121,29 +130,40 @@ class ActionModule(ActionBase):
                                 resp = self._process_directive(task)
                                 res.append(resp)
 
-                        if 'export_facts' in task:
-                            facts.update(res)
+                        if 'set_vars' in task:
+                            if register:
+                                self.ds[register] = res
+                                if export:
+                                    facts[register] = res
+                            else:
+                                self.ds.update(res)
+                                if export:
+                                    facts.update(res)
                         elif register:
                             self.ds[register] = res
-
                             if export:
-                                if register not in facts:
-                                    facts[register] = {}
-
                                 if export_as in ('dict', 'hash', 'object'):
+                                    if register not in facts:
+                                        facts[register] = {}
                                     for item in res:
                                         facts[register].update(item)
-                                elif export_as in ('list', 'elements'):
+                                else:
                                     facts[register] = res
 
 
                 else:
                     res = self._process_directive(task)
-                    if 'export_facts' in task:
-                        facts.update(res)
+                    if 'set_vars' in task:
+                        if register:
+                            self.ds[register] = res
+                            if export:
+                                facts[register] = res
+                        else:
+                            self.ds.update(res)
+                            if export:
+                                facts.update(res)
                     elif res and register:
                         self.ds[register] = res
-
                         if export:
                             if register:
                                 facts[register] = res
@@ -190,6 +210,8 @@ class ActionModule(ActionBase):
             task = entry.copy()
 
             name = task.pop('name', None)
+            display.vvv("text_parser: starting pattern_match [%s] in pattern_group" % name)
+
             register = task.pop('register', None)
 
             when = task.pop('when', None)
@@ -203,6 +225,7 @@ class ActionModule(ActionBase):
                 loop = self.template(loop, self.ds)
 
             loop_var = task.pop('loop_control', {}).get('loop_var') or 'item'
+            display.vvvv('text_parser: loop_var is %s' % loop_var)
 
             if not set(task).issubset(('pattern_group', 'pattern_match')):
                 raise AnsibleError('invalid directive specified')
@@ -252,6 +275,7 @@ class ActionModule(ActionBase):
                 raise AnsibleError('invalid directive in parser: %s' % directive)
 
             meth = getattr(self, 'do_%s' % directive)
+
             if meth:
                 if directive in self.VALID_GROUP_DIRECTIVES:
                     return meth(args)
@@ -260,320 +284,24 @@ class ActionModule(ActionBase):
             else:
                 raise AnsibleError('invalid directive: %s' % directive)
 
-    def do_parser_metadata(self, **kwargs):
-        pass
+    def do_parser_metadata(self, version=None, command=None, network_os=None):
+        if version:
+            display.vvv('text_parser: using parser version %s' % version)
+
+        if network_os not in (None, self.ds['ansible_network_os']):
+            raise AnsibleError('parser expected %s, got %s' % (network_os, self.ds['ansible_network_os']))
 
     def do_pattern_match(self, regex, contents=None, match_all=None, match_until=None, match_greedy=None):
-        """ Perform the regular expression match against the contents
-
-        :args regex: The regular expression pattern to use
-        :args contents: The contents to run the pattern against
-        :args match_all: Specifies if all matches of pattern should be returned
-            or just the first occurence
-
-        :returns: list object of matches or None if there where no matches found
-        """
-        contents = contents or "{{ contents }}"
-        contents = self.template(contents, self.ds)
-        regex = self.template(regex, self.ds)
-
-        if match_greedy:
-            return self._greedy_match(contents, regex, end=match_until, match_all=match_all)
-        elif match_all:
-            return self._match_all(contents, regex)
-        else:
-            return self._match(contents, regex)
+        contents = contents or self.template("{{ contents }}", self.ds)
+        parser = parser_loader.get('pattern_match', contents)
+        return parser.match(regex, match_all, match_until, match_greedy)
 
     def do_json_template(self, template):
-        """ Handle the json_template directive
+        return self.template.run(template, self.ds)
 
-        :args template: the data structure to template
-
-        :return: the templated data
-        """
-        return self._process_items(template)
-
-    def _process_items(self, template, variables=None):
-
-        templated_items = {}
-        variables = variables or self.ds
-
-        for item in template:
-            key = self.template(item['key'], variables)
-
-            when = item.get('when')
-            if when is not None:
-                if not self._check_conditional(when, variables):
-                    warning("skipping due to conditional failure")
-                    continue
-
-            if 'value' in item:
-                value = item.get('value')
-                items = None
-                item_type = None
-
-            elif 'object' in item:
-                items = item.get('object')
-                item_type = 'dict'
-
-            elif 'elements' in item:
-                items = item.get('elements')
-                item_type = 'list'
-
-            when = item.get('when')
-
-            loop = item.get('repeat_for')
-            loop_data = self.template(loop, variables) if loop else None
-            loop_var = item.get('repeat_var', 'item')
-
-            if items:
-                if loop:
-                    if isinstance(loop_data, collections.Iterable) and not isinstance(loop_data, string_types):
-                        templated_value = list()
-
-                        for loop_item in loop_data:
-                            variables[loop_var] = loop_item
-                            templated_value.append(self._process_items(items, variables))
-
-                        if item_type == 'list':
-                            templated_items[key] = templated_value
-
-                        elif item_type == 'dict':
-                            if key not in templated_items:
-                                templated_items[key] = {}
-
-                            for t in templated_value:
-                                templated_items[key] = self._update(templated_items[key], t)
-                    else:
-                        templated_items[key] = []
-
-                else:
-                    val = self._process_items(items, variables)
-
-                    if item_type == 'list':
-                        templated_value = [val]
-                    else:
-                        templated_value = val
-
-                    templated_items[key] = templated_value
-
-            else:
-                templated_value = self.template(value, variables)
-                templated_items[key] = templated_value
-
-        return templated_items
-
-    def do_export_facts(self, **kwargs):
+    def do_set_vars(self, **kwargs):
         return self.template(kwargs, self.ds)
-
-    def template(self, data, variables, convert_bare=False):
-
-        if isinstance(data, collections.Mapping):
-            templated_data = {}
-            for key, value in iteritems(data):
-                templated_key = self.template(key, variables, convert_bare=convert_bare)
-                templated_value = self.template(value, variables, convert_bare=convert_bare)
-                templated_data[templated_key] = templated_value
-            return templated_data
-
-        elif isinstance(data, collections.Iterable) and not isinstance(data, string_types):
-            return [self.template(i, variables, convert_bare=convert_bare) for i in data]
-
-        else:
-            data = data or {}
-            tmp_avail_vars = self._templar._available_variables
-            self._templar.set_available_variables(variables)
-            try:
-                resp = self._templar.template(data, convert_bare=convert_bare)
-                resp = self._coerce_to_native(resp)
-            except AnsibleUndefinedVariable:
-                resp = None
-                pass
-            finally:
-                self._templar.set_available_variables(tmp_avail_vars)
-            return resp
-
-    def _coerce_to_native(self, value):
-        if not isinstance(value, bool):
-            try:
-                value = int(value)
-            except Exception as exc:
-                if value is None or len(value) == 0:
-                    return None
-                pass
-        return value
-
-    def _update(self, d, u):
-        for k, v in u.iteritems():
-            if isinstance(v, collections.Mapping):
-                d[k] = self._update(d.get(k, {}), v)
-            else:
-                d[k] = v
-        return d
 
     def _check_conditional(self, when, variables):
         conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
         return self.template(conditional % when, variables)
-
-    def _match_all(self, contents, pattern):
-        match = self.re_matchall(pattern, contents)
-        if match:
-            return match
-
-    def _match(self, contents, pattern):
-        match = self.re_search(pattern, contents)
-        if match:
-            return match
-
-    def _greedy_match(self, contents, start, end=None, match_all=None):
-        """ Filter a section of the contents text for matching
-
-        :args contents: The contents to match against
-        :args start: The start of the section data
-        :args end: The end of the section data
-        :args match_all: Whether or not to match all of the instances
-
-        :returns: a list object of all matches
-        """
-        section_data = list()
-
-        if match_all:
-            while True:
-                section_range = self._get_section_range(contents, start, end)
-                if not section_range:
-                    break
-
-                sidx, eidx = section_range
-
-                if eidx is not None:
-                    section_data.append(contents[sidx: eidx])
-                    contents = contents[eidx:]
-                else:
-                    section_data.append(contents[sidx:])
-                    break
-
-        else:
-            section_data.append(contents)
-
-        return section_data
-
-    def _get_section_range(self, contents, start, end=None):
-
-        try:
-            context_start_re = re.compile(start, re.M)
-            if end:
-                context_end_re = re.compile(end, re.M)
-                include_end = True
-            else:
-                context_end_re = context_start_re
-                include_end = False
-        except KeyError as exc:
-            raise AnsibleError('Missing required key %s' % to_text(exc))
-
-        context_start = re.search(context_start_re, contents)
-        if not context_start:
-            return
-
-        string_start = context_start.start()
-        end = context_start.end() + 1
-
-        context_end = re.search(context_end_re, contents[end:])
-        if not context_end:
-            return (string_start, None)
-
-        if include_end:
-            string_end = end + context_end.end()
-        else:
-            string_end = end + context_end.start()
-
-        return (string_start, string_end)
-
-    def _get_context_data(self, entry, contents):
-        name = entry['name']
-
-        context = entry.get('context', {})
-        context_data = list()
-
-        if context:
-            while True:
-                context_range = self._get_context_range(name, context, contents)
-
-                if not context_range:
-                    break
-
-                start, end = context_range
-
-                if end is not None:
-                    context_data.append(contents[start: end])
-                    contents = contents[end:]
-                else:
-                    context_data.append(contents[start:])
-                    break
-
-        else:
-            context_data.append(contents)
-
-        return context_data
-
-    def _get_context_matches(self, entry, context_data):
-        matches = list()
-
-        for data in context_data:
-            variables = {'matches': list()}
-
-            for match in entry['matches']:
-                # FIXME
-                #when = entry.get('when')
-                #if when is not None:
-                #    if not self._check_conditional(when, variables):
-                #        warning('skipping match statement due to conditional check')
-                #        continue
-
-                pattern = self.template(match['pattern'], self.NAMED_PATTERNS)
-                match_var = match.get('match_var')
-                match_all = match.get('match_all')
-
-                if match_all:
-                    res = re.findall(pattern, data, re.M)
-                else:
-                    match = re.search(pattern, data, re.M)
-                    if match:
-                        res = list(match.groups())
-                    else:
-                        res = None
-
-                if match_var:
-                    variables[match_var] = res
-
-                variables['matches'].append(res)
-
-            matches.append(variables)
-        return matches
-
-    def re_search(self, regex, value):
-        obj = {}
-        regex = re.compile(regex, re.M)
-        match = regex.search(value)
-        if match:
-            items = list(match.groups())
-            if regex.groupindex:
-                for name, index in iteritems(regex.groupindex):
-                    obj[name] = items[index - 1]
-            obj['matches'] = items
-        return obj or None
-
-    def re_matchall(self, regex, value):
-        objects = list()
-        regex = re.compile(regex)
-        for match in re.findall(regex.pattern, value, re.M):
-            obj = {}
-            obj['matches'] = match
-            if regex.groupindex:
-                for name, index in iteritems(regex.groupindex):
-                    if len(regex.groupindex) == 1:
-                        obj[name] = match
-                    else:
-                        obj[name] = match[index - 1]
-            objects.append(obj)
-        return objects
-
