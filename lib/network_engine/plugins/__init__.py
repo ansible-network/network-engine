@@ -19,7 +19,5 @@ parser_loader = PluginLoader(
     'network_engine.plugins.parser',
     None,
     'parser_plugins',
-    #required_base_class='ParserBase'
+    # required_base_class='ParserBase'
 )
-
-

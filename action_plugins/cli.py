@@ -6,7 +6,6 @@
 #
 import json
 
-from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.module_utils.connection import Connection, ConnectionError
 from ansible.module_utils._text import to_text

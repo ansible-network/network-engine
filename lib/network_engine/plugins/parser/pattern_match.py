@@ -7,16 +7,11 @@
 import re
 
 from ansible.module_utils.six import iteritems
-from ansible.module_utils._text import to_text
-from ansible.errors import AnsibleError
 
-try:
-    from ansible.module_utils.network.common.utils import to_list
-except ImportError:
-    # keep role compatible with Ansible 2.4
-    from ansible.module_utils.network_common import to_list
 
-get_value = lambda m, i: m.group(i) if m else None
+def get_value(m, i):
+    return m.group(i) if m else None
+
 
 class ParserEngine(object):
 
@@ -165,4 +160,3 @@ class ParserEngine(object):
                         obj[name] = match[index - 1]
             objects.append(obj)
         return objects
-
