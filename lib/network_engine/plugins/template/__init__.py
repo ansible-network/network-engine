@@ -7,13 +7,7 @@
 import collections
 
 from ansible.module_utils.six import iteritems, string_types
-from ansible.errors import AnsibleError
-
-try:
-    from ansible.module_utils.network.common.utils import to_list
-except ImportError:
-    # keep role compatible with Ansible 2.4
-    from ansible.module_utils.network_common import to_list
+from ansible.errors import AnsibleUndefinedVariable
 
 
 class TemplateBase(object):
@@ -58,7 +52,7 @@ class TemplateBase(object):
         if not isinstance(value, bool):
             try:
                 value = int(value)
-            except Exception as exc:
+            except Exception:
                 if value is None or len(value) == 0:
                     return None
                 pass

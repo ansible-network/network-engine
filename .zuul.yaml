@@ -1,8 +1,7 @@
 - project:
     check:
       jobs:
-        - tox-linters:
-            voting: false
+        - tox-linters
     gate:
       jobs:
-        - noop
+        - tox-linters

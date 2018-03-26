@@ -9,4 +9,3 @@ from network_engine.plugins.template import TemplateBase
 
 class TemplateEngine(TemplateBase):
     pass
-

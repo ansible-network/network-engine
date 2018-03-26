@@ -5,17 +5,15 @@
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
 import os
-import re
 import sys
-import copy
-import json
 import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
 from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils._text import to_bytes, to_text
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable, AnsibleFileNotFound
+from ansible.module_utils._text import to_text
+from ansible.errors import AnsibleError
+
 
 try:
     from ansible.module_utils.network.common.utils import to_list
@@ -32,6 +30,7 @@ try:
 except ImportError:
     from ansible.utils.display import Display
     display = Display()
+
 
 def warning(msg):
     if C.ACTION_WARNINGS:
@@ -149,8 +148,6 @@ class ActionModule(ActionBase):
                                         facts[register].update(item)
                                 else:
                                     facts[register] = res
-
-
                 else:
                     res = self._process_directive(task)
                     if 'set_vars' in task:
@@ -216,7 +213,7 @@ class ActionModule(ActionBase):
 
             when = task.pop('when', None)
             if when is not None:
-                if not self._check_conditional(when, task_vars):
+                if not self._check_conditional(when):
                     warning('skipping task due to conditional check failure')
                     continue
 
