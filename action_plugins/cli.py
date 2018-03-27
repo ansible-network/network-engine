@@ -24,53 +24,58 @@ class ActionModule(ActionBase):
         del tmp  # tmp no longer has any effect
 
         try:
-            try:
-                command = self._task.args['command']
-                parser = self._task.args.get('parser')
-                engine = self._task.args.get('engine', 'text_parser')
-            except KeyError as exc:
-                raise AnsibleError(to_text(exc))
+            command = self._task.args['command']
+            parser = self._task.args.get('parser')
+            engine = self._task.args.get('engine', 'text_parser')
+        except KeyError as exc:
+            raise AnsibleError(to_text(exc))
 
-            socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
-            connection = Connection(socket_path)
+        socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
+        connection = Connection(socket_path)
 
-            try:
-                output = connection.get(command)
-            except ConnectionError as exc:
-                raise AnsibleError(to_text(exc))
+        try:
+            output = connection.get(command)
+        except ConnectionError as exc:
+            raise AnsibleError(to_text(exc))
 
-            result['stdout'] = output
+        result['stdout'] = output
 
-            # try to convert the cli output to native json
-            try:
-                json_data = json.loads(output)
-            except:
-                json_data = None
+        # try to convert the cli output to native json
+        try:
+            json_data = json.loads(output)
+        except:
+            json_data = None
 
-            result['json'] = json_data
+        result['json'] = json_data
 
-            if parser:
-                if engine not in ('text_parser', 'textfsm'):
-                    raise AnsibleError('missing or invalid value for argument engine')
+        if parser:
+            if engine not in ('text_parser', 'textfsm'):
+                raise AnsibleError('missing or invalid value for argument engine')
 
-                new_task = self._task.copy()
-                new_task.args = {
-                    'file': parser,
-                    'contents': (json_data or output)
-                }
+            new_task = self._task.copy()
+            new_task.args = {
+                'file': parser,
+                'contents': (json_data or output)
+            }
 
-                kwargs = {
-                    'task': new_task,
-                    'connection': self._connection,
-                    'play_context': self._play_context,
-                    'loader': self._loader,
-                    'templar': self._templar,
-                    'shared_loader_obj': self._shared_loader_obj
-                }
+            kwargs = {
+                'task': new_task,
+                'connection': self._connection,
+                'play_context': self._play_context,
+                'loader': self._loader,
+                'templar': self._templar,
+                'shared_loader_obj': self._shared_loader_obj
+            }
 
-                task_parser = self._shared_loader_obj.action_loader.get(engine, **kwargs)
-                result.update(task_parser.run(task_vars=task_vars))
-        finally:
-            self._remove_tmp_path(self._connection._shell.tmpdir)
+            task_parser = self._shared_loader_obj.action_loader.get(engine, **kwargs)
+            result.update(task_parser.run(task_vars=task_vars))
+
+        self._remove_tmp_path(self._connection._shell.tmpdir)
+
+        # this is needed so the strategy plugin can identify the connection as
+        # a persistent connection and track it, otherwise the connection will
+        # not be closed at th end of the play
+        socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
+        self._task.args['_ansible_socket'] = socket_path
 
         return result
