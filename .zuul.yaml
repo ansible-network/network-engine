@@ -1,7 +1,6 @@
 - project:
     check:
+      debug: True
       jobs:
         - tox-linters
-    gate:
-      jobs:
-        - tox-linters
+        - ansible-test-sanity
