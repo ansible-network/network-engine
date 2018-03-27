@@ -1,7 +1,27 @@
+- nodeset:
+    name: centos-7
+    nodes:
+      - name: centos-7
+        label: dib-centos-7
+
+- job:
+    name: ansible-role-functional-base
+    abstract: true
+    parent: tox
+    description: |
+      Run functional functional tests for ansible-role projects.
+
+      Uses tox with the ``functional`` environment.
+    pre-run: tests/playbooks/ansible-role-functional/pre.yaml
+    run: tests/playbooks/tox-with-sudo/run.yaml
+    vars:
+      tox_envlist: functional
+
+- job:
+    name: ansible-role-functional-centos-7
+    parent: ansible-role-functional-base
+
 - project:
     check:
       jobs:
-        - tox-linters
-    gate:
-      jobs:
-        - tox-linters
+        - ansible-role-functional-centos-7
