@@ -3,34 +3,36 @@ CLI Parser Directives
 The ```text_parser``` module is a module that can be used to parse the results of
 text strings into Ansible facts.  The primary motivation for developing the
 ```text_parser``` module is to convert structured ASCII text output (such as
-those returned from network devices) into structured JSON data structures
-sutable to be used as host facts.
+those returned from network devices) into  JSON data structures sutable to be 
+used as host facts.
 
 The parser file format is loosely based on the Ansible playbook directives
 language.  It uses the Ansible directive language to ease the transition from
-writing playbooks to writing parsers.  Below is the set of supported directives
-the ```text_parser``` module recognizes along with a description of the
-directives basic functionality.
+writing playbooks to writing parsers.  However, parsers developed using this 
+module are not written directly into the playbook, but are a separate file
+called from playbooks.  This is done for a variety of reasons but most notably
+to keep separation from the parsing logical and playbook execution. 
+
+The ```text_parser``` works based on a set of directives that perform actions
+on structured data with the end result being a valid JSON structure that can be
+returned to the Ansible facts system.
 
 ## Parser language 
-The parse supports an Ansible-like playbook parser language that is loosely 
-designed after the current Ansible language.  It implements a set of directives
-that are designed to perform specific actions.  
-
-The parser format uses YAML formatting, providing a list sequential list of
-directives to be performed on the contents (provided by the module argument).
-The overall general structure of a directive is as follows:
+The parser format uses YAML formatting, providing an ordered list of directives 
+to be performed on the contents (provided by the module argument).  The overall 
+general structure of a directive is as follows:
 
 ```
 - name: some description name of the task to be performed
   directive:
-    key: value
-    key: value
+    argument: value
+      argument_option: value
+    argument: value
   directive_option: value
   directive_option: value
 ```
 
-The ```text_parser``` currently supports the following directives:
+The ```text_parser``` currently supports the following top-level directives:
 
 * pattern_match
 * pattern_group
@@ -43,8 +45,17 @@ currently supported.
 * name
 * block
 * loop
+* loop_control
+    * loop_var
 * when
 * register
+* export
+* export_as
+
+Any of the directive options are accepted but in some cases, the option may
+provide no operation.  For instance, when using the ```export_facts```
+directive, the options ```register```, ```export``` and ```export_as``` are all
+ignored.  The module should provide warnings when an option is ignored.
 
 The following sections provide more details about how to use the parser
 directives to parse text into JSON structure.
@@ -56,9 +67,11 @@ configured on any directive.
 ### name
 All entries in the parser file many contain a ```name``` directive.  The
 ```name``` directive can be used to provide an arbitrary description as to the
-purpose of the parser items.
+purpose of the parser items.  The use of ```name``` is optional for all 
+directives.
 
-The use of ```name``` is optional for all directives.
+
+The default value for ```name``` is ```null```
 
 ### register
 The ```register``` directive option can be used same as would be used in an
@@ -68,16 +81,25 @@ the named variable such that it can be retrieved later.
 However, be sure to make note that registered variables are not available
 outside of the parser context.  Any values registered are only availalbe within
 the scope of the parser activities.  If you want to provide values back to the
-playbook, use the [export-facts](#export_facts) directive.
+playbook, you will have to define the [export](#export) option.
+
+
+The default value for ```register``` is ```null```
 
 ### export
-This option will short circuit the export of facts to the playbook.  The
-```export``` option accepts a boolean value and when configured to True, it
-will cause the registered value to be exported to the playbook.  When setting
-```export``` to True, no additional call to [export-facts](#export_facts) is
-required.  
+This option will allow any value to be exported back the calling task as an
+Ansible fact.  The ```export``` option accepts a boolean value that defines if
+the registered fact should be exported to the calling task in the playbook (or
+role) scope.  To export the value, simply set ```export``` to True.  
 
-The default value for ```export``` is False.
+Note this option requires the ```register``` value to be set in some cases and will
+produce a warning message if the ```register``` option is not provided.
+
+The default value for ```export``` is ```False```
+
+### export_as
+TBD
+
 
 ### loop
 Sometimes it is necessary to loop over a directive in order to process values.
@@ -89,6 +111,9 @@ Access to the individual items is the same as it would be for Ansible
 playbooks.  When iterating over a list of items, you can access the individual
 item using the ```{{ item }}``` variable.  When looping over a hash, you can
 access ```{{ item.key }}``` and ```{{ item.value }}```.
+
+### loop_control
+TBD
 
 ### when
 The ```when``` option allows for a conditional to be placed on the directive to
@@ -105,11 +130,6 @@ the ```when``` conditional as such:
     regex: "hostname (.+)"
   when: ansible_network_os == 'ios'
 ```
-
-### block
-The use of ```block``` allows for grouping items together to perform a common
-set of matches.  Typically this directive will be used when you need to iterate
-over a block of text to find multiple matches.  
 
 ## Directives
 The directives perform actions on the contents using regular expressions to
@@ -145,8 +165,12 @@ The following arguments are supported for this directive:
 * template
 
 
+### set_vars
+
+
 ### export_facts
 The ```export_facts``` directive takes an arbitrary set of key / value pairs
 and exposes (returns) them back to the playbook global namespace.  Any key /
 value pairs that are provided in this directive become available on the host.
+
 
