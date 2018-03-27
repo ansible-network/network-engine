@@ -1,5 +1,6 @@
 ---
 - hosts: localhost
-  remote_user: root
+  vars:
+    rolename: "{{ lookup('pipe', 'pwd') | dirname | basename }}"
   roles:
-    - network-engine
+    - "{{ rolename }}"

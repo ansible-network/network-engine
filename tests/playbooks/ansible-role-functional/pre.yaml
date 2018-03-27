@@ -1,0 +1,11 @@
+- hosts: all
+  name: Set up SSH login
+  tasks:
+    - name: Allow ssh login into localhost
+      shell:
+        cmd: |
+          # Allow user to ssh into localhost
+          ssh-keygen -f ~/.ssh/id_rsa -N ""
+          cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+          ssh-keyscan localhost >> ~/.ssh/known_hosts
+          ssh-keyscan 127.0.0.1 >> ~/.ssh/known_hosts
