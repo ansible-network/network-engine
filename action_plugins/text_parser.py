@@ -289,7 +289,7 @@ class ActionModule(ActionBase):
             raise AnsibleError('parser expected %s, got %s' % (network_os, self.ds['ansible_network_os']))
 
     def do_pattern_match(self, regex, contents=None, match_all=None, match_until=None, match_greedy=None):
-        contents = contents or self.template("{{ contents }}", self.ds)
+        contents = self.template(contents, self.ds) or self.template("{{ contents }}", self.ds)
         parser = parser_loader.get('pattern_match', contents)
         return parser.match(regex, match_all, match_until, match_greedy)
 
