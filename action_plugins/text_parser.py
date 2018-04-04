@@ -162,12 +162,7 @@ class ActionModule(ActionBase):
                     elif res and register:
                         self.ds[register] = res
                         if export:
-                            if register:
-                                facts[register] = res
-                            else:
-                                for r in to_list(res):
-                                    for k, v in iteritems(r):
-                                        facts.update({to_text(k): v})
+                            facts[register] = res
 
         result.update({
             'ansible_facts': facts,
