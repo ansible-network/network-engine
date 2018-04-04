@@ -44,8 +44,7 @@ class ParserEngine(object):
 
     def _match(self, contents, pattern):
         match = self.re_search(pattern, contents)
-        if match:
-            return match
+        return match
 
     def _match_greedy(self, contents, start, end=None, match_all=None):
         """ Filter a section of the contents text for matching
@@ -135,7 +134,7 @@ class ParserEngine(object):
         return context_data
 
     def re_search(self, regex, value):
-        obj = {}
+        obj = {'matches': []}
         regex = re.compile(regex, re.M)
         match = regex.search(value)
         if match:
@@ -144,7 +143,7 @@ class ParserEngine(object):
                 for name, index in iteritems(regex.groupindex):
                     obj[name] = items[index - 1]
             obj['matches'] = items
-        return obj or None
+        return obj
 
     def re_matchall(self, regex, value):
         objects = list()
