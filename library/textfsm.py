@@ -49,7 +49,7 @@ options:
     description:
       - The C(name) argument is used to define the top-level fact name to
         hold the output of the parser.  If this argument is not provided,
-        the output from parsing will be added as top level facts.
+        the output from parsing will not be exported.
     required: false
     default: null
 '''

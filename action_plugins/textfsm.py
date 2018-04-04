@@ -61,14 +61,16 @@ class ActionModule(ActionBase):
             except Exception as exc:
                 raise AnsibleError(str(exc))
 
-            facts = {}
+            final_facts = []
             for item in fsm_results:
+                facts = {}
                 facts.update(dict(zip(re_table.header, item)))
+                final_facts.append(facts)
 
             if name:
-                result['ansible_facts'] = {name: facts}
+                result['ansible_facts'] = {name: final_facts}
             else:
-                result['ansible_facts'] = facts
+                result['ansible_facts'] = {}
 
         finally:
             self._remove_tmp_path(self._connection._shell.tmpdir)
