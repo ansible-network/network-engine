@@ -39,7 +39,7 @@ class ActionModule(ActionBase):
             try:
                 filename = self._task.args.get('file')
                 src = self._task.args.get('src')
-                contents = self._task.args['contents']
+                content = self._task.args['content']
                 name = self._task.args.get('name')
             except KeyError as exc:
                 raise AnsibleError('missing required argument: %s' % exc)
@@ -56,7 +56,7 @@ class ActionModule(ActionBase):
 
             try:
                 re_table = textfsm.TextFSM(tmpl)
-                fsm_results = re_table.ParseText(contents)
+                fsm_results = re_table.ParseText(content)
 
             except Exception as exc:
                 raise AnsibleError(str(exc))
