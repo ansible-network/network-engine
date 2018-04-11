@@ -98,8 +98,13 @@ produce a warning message if the ```register``` option is not provided.
 The default value for ```export``` is ```False```
 
 ### export_as
-TBD
+This option will allow value to be exported back in the calling task as an
+Ansible fact in mentioned format. The ```export_as``` option accepts ```dict```,
+```hash```, ```object```, ```list```, ```elements``` that defines the structure
+of the exported value.
 
+Note this option requires the ```register``` value to be set and ```export``` to be
+set as ```true```.
 
 ### loop
 Sometimes it is necessary to loop over a directive in order to process values.
@@ -113,7 +118,22 @@ item using the ```{{ item }}``` variable.  When looping over a hash, you can
 access ```{{ item.key }}``` and ```{{ item.value }}```.
 
 ### loop_control
-TBD
+```loop_control``` option can be used to specify the name of the variable to be
+used for the loop instead of default loop variable ```item```.
+When looping over a hash, you can access {{ foo.key }} and {{ foo.value }} where ```foo```
+is ```loop_var```.
+The general structure of ```loop_control``` is as follow:
+
+```
+- name: User defined variable
+  pattern_match:
+    regex: "^(\\S+)"
+    content: "{{ foo }}"
+  loop: "{{ context }}"
+  loop_control:
+    loop_var: foo
+
+```
 
 ### when
 The ```when``` option allows for a conditional to be placed on the directive to
