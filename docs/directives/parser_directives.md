@@ -1,28 +1,29 @@
-CLI Parser Directives
-=====================
-The ```text_parser``` module is a module that can be used to parse the results of
+# CLI Parser Directives
+
+The `text_parser` module is a module that can be used to parse the results of
 text strings into Ansible facts.  The primary motivation for developing the
-```text_parser``` module is to convert structured ASCII text output (such as
-those returned from network devices) into  JSON data structures sutable to be 
+`text_parser` module is to convert structured ASCII text output (such as
+those returned from network devices) into  JSON data structures suitable to be
 used as host facts.
 
 The parser file format is loosely based on the Ansible playbook directives
 language.  It uses the Ansible directive language to ease the transition from
-writing playbooks to writing parsers.  However, parsers developed using this 
+writing playbooks to writing parsers.  However, parsers developed using this
 module are not written directly into the playbook, but are a separate file
 called from playbooks.  This is done for a variety of reasons but most notably
-to keep separation from the parsing logical and playbook execution. 
+to keep separation from the parsing logical and playbook execution.
 
-The ```text_parser``` works based on a set of directives that perform actions
+The `text_parser` works based on a set of directives that perform actions
 on structured data with the end result being a valid JSON structure that can be
 returned to the Ansible facts system.
 
-## Parser language 
-The parser format uses YAML formatting, providing an ordered list of directives 
-to be performed on the content (provided by the module argument).  The overall 
+## Parser language
+
+The parser format uses YAML formatting, providing an ordered list of directives
+to be performed on the contents (provided by the module argument).  The overall
 general structure of a directive is as follows:
 
-```
+```yaml
 - name: some description name of the task to be performed
   directive:
     argument: value
@@ -32,99 +33,111 @@ general structure of a directive is as follows:
   directive_option: value
 ```
 
-The ```text_parser``` currently supports the following top-level directives:
+The `text_parser` currently supports the following top-level directives:
 
-* pattern_match
-* pattern_group
-* json_template
-* export_facts
+* `pattern_match`
+* `pattern_group`
+* `json_template`
+* `export_facts`
 
 In addition to the directives, the following common directive options are
-currently supported.
+currently supported:
 
-* name
-* block
-* loop
-* loop_control
-    * loop_var
-* when
-* register
-* export
-* export_as
+* `name`
+* `block`
+* `loop`
+* `loop_control`
+
+  * `loop_var`
+
+* `when`
+* `register`
+* `export`
+* `export_as`
 
 Any of the directive options are accepted but in some cases, the option may
-provide no operation.  For instance, when using the ```export_facts```
-directive, the options ```register```, ```export``` and ```export_as``` are all
+provide no operation.  For instance, when using the `export_facts`
+directive, the options `register`, `export` and `export_as` are all
 ignored.  The module should provide warnings when an option is ignored.
 
 The following sections provide more details about how to use the parser
 directives to parse text into JSON structure.
 
 ## Directive Options
+
 This section provides details on the various options that are available to be
 configured on any directive.
 
-### name
-All entries in the parser file many contain a ```name``` directive.  The
-```name``` directive can be used to provide an arbitrary description as to the
-purpose of the parser items.  The use of ```name``` is optional for all 
+### `name`
+
+All entries in the parser file many contain a `name` directive.  The
+`name` directive can be used to provide an arbitrary description as to the
+purpose of the parser items.  The use of `name` is optional for all
 directives.
 
+The default value for `name` is `null`.
 
-The default value for ```name``` is ```null```
+### `register`
 
-### register
-The ```register``` directive option can be used same as would be used in an
+The `register` directive option can be used same as would be used in an
 Ansible playbook.  It will register the results of the directive operation into
-the named variable such that it can be retrieved later.  
+the named variable such that it can be retrieved later.
 
 However, be sure to make note that registered variables are not available
-outside of the parser context.  Any values registered are only availalbe within
+outside of the parser context.  Any values registered are only available within
 the scope of the parser activities.  If you want to provide values back to the
 playbook, you will have to define the [export](#export) option.
 
+The default value for `register` is `null`.
 
-The default value for ```register``` is ```null```
+<a id="export"></a>
 
-### export
+### `export`
+
 This option will allow any value to be exported back the calling task as an
-Ansible fact.  The ```export``` option accepts a boolean value that defines if
+Ansible fact.  The `export` option accepts a boolean value that defines if
 the registered fact should be exported to the calling task in the playbook (or
-role) scope.  To export the value, simply set ```export``` to True.  
+role) scope.  To export the value, simply set `export` to True.
 
-Note this option requires the ```register``` value to be set in some cases and will
-produce a warning message if the ```register``` option is not provided.
+Note this option requires the `register` value to be set in some cases and will
+produce a warning message if the `register` option is not provided.
 
-The default value for ```export``` is ```False```
+The default value for `export` is ``False`.
 
-### export_as
+### `export_as`
+
 This option will allow value to be exported back in the calling task as an
-Ansible fact in mentioned format. The ```export_as``` option accepts ```dict```,
-```hash```, ```object```, ```list```, ```elements``` that defines the structure
-of the exported value.
+Ansible fact in mentioned format. The `export_as` option can be used to define the structure of the exported data, which accepts:
 
-Note this option requires the ```register``` value to be set and ```export``` to be
-set as ```true```.
+* `dict`
+* `hash`
+* `object`
+* `list`
+* `elements` that defines the structure
+
+**Note** this option requires the `register`` value to be set and `export: True`.
 
 ### loop
+
 Sometimes it is necessary to loop over a directive in order to process values.
-Using the ```loop``` option, the parser will iterate over the directive and
-provide each of the values provided by the loop content to the directive for
-processing.  
+Using the `loop` option, the parser will iterate over the directive and
+provide each of the values provided by the loop contents to the directive for
+processing.
 
 Access to the individual items is the same as it would be for Ansible
 playbooks.  When iterating over a list of items, you can access the individual
-item using the ```{{ item }}``` variable.  When looping over a hash, you can
-access ```{{ item.key }}``` and ```{{ item.value }}```.
+item using the `{{ item }}` variable.  When looping over a hash, you can
+access `{{ item.key }}` and `{{ item.value }}`.
 
-### loop_control
-```loop_control``` option can be used to specify the name of the variable to be
-used for the loop instead of default loop variable ```item```.
-When looping over a hash, you can access {{ foo.key }} and {{ foo.value }} where ```foo```
-is ```loop_var```.
-The general structure of ```loop_control``` is as follow:
+### `loop_control`
 
-```
+`loop_control` option can be used to specify the name of the variable to be
+used for the loop instead of default loop variable `item`.
+When looping over a hash, you can access `{{ foo.key }}` and `{{ foo.value }}` where ``foo`
+is `loop_var`.
+The general structure of `loop_control` is as follow:
+
+```yaml
 - name: User defined variable
   pattern_match:
     regex: "^(\\S+)"
@@ -135,16 +148,17 @@ The general structure of ```loop_control``` is as follow:
 
 ```
 
-### when
-The ```when``` option allows for a conditional to be placed on the directive to
-decided if it is executed or not.  The ```when``` option operates the same as
+### `when`
+
+The `when` option allows for a conditional to be placed on the directive to
+decided if it is executed or not.  The `when` option operates the same as
 it would in an Ansible playbook.
 
 For example, let's assume we only want to match perform the match statement
-when the value of ```ansible_network_os``` is set to ``ios```.  We would apply
-the ```when``` conditional as such:
+when the value of `ansible_network_os` is set to `ios`.  We would apply
+the `when` conditional as such:
 
-```
+```yaml
 - name: conditionally matched var
   pattern_match:
     regex: "hostname (.+)"
@@ -152,44 +166,51 @@ the ```when``` conditional as such:
 ```
 
 ## Directives
-The directives perform actions on the content using regular expressions to
-extract various values.  Each directive provides some additional arguments that
-can be used to perform its operation.  
 
-### pattern_match
-The ```pattern_match``` directive is used to extract one or more values from
+The directives perform actions on the contents using regular expressions to
+extract various values.  Each directive provides some additional arguments that
+can be used to perform its operation.
+
+### `pattern_match`
+
+The `pattern_match` directive is used to extract one or more values from
 the structured ASCII text based on regular expressions.
 
 The following arguments are supported for this directive:
 
-* regex
-* content
-* match_all
-* match_greedy
+* `regex`
+* `contents`
+* `match_all`
+* `match_greedy`
 
+### `pattern_group`
 
-### pattern_group
-The ```pattern_group``` directive can be used to group multiple
-```pattern_match``` results together.  
-
+The `pattern_group` directive can be used to group multiple
+`pattern_match` results together.
 
 The following arguments are supported for this directive:
 
-### json_template
-The ```json_template``` directive will create a JSON data structure based on a
+* `json_template`
+* `set_vars`
+* `export_facts`
+
+### `json_template`
+
+The `json_template` directive will create a JSON data structure based on a
 template.  This directive will allow you to template out a multi-level JSON
-blob.  
+blob.
 
 The following arguments are supported for this directive:
 
-* template
+* `template`
 
+### `set_vars`
 
-### set_vars
+TBD
 
+### `export_facts`
 
-### export_facts
-The ```export_facts``` directive takes an arbitrary set of key / value pairs
+The `export_facts` directive takes an arbitrary set of key / value pairs
 and exposes (returns) them back to the playbook global namespace.  Any key /
 value pairs that are provided in this directive become available on the host.
 

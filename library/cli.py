@@ -66,7 +66,9 @@ RETURN = """
 stdout:
   description: returns the output from the command
   returned: always
+  type: dict
 json:
   description: the output converted from json to a hash
   returned: always
+  type: dict
 """
