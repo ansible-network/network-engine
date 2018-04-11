@@ -2,7 +2,7 @@
 - name: show_interface test
   textfsm:
     file: "{{ parser_path }}/show_interfaces.yaml"
-    contents: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
+    content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
     name: interface_facts
   register: result
   vars:
@@ -27,7 +27,7 @@
 - name: show_version test
   textfsm:
     file: "{{ parser_path }}/show_version.yaml"
-    contents: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
+    content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
     name: system_facts
   register: result
   vars:

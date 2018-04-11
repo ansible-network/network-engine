@@ -17,25 +17,25 @@
     - name: match name
       pattern_match:
         regex: "^(\\S+)"
-        contents: "{{ item }}"
+        content: "{{ item }}"
       register: name
 
     - name: match hardware
       pattern_match:
         regex: "Hardware is (\\S+),"
-        contents: "{{ item }}"
+        content: "{{ item }}"
       register: type
 
     - name: match mtu
       pattern_match:
         regex: "MTU (\\d+)"
-        contents: "{{ item }}"
+        content: "{{ item }}"
       register: mtu
 
     - name: match description
       pattern_match:
         regex: "Description: (.*)"
-        contents: "{{ item }}"
+        content: "{{ item }}"
       register: description
   loop: "{{ section }}"
   register: interfaces

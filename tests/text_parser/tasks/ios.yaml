@@ -1,7 +1,7 @@
 - name: "text_parser test for {{ ansible_network_os }} show_interface"
   text_parser:
     file: "{{ parser_path }}/show_interfaces.yaml"
-    contents: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
+    content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
   register: result
   vars:
     - ansible_network_os: ios
@@ -19,7 +19,7 @@
 - name: "text_parser test for {{ ansible_network_os }} show_version"
   text_parser:
     file: "{{ parser_path }}/show_version.yaml"
-    contents: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
+    content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
   register: result
   vars:
     - ansible_network_os: ios
