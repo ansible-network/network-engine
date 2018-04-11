@@ -33,8 +33,6 @@ role_name
 
 If you add any new Role for test, make sure to include the role in `test.yml`:
 
-`test.yml`
-
 ```yaml
 
   roles:
@@ -43,15 +41,13 @@ If you add any new Role for test, make sure to include the role in `test.yml`:
     - $role_name
 ```
 
-## Add new platforms tests for existing roles
+## Add new platforms tests to an existing roles
 
 Create directory with the `platform_name` in `output` and `parsers` directories
 which will contain output and parser files of the platform.
 
 Add corresponding playbook with the `platform_name` in `tasks/$platform_name.yaml`
-and make an entry in `tasks/main.yaml`:
-
-`tasks/main.yaml`
+and add an entry in `tasks/main.yaml`:
 
 ```yaml
 - name: platform_name text_parser test

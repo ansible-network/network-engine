@@ -19,10 +19,10 @@ that need to be done.
 module can be contributed directly to Ansible core, distributed through Ansible
 Galaxy or added to this role.
 
-2) Optional Step: If adding the module code directly to this role, add the module
+2) (Optional) If adding the module code directly to this role, add the module
 to `library/`
 
-3) Optional Steps: If the new platform module is distributed through another Galaxy
+3) (Optional) If the new platform module is distributed through another Galaxy
 role, please update [README](README.md) Dependencies section to include the
 name of the Galaxy role that includes the module.
 
@@ -80,5 +80,4 @@ issue](../../issues)
 ## Contact
 
 * [#ansible-network IRC channel](https://webchat.freenode.net/?channels=ansible-network) on Freenode.net
-
 
