@@ -19,23 +19,21 @@ that need to be done.
 module can be contributed directly to Ansible core, distributed through Ansible
 Galaxy or added to this role.
 
-2) Optional Steps
-
-a) If adding the module code directly to this role, add the module
+2) Optional Step: If adding the module code directly to this role, add the module
 to `library/`
 
-b) If the new platform module is distributed through another Galaxy
+3) Optional Steps: If the new platform module is distributed through another Galaxy
 role, please update [README](README.md) Dependencies section to include the
 name of the Galaxy role that includes the module.
 
-3) Once the module has been created, the add a new task in `tasks/` for the
+4) Once the module has been created, the add a new task in `tasks/` for the
 specific platform to be supported.  Use any of the existing platform
 implementations as a guide.
 
-4) (Optional) If a configuration parameter is not supported, then the
+5) (Optional) If a configuration parameter is not supported, then the
 implementation in tasks should detect that and provide a warning message.
 
-5) Update the `meta/main.yaml` file to add the newly provided platform to
+6) Update the `meta/main.yaml` file to add the newly provided platform to
 the `platforms` meta data.
 
 ### Adding platform specific arguments
@@ -70,7 +68,7 @@ create a file in the docs directory using GitHub Markdown.  The file name
 should be the platform name.
 
 For instance, let's assume we want to create implementation nodes for a
-fictitious platform call `foo`.  Create a new file in docs/ called `foo.md` and
+fictitious platform call `foo`.  Create a new file `docs/foo.md` and
 then add a link to [README](README.md) pointing to `docs/foo.md` in the `PLATFORM
 NOTES` section.
 
