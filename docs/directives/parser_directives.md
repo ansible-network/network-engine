@@ -179,7 +179,7 @@ the structured ASCII text based on regular expressions.
 The following arguments are supported for this directive:
 
 * `regex`
-* `contents`
+* `content`
 * `match_all`
 * `match_greedy`
 
