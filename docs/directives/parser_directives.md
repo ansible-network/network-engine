@@ -20,7 +20,7 @@ returned to the Ansible facts system.
 ## Parser language
 
 The parser format uses YAML formatting, providing an ordered list of directives
-to be performed on the contents (provided by the module argument).  The overall
+to be performed on the content (provided by the module argument).  The overall
 general structure of a directive is as follows:
 
 ```yaml
@@ -121,7 +121,7 @@ Ansible fact in mentioned format. The `export_as` option can be used to define t
 
 Sometimes it is necessary to loop over a directive in order to process values.
 Using the `loop` option, the parser will iterate over the directive and
-provide each of the values provided by the loop contents to the directive for
+provide each of the values provided by the loop content to the directive for
 processing.
 
 Access to the individual items is the same as it would be for Ansible
@@ -167,7 +167,7 @@ the `when` conditional as such:
 
 ## Directives
 
-The directives perform actions on the contents using regular expressions to
+The directives perform actions on the content using regular expressions to
 extract various values.  Each directive provides some additional arguments that
 can be used to perform its operation.
 
