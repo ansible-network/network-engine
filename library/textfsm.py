@@ -35,15 +35,15 @@ options:
     default: null
   src:
     description:
-      - The C(src) argument can be used to load the contents of a TextFSM
+      - The C(src) argument can be used to load the content of a TextFSM
         parser file.  This argument allow the TextFSM parser to be loaded
         from an external source.  See EXAMPLES.
     required: false
     default: null
-  contents:
+  content:
     description:
       - The output of the command to parse using the rules in the TextFSM
-        file.  The contents should be a text string.
+        file.  The content should be a text string.
     required: true
   name:
     description:
@@ -55,19 +55,19 @@ options:
 '''
 
 EXAMPLES = '''
-- name: parse the contents of a command
+- name: parse the content of a command
   textfsm:
-    parser: files/parsers/show_interface.yaml
-    contents: "{{ lookup('file', 'output/show_interfaces.txt') }}"
+    file: files/parsers/show_interface.yaml
+    content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 
 - name: store returned facts into a key call output
   textfsm:
-    parser: files/parsers/show_interface.yaml
-    contents: "{{ lookup('file', 'output/show_interfaces.txt') }}"
+    file: files/parsers/show_interface.yaml
+    content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
     name: output
 
 - name: read the parser from an url
   textfsm:
     src: "{{ lookup('url', 'http://server/path/to/parser') }}"
-    contents: "{{ lookup('file', 'output/show_interfaces.txt') }}"
+    content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 '''

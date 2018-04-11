@@ -27,7 +27,7 @@ options:
   dir:
     description:
       - The path to the directory that contains the parsers.  The module will
-        load all parsers found in this directory and pass the contents through
+        load all parsers found in this directory and pass the content through
         the them.  This argument is mutually exclusive with C(file).
     required: false
     default: null
@@ -38,9 +38,9 @@ options:
         This argument is mutually exclusive with C(dir).
     required: false
     default: null
-  contents:
+  content:
     description:
-      - The text contents to pass to the parser engine.  This argument provides
+      - The text content to pass to the parser engine.  This argument provides
         the input to the text parser for generating the JSON data.
     required: true
 author:
@@ -49,6 +49,6 @@ author:
 
 EXAMPLES = '''
 - text_parser:
-    parser: files/parsers/show_interface.yaml
-    contents: "{{ lookup('file', 'output/show_interfaces.txt') }}"
+    file: files/parsers/show_interface.yaml
+    content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 '''

@@ -19,37 +19,37 @@ class ParserEngine(object):
         self.text = text
 
     def match(self, regex, match_all=None, match_until=None, match_greedy=None):
-        """ Perform the regular expression match against the contents
+        """ Perform the regular expression match against the content
 
         :args regex: The regular expression pattern to use
-        :args contents: The contents to run the pattern against
+        :args content: The content to run the pattern against
         :args match_all: Specifies if all matches of pattern should be returned
             or just the first occurence
 
         :returns: list object of matches or None if there where no matches found
         """
-        contents = self.text
+        content = self.text
 
         if match_greedy:
-            return self._match_greedy(contents, regex, end=match_until, match_all=match_all)
+            return self._match_greedy(content, regex, end=match_until, match_all=match_all)
         elif match_all:
-            return self._match_all(contents, regex)
+            return self._match_all(content, regex)
         else:
-            return self._match(contents, regex)
+            return self._match(content, regex)
 
-    def _match_all(self, contents, pattern):
-        match = self.re_matchall(pattern, contents)
+    def _match_all(self, content, pattern):
+        match = self.re_matchall(pattern, content)
         if match:
             return match
 
-    def _match(self, contents, pattern):
-        match = self.re_search(pattern, contents)
+    def _match(self, content, pattern):
+        match = self.re_search(pattern, content)
         return match
 
-    def _match_greedy(self, contents, start, end=None, match_all=None):
-        """ Filter a section of the contents text for matching
+    def _match_greedy(self, content, start, end=None, match_all=None):
+        """ Filter a section of the content text for matching
 
-        :args contents: The contents to match against
+        :args content: The content to match against
         :args start: The start of the section data
         :args end: The end of the section data
         :args match_all: Whether or not to match all of the instances
@@ -60,25 +60,25 @@ class ParserEngine(object):
 
         if match_all:
             while True:
-                section_range = self._get_section_range(contents, start, end)
+                section_range = self._get_section_range(content, start, end)
                 if not section_range:
                     break
 
                 sidx, eidx = section_range
 
                 if eidx is not None:
-                    section_data.append(contents[sidx: eidx])
-                    contents = contents[eidx:]
+                    section_data.append(content[sidx: eidx])
+                    content = content[eidx:]
                 else:
-                    section_data.append(contents[sidx:])
+                    section_data.append(content[sidx:])
                     break
 
         else:
-            section_data.append(contents)
+            section_data.append(content)
 
         return section_data
 
-    def _get_section_range(self, contents, start, end=None):
+    def _get_section_range(self, content, start, end=None):
 
         context_start_re = re.compile(start, re.M)
         if end:
@@ -88,14 +88,14 @@ class ParserEngine(object):
             context_end_re = context_start_re
             include_end = False
 
-        context_start = re.search(context_start_re, contents)
+        context_start = re.search(context_start_re, content)
         if not context_start:
             return
 
         string_start = context_start.start()
         end = context_start.end() + 1
 
-        context_end = re.search(context_end_re, contents[end:])
+        context_end = re.search(context_end_re, content[end:])
         if not context_end:
             return (string_start, None)
 
@@ -106,7 +106,7 @@ class ParserEngine(object):
 
         return (string_start, string_end)
 
-    def _get_context_data(self, entry, contents):
+    def _get_context_data(self, entry, content):
         name = entry['name']
 
         context = entry.get('context', {})
@@ -114,7 +114,7 @@ class ParserEngine(object):
 
         if context:
             while True:
-                context_range = self._get_context_range(name, context, contents)
+                context_range = self._get_context_range(name, context, content)
 
                 if not context_range:
                     break
@@ -122,14 +122,14 @@ class ParserEngine(object):
                 start, end = context_range
 
                 if end is not None:
-                    context_data.append(contents[start: end])
-                    contents = contents[end:]
+                    context_data.append(content[start: end])
+                    content = content[end:]
                 else:
-                    context_data.append(contents[start:])
+                    context_data.append(content[start:])
                     break
 
         else:
-            context_data.append(contents)
+            context_data.append(content)
 
         return context_data
 

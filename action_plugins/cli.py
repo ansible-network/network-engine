@@ -55,7 +55,7 @@ class ActionModule(ActionBase):
             new_task = self._task.copy()
             new_task.args = {
                 'file': parser,
-                'contents': (json_data or output)
+                'content': (json_data or output)
             }
 
             kwargs = {

@@ -54,7 +54,7 @@ class ActionModule(ActionBase):
         try:
             source_dir = self._task.args.get('dir')
             source_file = self._task.args.get('file')
-            contents = self._task.args['contents']
+            content = self._task.args['content']
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
@@ -78,7 +78,7 @@ class ActionModule(ActionBase):
 
             tasks = self._loader.load_from_file(src)
 
-            self.ds = {'contents': contents}
+            self.ds = {'content': content}
             self.ds.update(task_vars)
 
             for task in tasks:
@@ -288,9 +288,9 @@ class ActionModule(ActionBase):
         if network_os not in (None, self.ds['ansible_network_os']):
             raise AnsibleError('parser expected %s, got %s' % (network_os, self.ds['ansible_network_os']))
 
-    def do_pattern_match(self, regex, contents=None, match_all=None, match_until=None, match_greedy=None):
-        contents = self.template(contents, self.ds) or self.template("{{ contents }}", self.ds)
-        parser = parser_loader.get('pattern_match', contents)
+    def do_pattern_match(self, regex, content=None, match_all=None, match_until=None, match_greedy=None):
+        content = self.template(content, self.ds) or self.template("{{ content }}", self.ds)
+        parser = parser_loader.get('pattern_match', content)
         return parser.match(regex, match_all, match_until, match_greedy)
 
     def do_json_template(self, template):
