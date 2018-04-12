@@ -1,18 +1,16 @@
-Test Guide
-==========
-The tests in network-engine are role based where the entrypoint is ```tests/test.yml```.
-The tests for textfsm and text_parser are run against localhost.
+# Test Guide
 
+The tests in network-engine are role based where the entry point is `tests/test.yml`.
+The tests for `textfsm` and `text_parser` are run against `localhost`.
 
-### How to run tests locally:
+## How to run tests locally
 
 ```
 cd tests/
 ansible-playbook -i inventory test.yml
 ```
 
-
-### Role Structure:
+## Role Structure
 
 ```
 role_name
@@ -33,10 +31,9 @@ role_name
         └── main.yaml
 ```
 
-If you add any new Role for test, make sure to include the role in ```test.yml```:
+If you add any new Role for test, make sure to include the role in `test.yml`:
 
-```
-# test.yml
+```yaml
 
   roles:
     - text_parser
@@ -44,17 +41,15 @@ If you add any new Role for test, make sure to include the role in ```test.yml``
     - $role_name
 ```
 
+## Add new platforms tests to an existing roles
 
-### Add new platforms tests for existing roles:
-
-Create directory with the platform_name in ```output``` and ```parsers``` directories
+Create directory with the `platform_name` in `output` and `parsers` directories
 which will contain output and parser files of the platform.
 
-Add corresponding playbook with the platform_name in ```tasks/$platform_name.yaml```
-and make an entry in ```tasks/main.yaml```:
+Add corresponding playbook with the `platform_name` in `tasks/$platform_name.yaml`
+and add an entry in `tasks/main.yaml`:
 
-```
-# tasks/main.yaml
+```yaml
 - name: platform_name text_parser test
   import_tasks: platform_name.yaml
 ```

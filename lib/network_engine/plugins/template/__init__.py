@@ -4,6 +4,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 import collections
 
 from ansible.module_utils.six import iteritems, string_types
@@ -59,7 +62,7 @@ class TemplateBase(object):
         return value
 
     def _update(self, d, u):
-        for k, v in u.iteritems():
+        for k, v in iteritems(u):
             if isinstance(v, collections.Mapping):
                 d[k] = self._update(d.get(k, {}), v)
             else:
