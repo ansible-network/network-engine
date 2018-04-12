@@ -18,7 +18,7 @@ module: get_config
 short_description: Retrieve the running configuration from the remote device
 description:
   - This module will connect to the remote network device and collect the
-    current active (running) configuration.  This module also supportes
+    current active (running) configuration.  This module also supports
     retrieving the active startup configuration by using the C(source)
     argument.
 version_added: "2.5"
@@ -27,7 +27,6 @@ options:
     description:
       - Specifies the configuration to return from the network device.  This
         argument accepts one of two values, either C(running) or C(startup).
-    required: false
     default: running
     choices:
       - running
@@ -36,7 +35,6 @@ options:
     description:
       - Changes the format of the returned configuration from the remote device
         to another format.  The value for this argument is device dependent.
-    required: false
     default: null
 author:
   - Ansible Network Team

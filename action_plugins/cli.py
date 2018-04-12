@@ -77,7 +77,7 @@ class ActionModule(ActionBase):
 
         # this is needed so the strategy plugin can identify the connection as
         # a persistent connection and track it, otherwise the connection will
-        # not be closed at th end of the play
+        # not be closed at the end of the play
         socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
         self._task.args['_ansible_socket'] = socket_path
 
