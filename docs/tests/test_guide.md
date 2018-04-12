@@ -24,8 +24,8 @@ role_name
 │       └── show_version.txt
 ├── parsers
 │   └── platform_name
-│       ├── show_interfaces.yaml
-│       └── show_version.yaml
+│       ├── show_interfaces
+│       └── show_version
 └── tasks
     ├── platform_name.yaml
         └── main.yaml
