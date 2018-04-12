@@ -1,6 +1,6 @@
 ---
 - hosts: localhost
-  #  remote_user: root
+  remote_user: root
   roles:
     - { role: 'text_parser', tags: 'text_parser' }
     - { role: 'textfsm', tags: 'textfsm' }
