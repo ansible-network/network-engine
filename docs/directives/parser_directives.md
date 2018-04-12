@@ -206,7 +206,8 @@ The following arguments are supported for this directive:
 
 ### `set_vars`
 
-TBD
+The `set_vars` directive will set variables to the values like key / value pairs
+and returns dictionary.
 
 ### `export_facts`
 
