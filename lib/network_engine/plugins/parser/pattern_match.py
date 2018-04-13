@@ -27,7 +27,7 @@ class ParserEngine(object):
         :args regex: The regular expression pattern to use
         :args content: The content to run the pattern against
         :args match_all: Specifies if all matches of pattern should be returned
-            or just the first occurence
+            or just the first occurrence
 
         :returns: list object of matches or None if there where no matches found
         """

@@ -31,14 +31,12 @@ options:
       - Path to the TextFSM parser to use to parse the output from a command.
         The C(file) argument accepts either a relative or absolute path
         to the TextFSM file.
-    required: false
     default: null
   src:
     description:
       - The C(src) argument can be used to load the content of a TextFSM
         parser file.  This argument allow the TextFSM parser to be loaded
         from an external source.  See EXAMPLES.
-    required: false
     default: null
   content:
     description:
@@ -50,7 +48,6 @@ options:
       - The C(name) argument is used to define the top-level fact name to
         hold the output of the parser.  If this argument is not provided,
         the output from parsing will not be exported.
-    required: false
     default: null
 '''
 

@@ -29,14 +29,12 @@ options:
       - The path to the directory that contains the parsers.  The module will
         load all parsers found in this directory and pass the content through
         the them.  This argument is mutually exclusive with C(file).
-    required: false
     default: null
   file:
     description:
       - The path to the parser to load from disk on the Ansible
         controller.  This can be either the absolute path or relative path.
         This argument is mutually exclusive with C(dir).
-    required: false
     default: null
   content:
     description:

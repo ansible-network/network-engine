@@ -28,7 +28,7 @@ options:
     description:
       - The command to be executed on the remote node.  The value for this
         argument will be passed unchanged to the network device and the
-        the ouput returned.
+        output returned.
     required: yes
     default: null
   parser:
@@ -37,14 +37,12 @@ options:
         generate Ansible facts.  If this argument is specified, the output
         from the command will be parsed based on the rules in the
         specified parser.
-    required: no
     default: null
   engine:
     description:
-      - Defines the engine to use when parsing the output.  This arugment
+      - Defines the engine to use when parsing the output.  This argument
         accepts one of two valid values, c(text_parser) or c(textfsm).  The
-        default is C(text_parser)
-    required: no
+        default is C(text_parser).
     default: text_parser
     choices:
       - text_parser
