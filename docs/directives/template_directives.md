@@ -64,7 +64,7 @@ combine them.  The `include` directive will instruct the current template
 to load another template file and process it.
 
 The `include` directive also supports variable substitution for the
-provided file name and can be processed with the `loop` and ``when`
+provided file name and can be processed with the `loop` and `when`
 directives.
 
 ## `when`
