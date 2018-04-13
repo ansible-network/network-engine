@@ -28,7 +28,7 @@ role_name
 │       └── show_version.yaml
 └── tasks
     ├── platform_name.yaml
-        └── main.yaml
+    └── main.yaml
 ```
 
 If you add any new Role for test, make sure to include the role in `test.yml`:
