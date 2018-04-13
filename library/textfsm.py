@@ -42,6 +42,7 @@ options:
     description:
       - The output of the command to parse using the rules in the TextFSM
         file.  The content should be a text string.
+    required: true
   name:
     description:
       - The C(name) argument is used to define the top-level fact name to
