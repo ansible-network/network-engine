@@ -59,7 +59,7 @@ EXAMPLES = """
 - name: return parsed command output
   cli:
     command: show version
-    parser: parsers/show_version
+    parser: parsers/show_version.yaml
 """
 
 RETURN = """
