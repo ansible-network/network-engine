@@ -102,7 +102,7 @@ role) scope.  To export the value, simply set `export` to True.
 Note this option requires the `register` value to be set in some cases and will
 produce a warning message if the `register` option is not provided.
 
-The default value for `export` is ``False`.
+The default value for `export` is `False`.
 
 ### `export_as`
 
@@ -115,7 +115,7 @@ Ansible fact in mentioned format. The `export_as` option can be used to define t
 * `list`
 * `elements` that defines the structure
 
-**Note** this option requires the `register`` value to be set and `export: True`.
+**Note** this option requires the `register` value to be set and `export: True`.
 
 ### loop
 
@@ -133,7 +133,7 @@ access `{{ item.key }}` and `{{ item.value }}`.
 
 `loop_control` option can be used to specify the name of the variable to be
 used for the loop instead of default loop variable `item`.
-When looping over a hash, you can access `{{ foo.key }}` and `{{ foo.value }}` where ``foo`
+When looping over a hash, you can access `{{ foo.key }}` and `{{ foo.value }}` where `foo`
 is `loop_var`.
 The general structure of `loop_control` is as follow:
 
