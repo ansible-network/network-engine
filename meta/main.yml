@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: Ansible Network
+  author: ansible-network
   description: This role is developed and maintained by the Ansible Network team
   company: Red Hat
 
