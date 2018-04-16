@@ -224,7 +224,7 @@ class ActionModule(ActionBase):
 
             when = task.pop('when', None)
             if when is not None:
-                if not self._check_conditional(when):
+                if not self._check_conditional(when, self.ds):
                     warning('skipping task due to conditional check failure')
                     continue
 
