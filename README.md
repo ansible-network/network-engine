@@ -47,7 +47,9 @@ The following is a list of modules that are provided by this role.
 
 The following is a list of plugins that are provided by this role.
 
-None
+### Lookup
+
+* `network_template` [[source]](lookup_plugins/network_template.py)
 
 ## Dependencies
 
