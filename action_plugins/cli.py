@@ -40,8 +40,7 @@ options:
   engine:
     description:
       - Defines the engine to use when parsing the output.  This argument
-        accepts one of two valid values, c(text_parser) or c(textfsm).  The
-        default is C(text_parser).
+        accepts one of two valid values, C(text_parser) or C(textfsm).
     default: text_parser
     choices:
       - text_parser
