@@ -5,7 +5,7 @@ major_changes:
 new_modules:
 - NEW ``text_parser`` Parses ASCII text into JSON facts using text_parser engine.
   Provides a rules base text parser that is closely modeled after the Ansible
-  playbook language.  This parser will iterate of the rules and parse the
+  playbook language. This parser will iterate of the rules and parse the
   output of structured ASCII text into a JSON data structure that can be
   added to the inventory host facts.
 - NEW ``textfsm`` Parses ASCII text into JSON facts using textfsm engine.
