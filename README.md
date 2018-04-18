@@ -49,7 +49,8 @@ The following is a list of plugins that are provided by this role.
 
 ### Lookup
 
-* `json_template` [[source]](lookup_plugins/json_template.py)
+* `json_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/json_template.py)
+* `network_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/network_template.py)
 
 ## Dependencies
 
