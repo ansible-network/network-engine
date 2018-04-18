@@ -39,7 +39,9 @@ The following is a list of modules that are provided by this role.
 
 The following is a list of plugins that are provided by this role.
 
-None
+### Lookup
+
+* `config_template` [[source]](lookup_plugins/config_template.py)
 
 ## Dependencies
 
