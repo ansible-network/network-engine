@@ -46,6 +46,11 @@ options:
     required: false
     default: no
     choices: ['yes', 'no']
+  format:
+    description:
+      - Changes the format of the returned configuration from the remote device
+        to another format.  The value for this argument is device dependent.
+    default: null
 author:
   - Ansible Network Team
 """
@@ -80,6 +85,7 @@ def main():
 
         # config operations
         backup=dict(type='bool', default=False),
+        format=dict()
     )
 
     module = AnsibleModule(argument_spec=argument_spec,
@@ -87,6 +93,7 @@ def main():
 
     source = module.params['source']
     config = module.params['config']
+    format = module.params['format']
 
     conn = Connection(module._socket_path)
     capability = json.loads(conn.get_capabilities())
