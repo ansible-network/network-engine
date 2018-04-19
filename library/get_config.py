@@ -50,6 +50,11 @@ EXAMPLES = """
 - name: return the current device config
   get_config:
     source: running
+
+- name: return the current interface config using flags
+  get_config:
+    flags: "| section interface"
+    source: running
 """
 
 RETURN = """
