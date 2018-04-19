@@ -18,10 +18,10 @@ module: textfsm
 author: Ansible Network Team
 short_description: Parses text into JSON facts using TextFSM
 description:
-  - Provides a rules base text parser that is closely modeled after the Ansible
-    playbook language.  This parser will iterate of the rules and parse the
-    output of structured ASCII text into a JSON data structure that can be
-    added to the inventory host facts.
+  - Provides textfsm rule based templates to parse data from text.
+    The template acting as parser will iterate of the rules and parse
+    the output of structured ASCII text into a JSON data structure
+    that can be added to the inventory host facts.
 requirements:
   - textfsm
 version_added: "2.5"
