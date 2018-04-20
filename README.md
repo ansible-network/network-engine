@@ -59,7 +59,9 @@ The following is a list of modules that are provided by this role, which include
 
 The following is a list of plugins that are provided by this role.
 
-None
+### Lookup
+
+* `json_template` [[source]](lookup_plugins/json_template.py)
 
 ## Dependencies
 
