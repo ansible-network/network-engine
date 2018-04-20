@@ -10,4 +10,3 @@ new_modules:
   added to the inventory host facts.
 - NEW ``textfsm`` Parses ASCII text into JSON facts using textfsm engine.
   Provides textfsm rules-based templates to parse data from text. The template acting as parser will iterate of the rules and parse the output of structured ASCII text into a JSON data structure that can be added to the inventory host facts.
-
