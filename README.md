@@ -9,9 +9,16 @@ Any open bugs and/or feature requests are tracked in [GitHub issues](../../issue
 
 Interested in contributing to this role, please see [CONTRIBUTING](CONTRIBUTING.md)
 
+## Documentation
+
+* User guide: [[Parser Directives]](docs/directives/parser_directives.md)
+* Development guide: [[How to test]](docs/tests/test_guide.md)
+
+For module documentation see the [modules](#modules) section.
+
 ## Requirements
 
-None
+* Ansible 2.5.0 (or higher)
 
 ## Tasks
 
@@ -30,8 +37,7 @@ None
 
 The following is a list of modules that are provided by this role.
 
-* `cli` [[source]](library/cli.py)
-* `get_config` [[source]](library/get_config.py)
+* `cli` [[source]](action_plugin/cli.py)
 * `text_parser` [[source]](library/text_parser.py)
 * `textfsm` [[source]](library/textfsm.py)
 
