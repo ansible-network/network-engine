@@ -38,7 +38,6 @@ None
 The following is a list of modules that are provided by this role.
 
 * `cli` [[source]](action_plugin/cli.py)
-* `get_config` [[source]](library/get_config.py)
 * `text_parser` [[source]](library/text_parser.py)
 * `textfsm` [[source]](library/textfsm.py)
 
