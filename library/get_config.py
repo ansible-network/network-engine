@@ -31,6 +31,12 @@ options:
     choices:
       - running
       - startup
+  flags:
+    description:
+      - Identifies the particular section of configuration that should be fetched from
+        remote host
+    type: list
+    aliases: ['filter']
   format:
     description:
       - Changes the format of the returned configuration from the remote device
@@ -43,6 +49,11 @@ author:
 EXAMPLES = """
 - name: return the current device config
   get_config:
+    source: running
+
+- name: return the current interface config using flags
+  get_config:
+    flags: "| section interface"
     source: running
 """
 
@@ -62,6 +73,7 @@ def main():
     """
     argument_spec = dict(
         source=dict(default='running', choices=['running', 'startup']),
+        flags=dict(type='list', aliases=['filter']),
         format=dict()
     )
 
@@ -70,9 +82,10 @@ def main():
 
     source = module.params['source']
     format = module.params['format']
+    flags = module.params['flags']
 
     connection = Connection(module._socket_path)
-    output = connection.get_config(source=source, format=format)
+    output = connection.get_config(source=source, format=format, flags=flags)
 
     result = {
         'changed': False,
