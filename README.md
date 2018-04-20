@@ -12,7 +12,6 @@ Interested in contributing to this role, please see [CONTRIBUTING](CONTRIBUTING.
 ## Documentation
 
 * User guide: [[Parser Directives]](docs/directives/parser_directives.md)
-* User guide: [[Template Directives]](docs/directives/template_directives.md)
 * Development guide: [[How to test]](docs/tests/test_guide.md)
 
 For module documentation see the [modules](#modules) section.
