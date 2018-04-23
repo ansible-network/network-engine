@@ -9,7 +9,7 @@ To use this role, install it from [Galaxy](https://galaxy.ansible.com/ansible-ne
 
 Any open bugs and/or feature requests are tracked in [GitHub issues](https://github.com/ansible-network/network-engine/issues).
 
-Interested in contributing to this role, please see [CONTRIBUTING](https://github.com/ansible-network/network-engine/blob/devel/CONTRIBUTING.md)
+Interested in contributing to this role? Check out [CONTRIBUTING](https://github.com/ansible-network/network-engine/blob/devel/CONTRIBUTING.md) before submitting a pull request.
 
 ## Documentation
 
