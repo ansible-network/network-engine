@@ -22,13 +22,14 @@ galaxy_info:
   #github_branch:
 
   platforms:
-    all
+    - all
 
   galaxy_tags:
-    - ansible-network
+    - ansible
+    - network
     - networking
+    - engine
     - core
-    - supported
     - cli
 
 dependencies: []
