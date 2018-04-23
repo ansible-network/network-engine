@@ -12,11 +12,11 @@ author: Ansible Network
 version_added: "2.5"
 short_description: retrieve and template device configuration
 description:
-  - This lookup plugin returns the content of a JSON file in JSON format.
-    configuration.
+  - This plugin lookups the content(key-value pair) of a JSON file
+    and returns network configuration in JSON format.
 options:
   _terms:
-    description: list of files for lookup
+    description: File for lookup
 """
 
 EXAMPLES = """
@@ -26,16 +26,16 @@ EXAMPLES = """
 
 RETURN = """
 _raw:
-   description: JSON file(s) content
+   description: JSON file content
 """
 
 import json
+import os
+import sys
 
 from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.plugins.lookup import LookupBase, display
-from ansible.module_utils._text import to_bytes
-from ansible.module_utils.network.common.utils import to_list
-
+from ansible.module_utils._text import to_bytes, to_text
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
 from network_engine.plugins import template_loader
@@ -44,8 +44,10 @@ class LookupModule(LookupBase):
 
     def run(self, terms, variables, **kwargs):
 
-        self.ds = variables.copy()
         ret = list()
+
+        self.ds = variables.copy()
+        self.template = template_loader.get('json_template', self._templar)
 
         display.debug("File lookup term: %s" % terms[0])
 
@@ -54,8 +56,9 @@ class LookupModule(LookupBase):
         try:
             if lookupfile:
                 with open(to_bytes(lookupfile, errors='surrogate_or_strict'), 'rb') as f:
-                    json_data = to_text(f.read(), errors='surrogate_or_strict')
-                    ret.append(json.load(f))
+                    json_data = list()
+                    json_data.append(json.load(f))
+                    ret.append(self.template.run(json_data, self.ds))
             else:
                 raise AnsibleParserError()
         except AnsibleParserError:
