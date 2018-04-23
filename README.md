@@ -5,16 +5,18 @@ modules and plugins that are common to all Ansible Network roles.  All of
 the artifacts in this role can be used independent of the platform that is
 being managed.
 
-Any open bugs and/or feature requests are tracked in [GitHub issues](../../issues).
+To use this role, install it from [Galaxy](https://galaxy.ansible.com/ansible-network/network-engine/). To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/).
 
-Interested in contributing to this role, please see [CONTRIBUTING](CONTRIBUTING.md)
+Any open bugs and/or feature requests are tracked in [GitHub issues](https://github.com/ansible-network/network-engine/issues).
+
+Interested in contributing to this role, please see [CONTRIBUTING](https://github.com/ansible-network/network-engine/blob/devel/CONTRIBUTING.md)
 
 ## Documentation
 
-* User guide: [[Parser Directives]](docs/directives/parser_directives.md)
-* Development guide: [[How to test]](docs/tests/test_guide.md)
+* User guide: [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
+* Development guide: [How to test](https://github.com/ansible-network/network-engine/blob/devel/docs/tests/test_guide.md)
 
-For module documentation see the [modules](#modules) section.
+For module documentation see the [modules](#modules) section below.
 
 ## Requirements
 
@@ -37,9 +39,9 @@ None
 
 The following is a list of modules that are provided by this role.
 
-* `cli` [[source]](action_plugin/cli.py)
-* `text_parser` [[source]](library/text_parser.py)
-* `textfsm` [[source]](library/textfsm.py)
+* `cli` [source](https://github.com/ansible-network/network-engine/blob/devel/action_plugins/cli.py)
+* `text_parser` [source](https://github.com/ansible-network/network-engine/blob/devel/library/text_parser.py)
+* `textfsm` [source](https://github.com/ansible-network/network-engine/blob/devel/library/textfsm.py)
 
 ## Plugins
 
