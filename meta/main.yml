@@ -21,6 +21,11 @@ galaxy_info:
   # (usually master) will be used.
   #github_branch:
 
+  platforms:
+    - name: network
+      versions:
+        - all
+
   galaxy_tags:
     - ansible
     - network
