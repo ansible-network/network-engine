@@ -4,3 +4,4 @@
   roles:
     - { role: 'text_parser', tags: 'text_parser' }
     - { role: 'textfsm', tags: 'textfsm' }
+    - { role: 'json_template', tags: 'json_template' }
