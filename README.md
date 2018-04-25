@@ -1,6 +1,5 @@
 # network-engine
 
-![Ansible Role](https://img.shields.io/ansible/role/d/25206.svg)
 ![Ansible Role](https://img.shields.io/ansible/role/25206.svg)
 
 This role provides the foundation for building network roles by providing
