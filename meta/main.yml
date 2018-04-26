@@ -22,6 +22,9 @@ galaxy_info:
   #github_branch:
 
   platforms:
+    - name: GenericLinux
+      versions:
+        - all
     - name: network
       versions:
         - all
