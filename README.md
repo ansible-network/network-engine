@@ -1,6 +1,6 @@
 # network-engine
 
-![Ansible Role](https://img.shields.io/ansible/role/25206.svg)
+[![network-engine Ansible Galaxy Role](https://img.shields.io/ansible/role/25206.svg)](https://galaxy.ansible.com/ansible-network/network-engine/)
 
 This role provides the foundation for building network roles by providing
 modules and plugins that are common to all Ansible Network roles.  All of
