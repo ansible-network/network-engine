@@ -1,20 +1,20 @@
 # textfsm
 
-The module `textfsm` provides [textfsm](https://github.com/google/textfsm/wiki/TextFSM) rule
-based templates to parse data from text and returns JSON facts as `ansible_facts`.
-The document describes how to use textfsm module.
+The module [textfsm](https://github.com/ansible-network/network-engine/blob/devel/library/textfsm.py)
+provides [textfsm](https://github.com/google/textfsm/wiki/TextFSM) rule based templates to parse data
+from text and returns JSON facts as `ansible_facts`. The document describes how to use textfsm module.
 
 ## Playbook
 
 ```yaml
 
 ---
-# The following task runs on localhost.
+# The following task runs on Ansible controller localhost.
 
 - hosts: localhost
 
   tasks:
-  - name: Genereta interface facts as JSON
+  - name: Generate interface facts as JSON
     textfsm:
       file: "parsers/ios/show_interfaces"
       content: "{{ lookup('file', 'output/ios/show_interfaces.txt') }}"
@@ -40,6 +40,7 @@ The document describes how to use textfsm module.
 ```
 
 ## Parser
+
 The `file` parameter for `textfsm` contains the standard textfsm rules.
 
 The following describes how a parser file looks like:

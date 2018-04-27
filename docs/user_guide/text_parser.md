@@ -1,21 +1,21 @@
 # text_paser
 
-The module `text_parser` provides rule based text parser that is closely modeled
-after the Ansible playbook language. This parser will iterate of the rules and
-parse the output of structured ASCII text into a JSON data structure that can be
-added to the inventory host facts.
+The module [text_parser](https://github.com/ansible-network/network-engine/blob/devel/library/text_parser.py)
+provides rule based text parser that is closely modeled after the Ansible playbook language.
+This parser will iterate of the rules and parse the output of structured ASCII text into a
+JSON data structure that can be added to the inventory host facts.
 
 ## Playbook
 
 ```yaml
 
 ---
-# The following task runs on localhost.
+# The following task runs on Ansible controller localhost.
 
 - hosts: localhost
 
   tasks:
-  - name: Genereta interface facts as JSON
+  - name: Generate interface facts as JSON
     text_parser:
       file: "parsers/ios/show_interfaces.yaml"
       content: "{{ lookup('file', 'output/ios/show_interfaces.txt') }}"
@@ -44,10 +44,11 @@ added to the inventory host facts.
 ```
 
 ## Parser
+
 The `file` parameter for `text_parser` contains rules to parse text.
 The rules in parser file uses directives written closely to Ansible language.
 
-Directives documentation is available [Here](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md).
+Directives documentation is available in [parser_directives.md](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md).
 
 The following describes how a parser file looks like:
 
