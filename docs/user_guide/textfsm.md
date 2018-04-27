@@ -1,4 +1,4 @@
-# Textfsm
+# textfsm
 
 The module `textfsm` provides [textfsm](https://github.com/google/textfsm/wiki/TextFSM) rule
 based templates to parse data from text and returns JSON facts as `ansible_facts`.
@@ -34,13 +34,14 @@ The document describes how to use textfsm module.
   - name: Generate interface facts as JSON
     textfsm:
       file: "parsers/ios/show_interfaces"
-      content: ios_interface_output
+      content: ios_interface_output['stdout'][0]
       name: interface_facts
 
 ```
 
 ## Parser
 The `file` parameter for `textfsm` contains the standard textfsm rules.
+
 The following describes how a parser file looks like:
 
 `parsers/ios/show_interfaces`

@@ -1,4 +1,4 @@
-# Text_paser
+# text_paser
 
 The module `text_parser` provides rule based text parser that is closely modeled
 after the Ansible playbook language. This parser will iterate of the rules and
@@ -39,14 +39,16 @@ added to the inventory host facts.
   - name: Generate interface facts as JSON
     text_parser:
       file: "parsers/ios/show_interfaces.yaml"
-      content: ios_interface_output
+      content: ios_interface_output['stdout'][0]
 
 ```
 
 ## Parser
 The `file` parameter for `text_parser` contains rules to parse text.
 The rules in parser file uses directives written closely to Ansible language.
-Directives documentation is available [Here](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
+
+Directives documentation is available [Here](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md).
+
 The following describes how a parser file looks like:
 
 `parser/ios/show_interfaces.yaml`
