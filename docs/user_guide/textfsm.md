@@ -39,10 +39,13 @@ The document describes how to use textfsm module.
 
 ```
 
-## textfsm template
-The `file` parameter for textfsm is the standard template that is used for textfsm
+## Parser
+The `file` parameter for `textfsm` contains the standard textfsm rules.
+The following describes how a parser file looks like:
 
+`parsers/ios/show_interfaces`
 ```
+
 Value Required name (\S+)
 Value type ([\w ]+)
 Value description (.*)
@@ -56,7 +59,7 @@ Start
 
 ```
 
-## textfsm content
+## Content
 
-The `content` paramter for textfsm should have the ASCII text output of commands run on
+The `content` paramter for `textfsm` should have the ASCII text output of commands run on
 network devices.
