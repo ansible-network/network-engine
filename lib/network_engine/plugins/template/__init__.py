@@ -68,3 +68,7 @@ class TemplateBase(object):
             else:
                 d[k] = v
         return d
+
+    def _check_conditional(self, when, variables):
+        conditional = "{%% if %s %%}True{%% else %%}False{%% endif %%}"
+        return self.template(conditional % when, variables)
