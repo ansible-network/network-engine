@@ -24,10 +24,10 @@ class TemplateEngine(TemplateBase):
             key = self.template(item['key'], variables)
 
             # FIXME moving to the plugin system breaks this
-            # when = item.get('when')
-            # if when is not None:
-            #     if not self._check_conditional(when, variables):
-            #         continue
+            when = item.get('when')
+            if when is not None:
+                if not self._check_conditional(when, variables):
+                    continue
 
             if 'value' in item:
                 value = item.get('value')
