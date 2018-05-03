@@ -4,3 +4,5 @@
   roles:
     - { role: 'text_parser', tags: 'text_parser' }
     - { role: 'textfsm', tags: 'textfsm' }
+    - { role: 'yaml_parser', tags: 'yaml_parser' }
+    - { role: 'textfsm_parser', tags: 'textfsm_parser' }
