@@ -49,6 +49,10 @@ class ActionModule(ActionBase):
     VALID_EXPORT_AS = ('list', 'elements', 'dict', 'object', 'hash')
 
     def run(self, tmp=None, task_vars=None):
+        display.deprecated(msg='the `text_parser` module has been deprecated, please use `yaml_parser` instead',
+                           version='2.6',
+                           removed=False)
+
         if task_vars is None:
             task_vars = dict()
 

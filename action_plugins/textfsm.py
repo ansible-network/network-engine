@@ -25,6 +25,9 @@ class ActionModule(ActionBase):
 
     def run(self, tmp=None, task_vars=None):
         ''' handler for textfsm action '''
+        display.deprecated(msg='the `textfsm` module has been deprecated, please use `textfsm_parser` instead',
+                           version='2.6',
+                           removed=False)
 
         if task_vars is None:
             task_vars = dict()
