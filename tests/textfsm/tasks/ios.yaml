@@ -1,5 +1,5 @@
 ---
-- name: show_interface test
+- name: textfsm test for {{ ansible_network_os }} show_interfaces
   textfsm:
     file: "{{ parser_path }}/show_interfaces"
     content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
@@ -24,7 +24,7 @@
       - "result.ansible_facts.interface_facts[2]['description'] == 'test-interface-2'"
       - "result.ansible_facts.interface_facts[2]['type'] == 'iGbE'"
 
-- name: show_version test
+- name: textfsm test for {{ ansible_network_os }} show_version
   textfsm:
     file: "{{ parser_path }}/show_version"
     content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"

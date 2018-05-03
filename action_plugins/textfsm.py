@@ -15,6 +15,12 @@ from ansible.plugins.action import ActionBase
 from ansible.errors import AnsibleError
 
 try:
+    from __main__ import display
+except ImportError:
+    from ansible.utils.display import Display
+    display = Display()
+
+try:
     import textfsm
     HAS_TEXTFSM = True
 except ImportError:
