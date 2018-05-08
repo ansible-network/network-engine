@@ -55,17 +55,6 @@ def interface_range(interface):
     return ['%s%s' % (prefix, index) for index in indicies]
 
 
-def vlan_compress(vlan):
-    if not isinstance(vlan, list):
-        raise AnsibleFilterError('value must be of type list, got %s' % type(vlan))
-
-   index = vlan
-   for item in index:
-       
-
-
-
-
 
 def vlan_expand(vlan):
     if not isinstance(vlan, string_types):
@@ -101,6 +90,6 @@ class FilterModule(object):
         return {
             'interface_split': interface_split,
             'interface_range': interface_range,
-            'vlan_compress': vlan_compress,
+            #'vlan_compress': vlan_compress,
             'vlan_expand': vlan_expand
         }
