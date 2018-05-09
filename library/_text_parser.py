@@ -26,7 +26,7 @@ version_added: "2.5"
 deprecated:
   removed_in: "2.6"
   why: Replaced for meaningful terminology.
-  alternative: Use M(yaml_parser) instead.
+  alternative: Use M(command_parser) instead.
 options:
   dir:
     description:
