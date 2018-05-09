@@ -1,8 +1,8 @@
 ---
 - name: textfsm_parser test for {{ ansible_network_os }} show_interfaces
   textfsm_parser:
-    parser_template: "{{ parser_path }}/show_interfaces"
-    command_output: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
+    file: "{{ parser_path }}/show_interfaces"
+    content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
     name: interface_facts
   register: result
   vars:
@@ -26,8 +26,8 @@
 
 - name: textfsm_parser test for {{ ansible_network_os }} show_version
   textfsm_parser:
-    parser_template: "{{ parser_path }}/show_version"
-    command_output: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
+    file: "{{ parser_path }}/show_version"
+    content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
     name: system_facts
   register: result
   vars:

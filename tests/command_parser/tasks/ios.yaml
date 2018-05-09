@@ -1,7 +1,7 @@
-- name: "yaml_parser test for {{ ansible_network_os }} show_interface"
-  yaml_parser:
-    parser_template: "{{ parser_path }}/show_interfaces.yaml"
-    command_output: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
+- name: "command_parser test for {{ ansible_network_os }} show_interface"
+  command_parser:
+    file: "{{ parser_path }}/show_interfaces.yaml"
+    content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
   register: result
   vars:
     - ansible_network_os: ios
@@ -16,10 +16,10 @@
       - "result.ansible_facts.interface_facts[1]['GigabitEthernet0/1']['config']['name'] == 'GigabitEthernet0/1'"
       - "result.ansible_facts.interface_facts[1]['GigabitEthernet0/1']['config']['description'] == 'test-interface'"
 
-- name: "yaml_parser test for {{ ansible_network_os }} show_version"
-  yaml_parser:
-    parser_template: "{{ parser_path }}/show_version.yaml"
-    command_output: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
+- name: "command_parser test for {{ ansible_network_os }} show_version"
+  command_parser:
+    file: "{{ parser_path }}/show_version.yaml"
+    content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
   register: result
   vars:
     - ansible_network_os: ios
