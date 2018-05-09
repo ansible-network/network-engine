@@ -49,10 +49,6 @@ class ActionModule(ActionBase):
     VALID_EXPORT_AS = ('list', 'elements', 'dict', 'object', 'hash')
 
     def run(self, tmp=None, task_vars=None):
-        display.deprecated(msg='the `text_parser` module has been deprecated, please use `command_parser` instead',
-                           version='2.6',
-                           removed=False)
-
         if task_vars is None:
             task_vars = dict()
 
@@ -80,9 +76,8 @@ class ActionModule(ActionBase):
         self.template = template_loader.get('json_template', self._templar)
 
         for src in sources:
-            src_path = os.path.expanduser(src)
-            if not os.path.exists(src_path) and not os.path.isfile(src_path):
-                raise AnsibleError("src [%s] is either missing or invalid" % src_path)
+            if not os.path.exists(src) and not os.path.isfile(src):
+                raise AnsibleError("src [%s] is either missing or invalid" % src)
 
             tasks = self._loader.load_from_file(src)
 
@@ -110,7 +105,7 @@ class ActionModule(ActionBase):
                 when = task.pop('when', None)
                 if when is not None:
                     if not self._check_conditional(when, self.ds):
-                        display.vvv('text_parser: skipping task [%s] due to conditional check' % name)
+                        display.vvv('command_parser: skipping task [%s] due to conditional check' % name)
                         continue
 
                 loop = task.pop('loop', None)
@@ -119,7 +114,7 @@ class ActionModule(ActionBase):
                 if loop is not None:
                     loop = self.template(loop, self.ds)
                     if not loop:
-                        display.vvv('text_parser: loop option was defined but no loop data found')
+                        display.vvv('command_parser: loop option was defined but no loop data found')
                     res = list()
 
                     if loop:
@@ -223,7 +218,7 @@ class ActionModule(ActionBase):
             task = entry.copy()
 
             name = task.pop('name', None)
-            display.vvv("text_parser: starting pattern_match [%s] in pattern_group" % name)
+            display.vvv("command_parser: starting pattern_match [%s] in pattern_group" % name)
 
             register = task.pop('register', None)
 
@@ -238,7 +233,7 @@ class ActionModule(ActionBase):
                 loop = self.template(loop, self.ds)
 
             loop_var = task.pop('loop_control', {}).get('loop_var') or 'item'
-            display.vvvv('text_parser: loop_var is %s' % loop_var)
+            display.vvvv('command_parser: loop_var is %s' % loop_var)
 
             if not set(task).issubset(('pattern_group', 'pattern_match')):
                 raise AnsibleError('invalid directive specified')
@@ -299,7 +294,7 @@ class ActionModule(ActionBase):
 
     def do_parser_metadata(self, version=None, command=None, network_os=None):
         if version:
-            display.vvv('text_parser: using parser version %s' % version)
+            display.vvv('command_parser: using parser version %s' % version)
 
         if network_os not in (None, self.ds['ansible_network_os']):
             raise AnsibleError('parser expected %s, got %s' % (network_os, self.ds['ansible_network_os']))

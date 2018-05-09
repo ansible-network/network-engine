@@ -40,11 +40,11 @@ options:
   engine:
     description:
       - Defines the engine to use when parsing the output.  This argument
-        accepts one of two valid values, C(yaml_parser) or C(textfsm_parser).
+        accepts one of two valid values, C(command_parser) or C(textfsm_parser).
         C(text_parser) and C(textfsm) are deprecated. Will be removed in Ansible version 2.6.
-    default: yaml_parser
+    default: command_parser
     choices:
-      - yaml_parser
+      - command_parser
       - textfsm_parser
 """
 
@@ -98,7 +98,7 @@ class ActionModule(ActionBase):
         try:
             command = self._task.args['command']
             parser = self._task.args.get('parser')
-            engine = self._task.args.get('engine', 'yaml_parser')
+            engine = self._task.args.get('engine', 'command_parser')
         except KeyError as exc:
             raise AnsibleError(to_text(exc))
 
@@ -121,11 +121,11 @@ class ActionModule(ActionBase):
         result['json'] = json_data
 
         if parser:
-            if engine not in ('yaml_parser', 'textfsm_parser', 'text_parser', 'textfsm'):
+            if engine not in ('command_parser', 'textfsm_parser', 'text_parser', 'textfsm'):
                 raise AnsibleError('missing or invalid value for argument engine')
 
             if engine == 'text_parser':
-                display.deprecated(msg='the `text_parser` module has been deprecated, please use `yaml_parser` instead',
+                display.deprecated(msg='the `text_parser` module has been deprecated, please use `command_parser` instead',
                                    version='2.6',
                                    removed=False)
             if engine == 'textfsm':
