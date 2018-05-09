@@ -1,8 +1,8 @@
 # CLI Parser Directives
 
-The `text_parser` module is a module that can be used to parse the results of
+The `command_parser` module is a module that can be used to parse the results of
 text strings into Ansible facts.  The primary motivation for developing the
-`text_parser` module is to convert structured ASCII text output (such as
+`command_parser` module is to convert structured ASCII text output (such as
 those returned from network devices) into  JSON data structures suitable to be
 used as host facts.
 
@@ -13,7 +13,7 @@ module are not written directly into the playbook, but are a separate file
 called from playbooks.  This is done for a variety of reasons but most notably
 to keep separation from the parsing logical and playbook execution.
 
-The `text_parser` works based on a set of directives that perform actions
+The `command_parser` works based on a set of directives that perform actions
 on structured data with the end result being a valid JSON structure that can be
 returned to the Ansible facts system.
 
@@ -33,7 +33,7 @@ general structure of a directive is as follows:
   directive_option: value
 ```
 
-The `text_parser` currently supports the following top-level directives:
+The `command_parser` currently supports the following top-level directives:
 
 * `pattern_match`
 * `pattern_group`
@@ -214,5 +214,4 @@ and returns dictionary.
 The `export_facts` directive takes an arbitrary set of key / value pairs
 and exposes (returns) them back to the playbook global namespace.  Any key /
 value pairs that are provided in this directive become available on the host.
-
 
