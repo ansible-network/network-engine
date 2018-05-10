@@ -9,7 +9,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import StringIO
+from ansible.module_utils.six import StringIO
 
 from ansible.plugins.action import ActionBase
 from ansible.errors import AnsibleError
@@ -50,7 +50,7 @@ class ActionModule(ActionBase):
             if filename:
                 tmpl = open(filename)
             else:
-                tmpl = StringIO.StringIO()
+                tmpl = StringIO()
                 tmpl.write(src.strip())
                 tmpl.seek(0)
 
