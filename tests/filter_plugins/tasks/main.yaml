@@ -1,3 +1,6 @@
 ---
 - name: vlan_expand test
   import_tasks: vlan_expand.yaml
+
+- name: vlan_compress test
+  import_tasks: vlan_compress.yaml

@@ -54,11 +54,24 @@ def interface_range(interface):
     return ['%s%s' % (prefix, index) for index in indicies]
 
 
+def _gen_ranges(vlan):
+    s = e = None
+    for i in sorted(vlan):
+        if s is None:
+            s = e = i
+        elif i == e or i == e + 1:
+            e = i
+        else:
+            yield (s, e)
+            s = e = i
+    if s is not None:
+        yield (s, e)
+
 def vlan_compress(vlan):
     if not isinstance(vlan, list):
         raise AnsibleFilterError('value must be of type list, got %s' % type(vlan))
 
-    for 
+    return (','.join(['%d' % s if s == e else '%d-%d' % (s, e) for (s, e) in _gen_ranges(vlan)]))
 
 
 def vlan_expand(vlan):
