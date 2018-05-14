@@ -51,6 +51,6 @@ author:
 
 EXAMPLES = '''
 - text_parser:
-    file: files/parsers/show_interface.yaml
+    file: files/parser_templates/show_interface.yaml
     content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 '''

@@ -22,7 +22,7 @@ role_name
 │   └── platform_name
 │       ├── show_interfaces.txt
 │       └── show_version.txt
-├── parsers
+├── parser_templates
 │   └── platform_name
 │       ├── show_interfaces.yaml
 │       └── show_version.yaml

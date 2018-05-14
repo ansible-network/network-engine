@@ -56,7 +56,7 @@ EXAMPLES = """
 - name: return parsed command output
   cli:
     command: show version
-    parser: parsers/show_version.yaml
+    parser: parser_templates/show_version.yaml
 """
 
 RETURN = """
