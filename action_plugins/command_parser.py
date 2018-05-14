@@ -76,8 +76,9 @@ class ActionModule(ActionBase):
         self.template = template_loader.get('json_template', self._templar)
 
         for src in sources:
-            if not os.path.exists(src) and not os.path.isfile(src):
-                raise AnsibleError("src [%s] is either missing or invalid" % src)
+            src_path = os.path.expanduser(src)
+            if not os.path.exists(src_path) and not os.path.isfile(src_path):
+                raise AnsibleError("src [%s] is either missing or invalid" % src_path)
 
             tasks = self._loader.load_from_file(src)
 
