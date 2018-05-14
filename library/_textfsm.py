@@ -25,6 +25,10 @@ description:
 requirements:
   - textfsm
 version_added: "2.5"
+deprecated:
+  removed_in: "2.6"
+  why: Replaced for meaningful terminology.
+  alternative: Use M(textfsm_parser) instead.
 options:
   file:
     description:
@@ -54,12 +58,12 @@ options:
 EXAMPLES = '''
 - name: parse the content of a command
   textfsm:
-    file: files/parsers/show_interface.yaml
+    file: files/parser_templates/show_interface.yaml
     content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 
 - name: store returned facts into a key call output
   textfsm:
-    file: files/parsers/show_interface.yaml
+    file: files/parser_templates/show_interface.yaml
     content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
     name: output
 

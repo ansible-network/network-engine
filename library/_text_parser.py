@@ -23,6 +23,10 @@ description:
     output of structured ASCII text into a JSON data structure that can be
     added to the inventory host facts.
 version_added: "2.5"
+deprecated:
+  removed_in: "2.6"
+  why: Replaced for meaningful terminology.
+  alternative: Use M(command_parser) instead.
 options:
   dir:
     description:
@@ -47,6 +51,6 @@ author:
 
 EXAMPLES = '''
 - text_parser:
-    file: files/parsers/show_interface.yaml
+    file: files/parser_templates/show_interface.yaml
     content: "{{ lookup('file', 'output/show_interfaces.txt') }}"
 '''

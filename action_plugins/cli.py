@@ -40,11 +40,12 @@ options:
   engine:
     description:
       - Defines the engine to use when parsing the output.  This argument
-        accepts one of two valid values, C(text_parser) or C(textfsm).
-    default: text_parser
+        accepts one of two valid values, C(command_parser) or C(textfsm_parser).
+        C(text_parser) and C(textfsm) are deprecated. Will be removed in Ansible version 2.6.
+    default: command_parser
     choices:
-      - text_parser
-      - textfsm
+      - command_parser
+      - textfsm_parser
 """
 
 EXAMPLES = """
@@ -55,7 +56,7 @@ EXAMPLES = """
 - name: return parsed command output
   cli:
     command: show version
-    parser: parsers/show_version.yaml
+    parser: parser_templates/show_version.yaml
 """
 
 RETURN = """
@@ -76,6 +77,12 @@ from ansible.module_utils.connection import Connection, ConnectionError
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
 
+try:
+    from __main__ import display
+except ImportError:
+    from ansible.utils.display import Display
+    display = Display()
+
 
 class ActionModule(ActionBase):
 
@@ -91,7 +98,7 @@ class ActionModule(ActionBase):
         try:
             command = self._task.args['command']
             parser = self._task.args.get('parser')
-            engine = self._task.args.get('engine', 'text_parser')
+            engine = self._task.args.get('engine', 'command_parser')
         except KeyError as exc:
             raise AnsibleError(to_text(exc))
 
@@ -114,8 +121,17 @@ class ActionModule(ActionBase):
         result['json'] = json_data
 
         if parser:
-            if engine not in ('text_parser', 'textfsm'):
+            if engine not in ('command_parser', 'textfsm_parser', 'text_parser', 'textfsm'):
                 raise AnsibleError('missing or invalid value for argument engine')
+
+            if engine == 'text_parser':
+                display.deprecated(msg='the `text_parser` module has been deprecated, please use `command_parser` instead',
+                                   version='2.6',
+                                   removed=False)
+            if engine == 'textfsm':
+                display.deprecated(msg='the `textfsm` module has been deprecated, please use `textfsm_parser` instead',
+                                   version='2.6',
+                                   removed=False)
 
             new_task = self._task.copy()
             new_task.args = {

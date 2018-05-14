@@ -1,6 +1,6 @@
 ---
-- name: textfsm test for {{ ansible_network_os }} show_interfaces
-  textfsm:
+- name: textfsm_parser test for {{ ansible_network_os }} show_interfaces
+  textfsm_parser:
     file: "{{ parser_path }}/show_interfaces"
     content: "{{ lookup('file', '{{ output_path }}/show_interfaces.txt') }}"
     name: interface_facts
@@ -24,8 +24,8 @@
       - "result.ansible_facts.interface_facts[2]['description'] == 'test-interface-2'"
       - "result.ansible_facts.interface_facts[2]['type'] == 'iGbE'"
 
-- name: textfsm test for {{ ansible_network_os }} show_version
-  textfsm:
+- name: textfsm_parser test for {{ ansible_network_os }} show_version
+  textfsm_parser:
     file: "{{ parser_path }}/show_version"
     content: "{{ lookup('file', '{{ output_path }}/show_version.txt') }}"
     name: system_facts

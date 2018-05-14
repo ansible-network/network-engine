@@ -9,70 +9,46 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-from ansible.module_utils.six import StringIO
-
 from ansible.plugins.action import ActionBase
-from ansible.errors import AnsibleError
 
 try:
-    import textfsm
-    HAS_TEXTFSM = True
+    from __main__ import display
 except ImportError:
-    HAS_TEXTFSM = False
+    from ansible.utils.display import Display
+    display = Display()
 
 
 class ActionModule(ActionBase):
 
     def run(self, tmp=None, task_vars=None):
         ''' handler for textfsm action '''
+        display.deprecated(msg='the `textfsm` module has been deprecated, please use `textfsm_parser` instead',
+                           version='2.6',
+                           removed=False)
 
         if task_vars is None:
             task_vars = dict()
 
-        result = super(ActionModule, self).run(tmp, task_vars)
         del tmp  # tmp no longer has any effect
 
-        try:
-            if not HAS_TEXTFSM:
-                raise AnsibleError('textfsm engine requires the TextFSM library to be installed')
+        new_task = self._task.copy()
+        new_task.args = {
+            'file': self._task.args.get('file'),
+            'src': self._task.args.get('src'),
+            'content': self._task.args['content'],
+            'name': self._task.args.get('name')
+        }
 
-            try:
-                filename = self._task.args.get('file')
-                src = self._task.args.get('src')
-                content = self._task.args['content']
-                name = self._task.args.get('name')
-            except KeyError as exc:
-                raise AnsibleError('missing required argument: %s' % exc)
+        kwargs = {
+            'task': new_task,
+            'connection': self._connection,
+            'play_context': self._play_context,
+            'loader': self._loader,
+            'templar': self._templar,
+            'shared_loader_obj': self._shared_loader_obj
+        }
 
-            if src and filename:
-                raise AnsibleError('`src` and `file` are mutually exclusive arguments')
-
-            if filename:
-                tmpl = open(filename)
-            else:
-                tmpl = StringIO()
-                tmpl.write(src.strip())
-                tmpl.seek(0)
-
-            try:
-                re_table = textfsm.TextFSM(tmpl)
-                fsm_results = re_table.ParseText(content)
-
-            except Exception as exc:
-                raise AnsibleError(str(exc))
-
-            final_facts = []
-            for item in fsm_results:
-                facts = {}
-                facts.update(dict(zip(re_table.header, item)))
-                final_facts.append(facts)
-
-            if name:
-                result['ansible_facts'] = {name: final_facts}
-            else:
-                result['ansible_facts'] = {}
-
-        finally:
-            self._remove_tmp_path(self._connection._shell.tmpdir)
+        textfsm_action = self._shared_loader_obj.action_loader.get('textfsm_parser', **kwargs)
+        result = textfsm_action.run(task_vars=task_vars)
 
         return result
