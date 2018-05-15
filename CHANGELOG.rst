@@ -2,8 +2,8 @@
 Ansible Network: network-engine
 ===============================
 
-2.5.0
-=====
+v2.5.0
+======
 
 Major Changes
 -------------
@@ -16,7 +16,7 @@ Major Changes
 New Modules
 -----------
 
-- NEW ``text_parser`` Parses ASCII text into JSON facts using text_parser engine. Provides a rules-based text parser that is closely modeled after the Ansible playbook language. This parser will iterate over the rules and parse the output of structured ASCII text into a JSON data structure that can be added to the inventory host facts.
+- NEW ``text_parser`` Parses ASCII text into JSON facts using text_parser engine and YAML-formatted input. Provides a rules-based text parser that is closely modeled after the Ansible playbook language. This parser will iterate over the rules and parse the output of structured ASCII text into a JSON data structure that can be added to the inventory host facts.
 
-- NEW ``textfsm`` Parses ASCII text into JSON facts using textfsm engine. Provides textfsm rules-based templates to parse data from text. The template acting as parser will iterate of the rules and parse the output of structured ASCII text into a JSON data structure that can be added to the inventory host facts.
+- NEW ``textfsm`` Parses ASCII text into JSON facts using textfsm engine and Google TextFSM-formatted input. Provides textfsm rules-based templates to parse data from text. The template acting as parser will iterate of the rules and parse the output of structured ASCII text into a JSON data structure that can be added to the inventory host facts.
 
