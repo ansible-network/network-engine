@@ -66,6 +66,9 @@ class ActionModule(ActionBase):
         elif source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
+        if not isinstance(content, string_types):
+            return {'failed': True, 'msg': '`content` must be of type str, got %s' % type(content)}
+
         if source_dir:
             sources = self.get_files(to_list(source_dir))
         else:
