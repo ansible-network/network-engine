@@ -2,8 +2,29 @@
 Ansible Network: network-engine
 ===============================
 
+.. _Ansible Network: network-engine_v2.5.1:
+
+v2.5.1
+======
+
+.. _Ansible Network: network-engine_v2.5.1_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix command_parser Absolute path with tilde in src should work (https://github.com/ansible-network/network-engine/pull/58)
+
+- Fix content mush only accepts string type (https://github.com/ansible-network/network-engine/pull/72)
+
+- Fix StringIO to work with Python3 in addition to Python2 (https://github.com/ansible-network/network-engine/pull/53)
+
+
+.. _Ansible Network: network-engine_v2.5.0:
+
 v2.5.0
 ======
+
+.. _Ansible Network: network-engine_v2.5.0_Major Changes:
 
 Major Changes
 -------------
@@ -12,6 +33,8 @@ Major Changes
 
 - This role provides the foundation for building network roles by providing modules and plugins that are common to all Ansible Network roles. All of the artifacts in this role can be used independent of the platform that is being managed.
 
+
+.. _Ansible Network: network-engine_v2.5.0_New Modules:
 
 New Modules
 -----------
