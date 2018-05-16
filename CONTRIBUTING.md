@@ -7,7 +7,7 @@ role.
 
 ## Contributing
 
-There are many ways you can contribute to this role.  Adding new artefacts such
+There are many ways you can contribute to this role.  Adding new artifacts such
 as modules and plugins, testing and/or reviewing and updating documentation.
 
 ### Adding support for a new platform

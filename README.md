@@ -3,11 +3,15 @@
 [![network-engine Ansible Galaxy Role](https://img.shields.io/ansible/role/25206.svg)](https://galaxy.ansible.com/ansible-network/network-engine/)
 
 This role provides the foundation for building network roles by providing
-modules and plugins that are common to all Ansible Network roles.  All of
-the artifacts in this role can be used independent of the platform that is
-being managed.
+modules and plugins that are common to all Ansible Network roles. The role
+is platform-agnostic - all of the artifacts in this role can be used on any
+Ansible-managed network platform.
 
-To use this role, install it from [Galaxy](https://galaxy.ansible.com/ansible-network/network-engine/). To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/).
+To install this role: `ansible-galaxy install ansible-network.network-engine`.
+To see the version of this role you currently have installed: `ansible-galaxy list`, then find `network-engine` in the results. 
+To ensure you have the latest version available: `ansible-galaxy install -f ansible-network.network-engine`.
+To use this role, follow the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md).
+To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/). 
 
 Any open bugs and/or feature requests are tracked in [GitHub issues](https://github.com/ansible-network/network-engine/issues).
 
@@ -15,7 +19,9 @@ Interested in contributing to this role? Check out [CONTRIBUTING](https://github
 
 ## Documentation
 
-* User guide: [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
+* User guide:
+    - [How to use](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md)
+    - [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
 * Development guide: [How to test](https://github.com/ansible-network/network-engine/blob/devel/docs/tests/test_guide.md)
 
 For module documentation see the [modules](#modules) section below.
@@ -42,8 +48,8 @@ None
 The following is a list of modules that are provided by this role, which include documentation & examples:
 
 * `cli` [source](https://github.com/ansible-network/network-engine/blob/devel/action_plugins/cli.py)
-* `text_parser` [source](https://github.com/ansible-network/network-engine/blob/devel/library/text_parser.py)
-* `textfsm` [source](https://github.com/ansible-network/network-engine/blob/devel/library/textfsm.py)
+* `command_parser` [source](https://github.com/ansible-network/network-engine/blob/devel/library/command_parser.py)
+* `textfsm_parser` [source](https://github.com/ansible-network/network-engine/blob/devel/library/textfsm_parser.py)
 
 ## Plugins
 

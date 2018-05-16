@@ -18,6 +18,25 @@ Bugfixes
 
 - Fix StringIO to work with Python3 in addition to Python2 (https://github.com/ansible-network/network-engine/pull/53)
 
+.. _Ansible Network: network-engine_v2.5.1_Deprecated Features:
+
+Deprecated Features
+-------------------
+
+- Module ``text_parser`` renamed to ``command_parser``; original name deprecated; legacy use supported; will be removed in 2.6.0.
+
+- Module ``textfsm`` renamed to ``textfsm_parser``; original name deprecated; legacy use supported; will be removed in 2.6.0.
+
+
+.. _Ansible Network: network-engine_v2.5.1_New Modules:
+
+New Modules
+-----------
+
+- New module ``command_parser`` (renamed from ``text_parser``)
+
+- New module ``textfsm_parser`` (renamed from ``textfsm``)
+
 
 .. _Ansible Network: network-engine_v2.5.0:
 
