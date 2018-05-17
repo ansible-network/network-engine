@@ -18,3 +18,4 @@ sections:
 - ['new_modules', 'New Modules']
 - ['bugfixes', 'Bugfixes']
 - ['known_issues', 'Known Issues']
+- ['docs', 'Documentation Updates']

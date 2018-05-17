@@ -13,7 +13,7 @@ To see the version of this role you currently have installed: `ansible-galaxy li
 
 To ensure you have the latest version available: `ansible-galaxy install -f ansible-network.network-engine`
 
-To use this role, follow the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md).
+To use this role, follow the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/README.md).
 
 To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/). 
 
@@ -24,7 +24,7 @@ Interested in contributing to this role? Check out [CONTRIBUTING](https://github
 ## Documentation
 
 * User guide:
-    - [How to use](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md)
+    - [How to use](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/README.md)
     - [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
 * Development guide: [How to test](https://github.com/ansible-network/network-engine/blob/devel/docs/tests/test_guide.md)
 
