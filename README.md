@@ -7,10 +7,14 @@ modules and plugins that are common to all Ansible Network roles. The role
 is platform-agnostic - all of the artifacts in this role can be used on any
 Ansible-managed network platform.
 
-To install this role: `ansible-galaxy install ansible-network.network-engine`.
-To see the version of this role you currently have installed: `ansible-galaxy list`, then find `network-engine` in the results. 
-To ensure you have the latest version available: `ansible-galaxy install -f ansible-network.network-engine`.
+To install this role: `ansible-galaxy install ansible-network.network-engine`
+
+To see the version of this role you currently have installed: `ansible-galaxy list | grep network-engine` 
+
+To ensure you have the latest version available: `ansible-galaxy install -f ansible-network.network-engine`
+
 To use this role, follow the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md).
+
 To find other roles maintained by the Ansible Network team, see our [Galaxy Profile](https://galaxy.ansible.com/ansible-network/). 
 
 Any open bugs and/or feature requests are tracked in [GitHub issues](https://github.com/ansible-network/network-engine/issues).
