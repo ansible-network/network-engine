@@ -27,10 +27,11 @@ See the Playbook sections of the command_parser and textfsm_parser docs for exam
 
 Additional Resources
 -------------------------------------
-[README](https://galaxy.ansible.com/ansible-network/network-engine/#readme)
-[command_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/command_parser)
-[textfsm_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/textfsm_parser)
-[Full changelog diff](https://github.com/ansible-network/network-engine/blob/devel/CHANGELOG.rst)
+
+* [README](https://galaxy.ansible.com/ansible-network/network-engine/#readme)
+* [command_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/command_parser)
+* [textfsm_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/textfsm_parser)
+* [Full changelog diff](https://github.com/ansible-network/network-engine/blob/devel/CHANGELOG.rst)
 
 Contributing and Reporting Feedback
 -------------------------------------
