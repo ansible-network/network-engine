@@ -4,5 +4,7 @@
   roles:
     - { role: 'text_parser', tags: 'text_parser' }
     - { role: 'textfsm', tags: 'textfsm' }
+    - { role: 'json_template', tags: 'json_template' }
     - { role: 'command_parser', tags: 'command_parser' }
     - { role: 'textfsm_parser', tags: 'textfsm_parser' }
+    - { role: 'filter_plugins', tags: 'filter_plugins' }
