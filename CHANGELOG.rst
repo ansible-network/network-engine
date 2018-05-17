@@ -7,6 +7,14 @@ Ansible Network: network-engine
 v2.5.1
 ======
 
+.. _Ansible Network: network-engine_v2.5.1_Documentation Updates:
+
+Documentation Updates
+---------------------
+
+- User Guide `docs/user_guide <https://github.com/ansible-network/network-engine/tree/devel/docs/user_guide>`_.
+
+
 .. _Ansible Network: network-engine_v2.5.1_Deprecated Features:
 
 Deprecated Features

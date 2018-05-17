@@ -25,5 +25,5 @@ Via Ansible Galaxy using the following Linux command:
 
 How do I use it?
 ----------------------------------
-See the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/main.md) for details and examples.
+See the [User Guide](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/README.md) for details and examples.
 
