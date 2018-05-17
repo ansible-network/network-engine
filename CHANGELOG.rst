@@ -7,17 +7,6 @@ Ansible Network: network-engine
 v2.5.1
 ======
 
-.. _Ansible Network: network-engine_v2.5.1_Bugfixes:
-
-Bugfixes
---------
-
-- Fix command_parser Absolute path with tilde in src should work (https://github.com/ansible-network/network-engine/pull/58)
-
-- Fix content mush only accepts string type (https://github.com/ansible-network/network-engine/pull/72)
-
-- Fix StringIO to work with Python3 in addition to Python2 (https://github.com/ansible-network/network-engine/pull/53)
-
 .. _Ansible Network: network-engine_v2.5.1_Deprecated Features:
 
 Deprecated Features
@@ -36,6 +25,18 @@ New Modules
 - New module ``command_parser`` (renamed from ``text_parser``)
 
 - New module ``textfsm_parser`` (renamed from ``textfsm``)
+
+
+.. _Ansible Network: network-engine_v2.5.1_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix ``command_parser`` Absolute path with tilde in src should work `network-engine#58 <https://github.com/ansible-network/network-engine/pull/58>`_
+
+- Fix content mush only accepts string type `network-engine#72 <https://github.com/ansible-network/network-engine/pull/72>`_
+
+- Fix StringIO to work with Python3 in addition to Python2 `network-engine#53 <https://github.com/ansible-network/network-engine/pull/53>`_
 
 
 .. _Ansible Network: network-engine_v2.5.0:
