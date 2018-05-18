@@ -248,7 +248,6 @@ class LookupModule(LookupBase):
                 resp = self._coerce_to_native(resp)
             except AnsibleUndefinedVariable:
                 resp = None
-                pass
             finally:
                 self._templar.set_available_variables(tmp_avail_vars)
             return resp
@@ -260,7 +259,6 @@ class LookupModule(LookupBase):
             except Exception as exc:
                 if value is None or len(value) == 0:
                     return None
-                pass
         return value
 
     def _check_conditional(self, when, variables):

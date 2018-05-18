@@ -14,7 +14,7 @@ from ansible.errors import AnsibleFilterError
 def interface_split(interface, key=None):
     match = re.match(r'([A-Za-z\-]*)(.+)', interface)
     if not match:
-        raise FilterError('unable to parse interface %s' % interface)
+        raise AnsibleFilterError('unable to parse interface %s' % interface)
     obj = {'name': match.group(1), 'index': match.group(2)}
     if key:
         return obj[key]
@@ -33,7 +33,7 @@ def interface_range(interface):
     else:
         match = re.match(r'([A-Za-z]*)(.+)', interface)
         if not match:
-            raise FilterError('unable to parse interface %s' % interface)
+            raise AnsibleFilterError('unable to parse interface %s' % interface)
         prefix = match.group(1)
         index = match.group(2)
 
