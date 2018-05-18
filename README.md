@@ -64,6 +64,13 @@ The following is a list of plugins that are provided by this role.
 * `json_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/json_template.py)
 * `network_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/network_template.py)
 
+### Filter
+
+* `interface_split` [[source]](https://github.com/ansible-network/network-engine/blob/devel/filter_plugins/network_engine.py)
+* `interface_range` [[source]](https://github.com/ansible-network/network-engine/blob/devel/filter_plugins/network_engine.py)
+* `vlan_expand` [[source]](https://github.com/ansible-network/network-engine/blob/devel/filter_plugins/network_engine.py)
+* `vlan_compress` [[source]](https://github.com/ansible-network/network-engine/blob/devel/filter_plugins/network_engine.py)
+
 ## Dependencies
 
 The following is the list of dependencies on other roles this role requires.
