@@ -72,7 +72,7 @@ class LookupModule(LookupBase):
 
                         when = task.pop('when', None)
                         if when is not None:
-                            if not self._check_conditional(when, task_vars):
+                            if not self._check_conditional(when, self.ds):
                                 display.vvv('skipping task due to conditional check failure')
                                 continue
 
