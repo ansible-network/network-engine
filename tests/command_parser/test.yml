@@ -1,0 +1,4 @@
+- hosts: localhost
+  remote_user: root
+  roles:
+    - { role: 'command_parser', tags: 'command_parser' }

@@ -1,0 +1,4 @@
+- hosts: localhost
+  remote_user: root
+  roles:
+    - { role: 'json_template', tags: 'json_template' }
