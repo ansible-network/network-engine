@@ -1,4 +1,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - { role: 'text_parser', tags: 'text_parser' }
+    - text_parser

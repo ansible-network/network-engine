@@ -1,4 +1,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - { role: 'textfsm_parser', tags: 'textfsm_parser' }
+    - textfsm_parser

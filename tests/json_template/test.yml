@@ -1,4 +1,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - { role: 'json_template', tags: 'json_template' }
+    - json_template
