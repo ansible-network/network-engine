@@ -33,14 +33,10 @@ _raw:
 """
 
 
-import os
-import re
 import collections
 
-from ansible import constants as C
 from ansible.plugins.lookup import LookupBase, display
 from ansible.module_utils.network.common.utils import to_list
-from ansible.module_utils.network.common.config import NetworkConfig
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_text, to_bytes
 from ansible.errors import AnsibleError, AnsibleUndefinedVariable
