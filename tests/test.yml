@@ -1,9 +1,8 @@
 ---
-- hosts: localhost
-  remote_user: root
-  roles:
-    - { role: 'text_parser', tags: 'text_parser' }
-    - { role: 'textfsm', tags: 'textfsm' }
-    - { role: 'json_template', tags: 'json_template' }
-    - { role: 'command_parser', tags: 'command_parser' }
-    - { role: 'textfsm_parser', tags: 'textfsm_parser' }
+# main entrypoint
+
+- import_playbook: text_parser/test.yml
+- import_playbook: textfsm/test.yml
+- import_playbook: command_parser/test.yml
+- import_playbook: textfsm_parser/test.yml
+- import_playbook: json_template/test.yml
