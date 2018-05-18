@@ -1,4 +1,4 @@
 - hosts: localhost
-  remote_user: root
+  connection: local
   roles:
     - { role: 'text_parser', tags: 'text_parser' }

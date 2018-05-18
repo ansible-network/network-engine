@@ -1,4 +1,4 @@
 - hosts: localhost
-  remote_user: root
+  connection: local
   roles:
     - { role: 'textfsm', tags: 'textfsm' }
