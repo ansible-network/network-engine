@@ -23,7 +23,7 @@ class ActionModule(ActionBase):
                            version='2.6',
                            removed=False)
 
-        del tmp # tmp no longer has any effect
+        del tmp  # tmp no longer has any effect
 
         if task_vars is None:
             task_vars = dict()

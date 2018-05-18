@@ -35,10 +35,11 @@ import sys
 
 from ansible.errors import AnsibleError, AnsibleParserError
 from ansible.plugins.lookup import LookupBase, display
-from ansible.module_utils._text import to_bytes, to_text
+from ansible.module_utils._text import to_bytes
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
 from network_engine.plugins import template_loader
+
 
 class LookupModule(LookupBase):
 
