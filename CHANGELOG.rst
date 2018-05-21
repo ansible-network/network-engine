@@ -1,21 +1,13 @@
-===============================
-Ansible Network: network-engine
-===============================
+==============================
+Ansible Network network-engine
+==============================
 
-.. _Ansible Network: network-engine_v2.5.1:
+.. _Ansible Network network-engine_v2.5.1:
 
 v2.5.1
 ======
 
-.. _Ansible Network: network-engine_v2.5.1_Documentation Updates:
-
-Documentation Updates
----------------------
-
-- User Guide `docs/user_guide <https://github.com/ansible-network/network-engine/tree/devel/docs/user_guide>`_.
-
-
-.. _Ansible Network: network-engine_v2.5.1_Deprecated Features:
+.. _Ansible Network network-engine_v2.5.1_Deprecated Features:
 
 Deprecated Features
 -------------------
@@ -25,7 +17,7 @@ Deprecated Features
 - Module ``textfsm`` renamed to ``textfsm_parser``; original name deprecated; legacy use supported; will be removed in 2.6.0.
 
 
-.. _Ansible Network: network-engine_v2.5.1_New Modules:
+.. _Ansible Network network-engine_v2.5.1_New Modules:
 
 New Modules
 -----------
@@ -35,7 +27,7 @@ New Modules
 - New module ``textfsm_parser`` (renamed from ``textfsm``)
 
 
-.. _Ansible Network: network-engine_v2.5.1_Bugfixes:
+.. _Ansible Network network-engine_v2.5.1_Bugfixes:
 
 Bugfixes
 --------
@@ -47,12 +39,20 @@ Bugfixes
 - Fix StringIO to work with Python3 in addition to Python2 `network-engine#53 <https://github.com/ansible-network/network-engine/pull/53>`_
 
 
-.. _Ansible Network: network-engine_v2.5.0:
+.. _Ansible Network network-engine_v2.5.1_Documentation Updates:
+
+Documentation Updates
+---------------------
+
+- User Guide `docs/user_guide <https://github.com/ansible-network/network-engine/tree/devel/docs/user_guide>`_.
+
+
+.. _Ansible Network network-engine_v2.5.0:
 
 v2.5.0
 ======
 
-.. _Ansible Network: network-engine_v2.5.0_Major Changes:
+.. _Ansible Network network-engine_v2.5.0_Major Changes:
 
 Major Changes
 -------------
@@ -62,7 +62,7 @@ Major Changes
 - This role provides the foundation for building network roles by providing modules and plugins that are common to all Ansible Network roles. All of the artifacts in this role can be used independent of the platform that is being managed.
 
 
-.. _Ansible Network: network-engine_v2.5.0_New Modules:
+.. _Ansible Network network-engine_v2.5.0_New Modules:
 
 New Modules
 -----------
