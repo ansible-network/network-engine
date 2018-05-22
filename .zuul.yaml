@@ -1,4 +1,13 @@
 - project:
     check:
       jobs:
-        - noop
+        - ansible-test-sanity
+        - ansible-role-tests-stable-py2
+        - ansible-role-tests-stable-py3
+        - ansible-role-tests-devel-py2
+    gate:
+      jobs:
+        - ansible-test-sanity
+        - ansible-role-tests-stable-py2
+        - ansible-role-tests-stable-py3
+        - ansible-role-tests-devel-py2
