@@ -81,7 +81,7 @@ def vlan_expand(vlan):
 
     match = re.match(r'([A-Za-z]*)(.+)', vlan)
     if not match:
-        raise FilterError('unable to parse vlan %s' % vlan)
+        raise AnsibleFilterError('unable to parse vlan %s' % vlan)
 
     index = match.group(2)
     indices = list()
@@ -99,7 +99,6 @@ def vlan_expand(vlan):
                 i += 1
 
     return ['%d' % int(index) for index in indices]
-
 
 
 class FilterModule(object):
