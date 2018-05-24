@@ -127,7 +127,6 @@ RETURN = """
 import os
 import sys
 import copy
-import six
 import shutil
 import json
 import imp
@@ -136,7 +135,7 @@ from copy import deepcopy
 
 from ansible import constants as C
 from ansible.plugins.lookup import LookupBase
-from ansible.module_utils.six import StringIO, iteritems, string_types
+from ansible.module_utils.six import StringIO, iteritems, string_types, PY3
 from ansible.module_utils.parsing.convert_bool import boolean
 from ansible.utils.path import unfrackpath, makedirs_safe
 from ansible.errors import AnsibleError
@@ -172,7 +171,7 @@ def warning(msg):
 
 
 # Python3 support
-if six.PY3:
+if PY3:
     long = int
     unicode = str
 
@@ -288,8 +287,7 @@ INT_RANGE_TYPES = ["uint8", "uint16", "uint32", "uint64",
                    "int8", "int16", "int32", "int64"]
 
 # The types that are built-in to YANG
-YANG_BUILTIN_TYPES = list(class_map.keys()) + \
-                     ["container", "list", "rpc", "notification", "leafref"]
+YANG_BUILTIN_TYPES = list(class_map.keys()) + ["container", "list", "rpc", "notification", "leafref"]
 
 YANG2SPEC_PLUGIN_PATH = "~/.ansible/tmp/yang2spec"
 
@@ -476,7 +474,7 @@ def module_import_prefixes(ctx):
     for mod in ctx.modules:
         m = ctx.search_module(0, mod[0])
         for importstmt in m.search('import'):
-            if not importstmt.arg in mod_ref_prefixes:
+            if importstmt.arg not in mod_ref_prefixes:
                 mod_ref_prefixes[importstmt.arg] = []
             mod_ref_prefixes[importstmt.arg].append(importstmt.search_one('prefix').arg)
     return mod_ref_prefixes
@@ -521,7 +519,7 @@ class Identity(object):
         self.children = []
 
     def add_prefix(self, prefix):
-        if not prefix in self._imported_prefixes:
+        if prefix not in self._imported_prefixes:
             self._imported_prefixes.append(prefix)
 
     def add_child(self, child):
@@ -662,8 +660,7 @@ def build_spec(ctx, modules, fd):
         for e in ctx.errors:
             display.display("INFO: encountered %s" % str(e))
             if not e[1] in ["UNUSED_IMPORT", "PATTERN_ERROR"]:
-                raise AnsibleError("FATAL: yang2spec cannot build module that pyang" +
-                                 " has found errors with.\n")
+                raise AnsibleError("FATAL: yang2spec cannot build module that pyang has found errors with.\n")
 
     # Determine all modules, and submodules that are needed, along with the
     # prefix that is used for it. We need to ensure that we understand all of the
@@ -766,7 +763,7 @@ def build_identities(ctx, defnd):
                     identity_dict[ident]["%s%s" % (spfx, ch.name)] = d
                     identity_dict[identity.name]["%s%s" % (spfx, ch.name)] = d
 
-        if not identity.name in identity_dict:
+        if identity.name not in identity_dict:
             identity_dict[identity.name] = {}
 
     # Add entries to the class_map such that this identity can be referenced by
@@ -1017,8 +1014,7 @@ def get_children(ctx, fd, i_children, module, parent, path=str(),
         # is and store this such that we can give a hint.
         keyval = False
         if parent.keyword == "list":
-            keyval = parent.search_one('key').arg if parent.search_one('key') \
-                                                     is not None else False
+            keyval = parent.search_one('key').arg if parent.search_one('key') is not None else False
             if keyval and " " in keyval:
                 keyval = keyval.split(" ")
             else:
@@ -1089,12 +1085,9 @@ def build_elemtype(ctx, et, prefix=False):
     # both in the case that a typedef needs to be built, as well as on per-list
     # basis.
     cls = None
-    pattern_stmt = et.search_one('pattern') if not et.search_one('pattern') \
-                                                   is None else False
-    range_stmt = et.search_one('range') if not et.search_one('range') \
-                                               is None else False
-    length_stmt = et.search_one('length') if not et.search_one('length') \
-                                                 is None else False
+    pattern_stmt = et.search_one('pattern') if not et.search_one('pattern') is None else False
+    range_stmt = et.search_one('range') if not et.search_one('range') is None else False
+    length_stmt = et.search_one('length') if not et.search_one('length') is None else False
 
     # Determine whether there are any restrictions that are placed on this leaf,
     # and build a dictionary of the different restrictions to be placed on the
@@ -1182,10 +1175,7 @@ def build_elemtype(ctx, et, prefix=False):
             path_stmt = et.search_one('path')
             if path_stmt is None:
                 raise ValueError("leafref specified with no path statement")
-            require_instance = \
-                class_bool_map[et.search_one('require-instance').arg] \
-                    if et.search_one('require-instance') \
-                       is not None else True
+            require_instance = class_bool_map[et.search_one('require-instance').arg] if et.search_one('require-instance') is not None else True
 
             elemtype = {
                 "native_type": "unicode",
@@ -1359,13 +1349,10 @@ def get_element(ctx, fd, element, module, parent, path,
             # Deal with specific cases for list - such as the key and how it is
             # ordered.
             if element.keyword == "list":
-                elemdict["key"] = safe_name(element.search_one("key").arg) \
-                    if element.search_one("key") is not None else False
-                elemdict["yang_keys"] = element.search_one("key").arg \
-                    if element.search_one("key") is not None else False
+                elemdict["key"] = safe_name(element.search_one("key").arg) if element.search_one("key") is not None else False
+                elemdict["yang_keys"] = element.search_one("key").arg if element.search_one("key") is not None else False
                 user_ordered = element.search_one('ordered-by')
-                elemdict["user_ordered"] = True if user_ordered is not None \
-                                                   and user_ordered.arg.upper() == "USER" else False
+                elemdict["user_ordered"] = True if user_ordered is not None and user_ordered.arg.upper() == "USER" else False
             this_object.append(elemdict)
             has_children = True
 
@@ -1373,8 +1360,7 @@ def get_element(ctx, fd, element, module, parent, path,
     if not has_children:
         if element.keyword in ["leaf-list"]:
             create_list = True
-        cls, elemtype = copy.deepcopy(build_elemtype(ctx,
-                                                     element.search_one('type')))
+        cls, elemtype = copy.deepcopy(build_elemtype(ctx, element.search_one('type')))
 
         # Determine what the default for the leaf should be where there are
         # multiple available.
