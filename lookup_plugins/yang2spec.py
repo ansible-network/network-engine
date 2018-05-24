@@ -26,10 +26,10 @@ DOCUMENTATION = """
     short_description:  This plugin reads the content of given yang document and transforms it to a
                         rules spec and configuration schema.
     description:
-      - This plugin parses yang document and transforms it into a spec which provides a set of rules 
-        This rules spec can be used to validate the input configuration to check  if it adheres 
-        with respective yang model. It also outputs the  configuration schema in json format and can 
-        be used as reference to build input json configuration.  
+      - This plugin parses yang document and transforms it into a spec which provides a set of rules
+        This rules spec can be used to validate the input configuration to check  if it adheres
+        with respective yang model. It also outputs the  configuration schema in json format and can
+        be used as reference to build input json configuration.
     options:
       _terms:
         description: The path points to the location of the top level yang module which
@@ -38,7 +38,7 @@ DOCUMENTATION = """
       search_path:
         description:
           - The path is a colon (:) separated list of directories to search for imported yang modules
-            in the yang file mentioned in C(path) option. If the value is not given it will search in 
+            in the yang file mentioned in C(path) option. If the value is not given it will search in
             the current directory.
         required: false
 """
@@ -46,7 +46,7 @@ DOCUMENTATION = """
 EXAMPLES = """
 - name: Get interface yang spec
   set_fact:
-    interfaces_spec: "{{ lookup('yang2spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang', 
+    interfaces_spec: "{{ lookup('yang2spec', 'openconfig/public/release/models/interfaces/openconfig-interfaces.yang',
                             search_path='openconfig/public/release/models:pyang/modules/') }}"
 """
 
@@ -104,7 +104,7 @@ RETURN = """
       config_schema:
         description: The json configuration schema generated from yang document
         returned: success
-        type: dict 
+        type: dict
         sample: |
           {
             "interfaces": {
