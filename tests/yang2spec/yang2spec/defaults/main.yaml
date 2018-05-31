@@ -1,0 +1,2 @@
+yang_file: "{{ role_path }}/files/openconfig/interfaces/openconfig-interfaces.yang"
+search_path: "{{ role_path }}/files/"

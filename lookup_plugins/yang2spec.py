@@ -1,23 +1,10 @@
-#
-#  Copyright 2018 Red Hat | Ansible
-#
-# This file is part of Ansible
-#
-# Ansible is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Ansible is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# (c) 2018 Red Hat, Inc.
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import (absolute_import, division, print_function)
-
 __metaclass__ = type
 
 DOCUMENTATION = """
@@ -37,7 +24,7 @@ DOCUMENTATION = """
         required: True
       search_path:
         description:
-          - The path is a colon (:) separated list of directories to search for imported yang modules
+          - is a colon C(:) separated list of directories to search for imported yang modules
             in the yang file mentioned in C(path) option. If the value is not given it will search in
             the current directory.
         required: false
@@ -558,7 +545,9 @@ class IdentityStore(object):
 
     def build_store_from_definitions(self, ctx, defnd):
         unresolved_identities = list(defnd.keys())
-        unresolved_identity_count = {k: 0 for k in defnd}
+        unresolved_identity_count = {}
+        for k in defnd:
+            unresolved_identity_count[k] = 0
         error_ids = []
 
         mod_ref_prefixes = module_import_prefixes(ctx)
