@@ -31,6 +31,7 @@ Additional Resources
 * [README](https://galaxy.ansible.com/ansible-network/network-engine/#readme)
 * [command_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/command_parser)
 * [textfsm_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/textfsm_parser)
+* [yang2spec tests](https://github.com/ansible-network/network-engine/tree/devel/tests/yang2spec)
 * [Full changelog diff](https://github.com/ansible-network/network-engine/blob/devel/CHANGELOG.rst)
 
 Contributing and Reporting Feedback
