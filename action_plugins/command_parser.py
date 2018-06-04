@@ -63,9 +63,9 @@ class ActionModule(ActionBase):
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        if not source_dir and not source_file:
-            return {'failed': True, 'msg': 'one of `dir` or `file` must be specified'}
-        elif source_dir and source_file:
+        #if not source_dir and not source_file:
+        #    return {'failed': True, 'msg': 'one of `dir` or `file` must be specified'}
+        if source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
         if source_dir:
@@ -81,8 +81,7 @@ class ActionModule(ActionBase):
                     else:
                         sources = self.get_default_parser(path='parser_templates')
                 else:
-                    sources = self.get_default_parser(path='./')
-
+                    sources = self.get_default_parser(path='.')
 
         facts = {}
 
@@ -253,8 +252,8 @@ class ActionModule(ActionBase):
 
         if len(src_file) == 1:
             f, ext = os.path.splitext(src_file[0])
-            if ext in VALID_FILE_EXTENSIONS:
-                sources = src_file
+            if ext in self.VALID_FILE_EXTENSIONS:
+                sources = ["%s/%s" % (path, src_file[0])]
             else:
                 raise AnsibleError("invalid file format {0} in default parser path {1}".format(ext, path))
         elif len(src_file) == 0:
