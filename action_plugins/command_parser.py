@@ -71,7 +71,18 @@ class ActionModule(ActionBase):
         if source_dir:
             sources = self.get_files(to_list(source_dir))
         else:
-            sources = to_list(source_file)
+            if source_file:
+                sources = to_list(source_file)
+            else:
+                if 'parser_templates' in os.listdir('.'):
+                    if task_vars['ansible_network_os'] in os.listdir('parser_templates'):
+                        path = 'parser_templates/%s' % task_vars['ansible_network_os']
+                        sources = self.get_default_parser(path=path)
+                    else:
+                        sources = self.get_default_parser(path='parser_templates')
+                else:
+                    sources = self.get_default_parser(path='./')
+
 
         facts = {}
 
@@ -235,6 +246,23 @@ class ActionModule(ActionBase):
             working_set[child] = value
 
         return update_set
+
+    def get_default_parser(self, path):
+        sources = list()
+        src_file = os.listdir(path)
+
+        if len(src_file) == 1:
+            f, ext = os.path.splitext(src_file[0])
+            if ext in VALID_FILE_EXTENSIONS:
+                sources = src_file
+            else:
+                raise AnsibleError("invalid file format {0} in default parser path {1}".format(ext, path))
+        elif len(src_file) == 0:
+            raise AnsibleError("no file found in {0}, please create parser file".format(path))
+        else:
+            raise AnsibleError("too many files, use `source_dir` instead")
+
+        return sources
 
     def get_files(self, source_dirs):
         include_files = list()
