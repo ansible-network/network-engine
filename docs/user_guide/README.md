@@ -11,7 +11,7 @@ The initial release of the Network Engine role includes two parser modules:
 
 Both modules iterate over the data definitions in your parser templates, parse command output from your network devices (structured ASCII text) to find matches, and then convert the matches into Ansible facts in a JSON data structure.
 
-To manage multiple interfaces and vlans, the Network Engine role also offers filter plugins that turn lists of interfaces or vlans into ranges and vice versa.
+To manage multiple interfaces and vlans, the Network Engine role also offers [filter_plugins](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/filter_plugins.md) that turn lists of interfaces or vlans into ranges and vice versa.
 
 To use the Network Engine Role:
 ----------------------------------------
