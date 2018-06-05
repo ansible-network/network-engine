@@ -13,10 +13,11 @@ import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.six import iteritems, string_types
+from ansible.module_utils.six import iteritems, iterkeys, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
 
+from ansible.plugins.filter.core import combine
 
 try:
     from ansible.module_utils.network.common.utils import to_list
@@ -26,6 +27,7 @@ except ImportError:
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
 from network_engine.plugins import template_loader, parser_loader
+from network_engine.utils import dict_merge
 
 
 try:
@@ -66,8 +68,8 @@ class ActionModule(ActionBase):
         elif source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
-        if not isinstance(content, string_types):
-            return {'failed': True, 'msg': '`content` must be of type str, got %s' % type(content)}
+        #if not isinstance(content, string_types):
+        #    return {'failed': True, 'msg': '`content` must be of type str, got %s' % type(content)}
 
         if source_dir:
             sources = self.get_files(to_list(source_dir))
@@ -93,6 +95,7 @@ class ActionModule(ActionBase):
                 display.vvvv('processing directive: %s' % name)
 
                 register = task.pop('register', None)
+                extend = task.pop('extend', None)
 
                 export = task.pop('export', False)
                 export_as = task.pop('export_as', 'list')
@@ -140,7 +143,16 @@ class ActionModule(ActionBase):
                             if register:
                                 self.ds[register] = res
                                 if export:
-                                    facts[register] = res
+                                    if extend:
+                                        update_set = dict()
+                                        working_set = update_set
+                                        for key in extend.split('.'):
+                                            working_set[key] = dict()
+                                            working_set = working_set[key]
+                                        working_set[register] = res
+                                        facts = dict_merge(facts, update_set)
+                                    else:
+                                        facts[register] = res
                             else:
                                 self.ds.update(res)
                                 if export:
@@ -149,19 +161,48 @@ class ActionModule(ActionBase):
                             self.ds[register] = res
                             if export:
                                 if export_as in ('dict', 'hash', 'object'):
-                                    if register not in facts:
-                                        facts[register] = {}
-                                    for item in res:
-                                        facts[register] = self.rec_update(facts[register], item)
+                                    if extend:
+                                        update_set = dict()
+                                        working_set = update_set
+                                        for key in extend.split('.'):
+                                            working_set[key] = dict()
+                                            working_set = working_set[key]
+                                        working_set[register] = {}
+                                        for item in res:
+                                            working_set[register] = self.rec_update(working_set[register], item)
+                                        facts = dict_merge(facts, update_set)
+                                    else:
+                                        if register not in facts:
+                                            facts[register] = {}
+                                        for item in res:
+                                            facts[register] = self.rec_update(facts[register], item)
                                 else:
-                                    facts[register] = res
+                                    if extend:
+                                        update_set = dict()
+                                        working_set = update_set
+                                        for key in extend.split('.'):
+                                            working_set[key] = dict()
+                                            working_set = working_set[key]
+                                        working_set[register] = res
+                                        facts = dict_merge(facts, update_set)
+                                    else:
+                                        facts[register] = res
                 else:
                     res = self._process_directive(task)
                     if 'set_vars' in task:
                         if register:
                             self.ds[register] = res
                             if export:
-                                facts[register] = res
+                                if extend:
+                                    update_set = dict()
+                                    working_set = update_set
+                                    for key in extend.split('.'):
+                                        working_set[key] = dict()
+                                        working_set = working_set[key]
+                                    working_set[register] = res
+                                    facts = dict_merge(facts, update_set)
+                                else:
+                                    facts[register] = res
                         else:
                             self.ds.update(res)
                             if export:
@@ -170,14 +211,28 @@ class ActionModule(ActionBase):
                         self.ds[register] = res
                         if export:
                             if register:
-                                facts[register] = res
+                                if extend:
+                                    update_set = dict()
+                                    working_set = update_set
+                                    for key in extend.split('.'):
+                                        working_set[key] = dict()
+                                        working_set = working_set[key]
+                                    working_set[register] = res
+                                    facts = dict_merge(facts, update_set)
+                                else:
+                                    facts[register] = res
                             else:
                                 for r in to_list(res):
                                     for k, v in iteritems(r):
                                         facts.update({to_text(k): v})
 
+
+        base = {}
+        for key in iterkeys(facts):
+            base[key] = task_vars.get(key, {})
+
         result.update({
-            'ansible_facts': facts,
+            'ansible_facts': dict_merge(base, facts),
             'included': sources
         })
 
