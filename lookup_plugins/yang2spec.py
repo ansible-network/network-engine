@@ -987,9 +987,7 @@ def get_children(ctx, fd, i_children, module, parent, path=str(),
 
             parent_descr = parent.search_one('description')
             if parent_descr is not None:
-                ansible_spec_header['description'] = parent_descr.arg.decode('utf8').encode('ascii',
-                                                                                            'ignore').strip().replace(
-                    '\n', ' ')
+                ansible_spec_header['description'] = parent_descr.arg.strip().replace('\n\n', '\n')
                 ansible_spec_header['short_description'] = ansible_spec_header['description'].split('.')[0]
             else:
                 ansible_spec_header['description'] = ""
@@ -1047,7 +1045,7 @@ def get_children(ctx, fd, i_children, module, parent, path=str(),
                     spec['default'] = i['default']
 
                 if i.get('description'):
-                    spec['description'] = i["description"].decode('utf-8').encode('ascii', 'ignore').replace('\n', ' ')
+                    spec['description'] = i["description"]
 
                 if keyval and i['yang_name'] in keyval:
                     spec['required'] = True
