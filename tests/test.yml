@@ -10,3 +10,5 @@
 - import_playbook: vlan_expand/test.yml
 - import_playbook: netcfg_diff/test.yml
 - import_playbook: yang2spec/test.yml
+- import_playbook: interface_range/test.yml
+- import_playbook: interface_split/test.yml

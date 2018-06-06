@@ -1,0 +1,3 @@
+---
+- name: interface_range test
+  import_tasks: interface_range.yaml
