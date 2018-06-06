@@ -1,6 +1,6 @@
 - name: "config diff test for {{ ansible_network_os }} with default"
   set_fact:
-    diff: "{{ lookup('config_diff', want, have=have) }}"
+    diff: "{{ lookup('netcfg_diff', want, have=have) }}"
   vars:
     - ansible_network_os: ios
 
@@ -13,7 +13,7 @@
 
 - name: "config diff test for {{ ansible_network_os }} with strict match"
   set_fact:
-    diff: "{{ lookup('config_diff', want, have=have, match='strict') }}"
+    diff: "{{ lookup('netcfg_diff', want, have=have, match='strict') }}"
   vars:
     - ansible_network_os: ios
 
@@ -24,7 +24,7 @@
 
 - name: "config diff test for {{ ansible_network_os }} with exact match"
   set_fact:
-    diff: "{{ lookup('config_diff', want, have=have, match='exact') }}"
+    diff: "{{ lookup('netcfg_diff', want, have=have, match='exact') }}"
   vars:
     - ansible_network_os: ios
 
@@ -34,7 +34,7 @@
 
 - name: "config diff test for {{ ansible_network_os }} with block replace"
   set_fact:
-    diff: "{{ lookup('config_diff', want, have=have, replace='block') }}"
+    diff: "{{ lookup('netcfg_diff', want, have=have, replace='block') }}"
   vars:
     - ansible_network_os: ios
 
@@ -52,7 +52,7 @@
 
 - name: "config diff test for {{ ansible_network_os }} with block line"
   set_fact:
-    diff: "{{ lookup('config_diff', want, have=have, replace='line') }}"
+    diff: "{{ lookup('netcfg_diff', want, have=have, replace='line') }}"
   vars:
     - ansible_network_os: ios
 

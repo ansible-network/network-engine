@@ -1,4 +1,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - config_diff
+    - netcfg_diff
