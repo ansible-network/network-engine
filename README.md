@@ -64,6 +64,8 @@ The following is a list of plugins that are provided by this role.
 * `json_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/json_template.py)
 * `network_template` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/network_template.py)
 * `netcfg_diff` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/netcfg_diff.py)
+* `yang2spec` [[source]](https://github.com/ansible-network/network-engine/blob/devel/lookup_plugins/yang2spec.py)
+
 
 ### Filter
 

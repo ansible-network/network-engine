@@ -9,3 +9,4 @@
 - import_playbook: vlan_compress/test.yml
 - import_playbook: vlan_expand/test.yml
 - import_playbook: netcfg_diff/test.yml
+- import_playbook: yang2spec/test.yml
