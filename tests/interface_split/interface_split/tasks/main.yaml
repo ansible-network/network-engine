@@ -1,0 +1,3 @@
+---
+- name: interface_split test
+  import_tasks: interface_split.yaml
