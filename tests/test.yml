@@ -8,3 +8,4 @@
 - import_playbook: json_template/test.yml
 - import_playbook: vlan_compress/test.yml
 - import_playbook: vlan_expand/test.yml
+- import_playbook: netcfg_diff/test.yml
