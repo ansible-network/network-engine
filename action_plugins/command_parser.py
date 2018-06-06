@@ -63,8 +63,6 @@ class ActionModule(ActionBase):
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        #if not source_dir and not source_file:
-        #    return {'failed': True, 'msg': 'one of `dir` or `file` must be specified'}
         if source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
@@ -248,18 +246,23 @@ class ActionModule(ActionBase):
 
     def get_default_parser(self, path):
         sources = list()
-        src_file = os.listdir(path)
+        src_file = list()
+        cwd = os.getcwd()
+
+        for i in os.listdir(path):
+            if i.startswith('show_'):
+                src_file.append(i)
 
         if len(src_file) == 1:
             f, ext = os.path.splitext(src_file[0])
             if ext in self.VALID_FILE_EXTENSIONS:
                 sources = ["%s/%s" % (path, src_file[0])]
             else:
-                raise AnsibleError("invalid file format {0} in default parser path {1}".format(ext, path))
+                raise AnsibleError("invalid file format {0} in default parser path {1}".format(ext, cwd + '/' + path))
         elif len(src_file) == 0:
-            raise AnsibleError("no file found in {0}, please create parser file".format(path))
+            raise AnsibleError("no file found in {0}, please create parser file".format(cwd + '/' + path))
         else:
-            raise AnsibleError("too many files, use `source_dir` instead")
+            raise AnsibleError("too many files in {0}, use `source_dir` instead".format(cwd + '/' + path))
 
         return sources
 
