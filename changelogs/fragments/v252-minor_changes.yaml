@@ -1,0 +1,2 @@
+minor_changes:
+- Add parsers to search path `network-engine#89 <https://github.com/ansible-network/network-engine/pull/89>`_.
