@@ -1,6 +1,6 @@
 # Task cli
 The ```cli``` task provides an implementation for running CLI commands on
-network devices that is platform agnostic.  The ```cli``` task accepts a
+network devices that is platform agnostic. The ```cli``` task accepts a
 command and will attempt to execute that command on the remote device returning
 the command ouput.
 
@@ -21,7 +21,7 @@ The following are the list of required and optional arguments supported by this
 task.
 
 ### command
-This argument specifies the command to be executed on the remote device.  The
+This argument specifies the command to be executed on the remote device. The
 ```command``` argument is a required value.
 
 ### parser
@@ -32,7 +32,8 @@ when ```engine``` is used.
 ### engine
 The ```engine``` argument is used to define which parsing engine to use when parsing the output
 of the CLI commands. This argument uses the file specified to ```parser``` for parsing output to
-JSON facts.
+JSON facts. This argument requires ```parser``` argument to be specified.
+
 This action currently supports two different parsers:
 
 * ```command_parser```

@@ -24,7 +24,7 @@
     msg: "missing required fact: parser"
   when: engine is defined and parser is undefined
 
-- name: run command on remote network node and use engine to parse facts
+- name: run command on remote network node
   cli:
     command: "{{ command }}"
   when: parser is undefined
