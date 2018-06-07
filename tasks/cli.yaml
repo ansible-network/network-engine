@@ -14,12 +14,12 @@
     msg: "invalid option for engine"
   when: engine is defined and engine not in ['command_parser', 'textfsm_parser', 'text_parser', 'textfsm']
 
-- name: validate the command variable
+- name: check for required fact command
   fail:
     msg: "missing required fact: command"
   when: command is undefined
 
-- name: validate the parser variable
+- name: check for required fact parser for engine
   fail:
     msg: "missing required fact: parser"
   when: engine is defined and parser is undefined
@@ -29,7 +29,7 @@
     command: "{{ command }}"
   when: parser is undefined
 
-- name: run command on remote network node and use engine to parse facts
+- name: run command on remote network node and use engine to parse output into JSON facts
   cli:
     command: "{{ command }}"
     parser: "{{ parser }}"
