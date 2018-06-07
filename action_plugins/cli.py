@@ -105,6 +105,14 @@ class ActionModule(ActionBase):
         socket_path = getattr(self._connection, 'socket_path') or task_vars.get('ansible_socket')
         connection = Connection(socket_path)
 
+        # make command a required argument
+        if not command:
+            raise AnsibleError('missing required argument `command`')
+
+        # when default value is set to None Ansible sets it to ''
+        if not engine:
+            engine = 'command_parser'
+
         try:
             output = connection.get(command)
         except ConnectionError as exc:

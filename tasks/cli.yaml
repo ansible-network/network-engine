@@ -4,34 +4,8 @@
     msg: "expected connection network_cli, got {{ ansible_connection }}"
   when: ansible_connection != 'network_cli'
 
-- name: check for required fact ansible_network_os
-  fail:
-    msg: "missing required fact: ansible_network_os"
-  when: ansible_network_os is undefined
-
-- name: validate the engine variable
-  fail:
-    msg: "invalid option for engine"
-  when: engine is defined and engine not in ['command_parser', 'textfsm_parser', 'text_parser', 'textfsm']
-
-- name: check for required fact command
-  fail:
-    msg: "missing required fact: command"
-  when: command is undefined
-
-- name: check for required fact parser for engine
-  fail:
-    msg: "missing required fact: parser"
-  when: engine is defined and parser is undefined
-
-- name: run command on remote network node
-  cli:
-    command: "{{ command }}"
-  when: parser is undefined
-
 - name: run command on remote network node and use engine to parse output into JSON facts
   cli:
-    command: "{{ command }}"
-    parser: "{{ parser }}"
-    engine: "{{ engine | default('command_parser') }}"
-  when: parser is defined
+    command: "{{ network_engine_command }}"
+    parser: "{{ network_engine_parser | default(omit) }}"
+    engine: "{{ network_engine_engine | default(omit) }}"

@@ -1,2 +1,6 @@
 ---
 # vars file for network-engine
+#
+command: null
+parser: null
+engine: null
