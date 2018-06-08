@@ -144,13 +144,7 @@ class ActionModule(ActionBase):
                                 self.ds[register] = res
                                 if export:
                                     if extend:
-                                        update_set = dict()
-                                        working_set = update_set
-                                        for key in extend.split('.'):
-                                            working_set[key] = dict()
-                                            working_set = working_set[key]
-                                        working_set[register] = res
-                                        facts = dict_merge(facts, update_set)
+                                        facts.update(self.merge_facts(task_vars, extend, register, res))
                                     else:
                                         facts[register] = res
                             else:
@@ -162,15 +156,7 @@ class ActionModule(ActionBase):
                             if export:
                                 if export_as in ('dict', 'hash', 'object'):
                                     if extend:
-                                        update_set = dict()
-                                        working_set = update_set
-                                        for key in extend.split('.'):
-                                            working_set[key] = dict()
-                                            working_set = working_set[key]
-                                        working_set[register] = {}
-                                        for item in res:
-                                            working_set[register] = self.rec_update(working_set[register], item)
-                                        facts = dict_merge(facts, update_set)
+                                        facts.update(self.merge_facts(task_vars, extend, register, res, expand=True))
                                     else:
                                         if register not in facts:
                                             facts[register] = {}
@@ -178,13 +164,7 @@ class ActionModule(ActionBase):
                                             facts[register] = self.rec_update(facts[register], item)
                                 else:
                                     if extend:
-                                        update_set = dict()
-                                        working_set = update_set
-                                        for key in extend.split('.'):
-                                            working_set[key] = dict()
-                                            working_set = working_set[key]
-                                        working_set[register] = res
-                                        facts = dict_merge(facts, update_set)
+                                        facts.update(self.merge_facts(task_vars, extend, register, res))
                                     else:
                                         facts[register] = res
                 else:
@@ -194,13 +174,7 @@ class ActionModule(ActionBase):
                             self.ds[register] = res
                             if export:
                                 if extend:
-                                    update_set = dict()
-                                    working_set = update_set
-                                    for key in extend.split('.'):
-                                        working_set[key] = dict()
-                                        working_set = working_set[key]
-                                    working_set[register] = res
-                                    facts = dict_merge(facts, update_set)
+                                    facts.update(self.merge_facts(task_vars, extend, register, res))
                                 else:
                                     facts[register] = res
                         else:
@@ -212,13 +186,7 @@ class ActionModule(ActionBase):
                         if export:
                             if register:
                                 if extend:
-                                    update_set = dict()
-                                    working_set = update_set
-                                    for key in extend.split('.'):
-                                        working_set[key] = dict()
-                                        working_set = working_set[key]
-                                    working_set[register] = res
-                                    facts = dict_merge(facts, update_set)
+                                    facts.update(self.merge_facts(task_vars, extend, register, res))
                                 else:
                                     facts[register] = res
                             else:
@@ -227,16 +195,50 @@ class ActionModule(ActionBase):
                                         facts.update({to_text(k): v})
 
 
-        base = {}
-        for key in iterkeys(facts):
-            base[key] = task_vars.get(key, {})
-
         result.update({
-            'ansible_facts': dict_merge(base, facts),
+            'ansible_facts': facts,
             'included': sources
         })
 
         return result
+
+    def merge_facts(self, task_vars, extend, register, res, expand=False):
+        update = self.build_update(extend, register, res, expand)
+        root = extend.split('.')[0]
+        current = {root: task_vars.get(root, {})}
+        return dict_merge(current, update)
+
+    def build_update(self, path, child, value, expand=False):
+        """Build an update based on the current results
+
+        This method will take the current results and build a nested dict
+        object.  The keys for the nested dict object are identified by
+        path.
+
+        :param path: The path of the nest keys
+
+        :param child: The child key name to assign the value to
+
+        :param value: The value to assign to the child key
+
+        :param expand: When set to True, this will iterate over the value
+
+        :returns: A nest dict object
+        """
+        update_set = dict()
+        working_set = update_set
+
+        if expand is True:
+            working_set[child] = {}
+            for item in value:
+                working_set[child] = self.rec_update(working_set[child], item)
+        else:
+            for key in path.split('.'):
+                working_set[key] = dict()
+                working_set = working_set[key]
+            working_set[child] = value
+
+        return update_set
 
     def get_files(self, source_dirs):
         include_files = list()

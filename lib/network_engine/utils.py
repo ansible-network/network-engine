@@ -7,6 +7,7 @@
 from itertools import chain
 
 from ansible.module_utils.six import iteritems
+from ansible.module_utils.network.common.utils import sort_list
 
 
 def dict_merge(base, other):
