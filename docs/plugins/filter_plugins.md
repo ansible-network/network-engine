@@ -11,9 +11,9 @@ The `interface_split` plugin splits an interface and returns its parts:
 
 {{ 'Ethernet1' | interface_split }} returns '1' as index and 'Ethernet' as name
 
-{{ 'Ethernet1' | interface_split('name') }} returns `Ethernet`
+{{ 'Ethernet1' | interface_split('name') }} returns 'Ethernet'
 
-{{ 'Ethernet1' | interface_split('index') }} returns `1`
+{{ 'Ethernet1' | interface_split('index') }} returns '1'
 
 [interface_split examples](https://github.com/ansible-network/network-engine/blob/devel/tests/interface_split/interface_split/tasks/interface_split.yaml)
 
