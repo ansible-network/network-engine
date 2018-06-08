@@ -26,6 +26,7 @@ Interested in contributing to this role? Check out [CONTRIBUTING](https://github
 * User guide:
     - [How to use](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/README.md)
     - [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
+    - [Filter Plugins](https://github.com/ansible-network/network-engine/blob/devel/docs/plugins/filter_plugins.md)
 * Development guide: [How to test](https://github.com/ansible-network/network-engine/blob/devel/docs/tests/test_guide.md)
 
 For module documentation see the [modules](#modules) section below.
