@@ -1,7 +1,7 @@
 # network_engine filter plugins
 
-The [filter_plugins/network_engine](https://github.com/ansible-network/network-engine/blob/devel/library/filter_plugins/network_engine.py)
-code offers four options for managing multiple interfaces and vlans.
+The [filter_plugins/network_engine code](https://github.com/ansible-network/network-engine/blob/devel/library/filter_plugins/network_engine.py)
+offers four options for managing multiple interfaces and vlans.
 
 ## interface_split
 
