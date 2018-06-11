@@ -109,10 +109,6 @@ class ActionModule(ActionBase):
         if not command:
             raise AnsibleError('missing required argument `command`')
 
-        # when default value is set to None Ansible sets it to ''
-        if not engine:
-            engine = 'command_parser'
-
         try:
             output = connection.get(command)
         except ConnectionError as exc:

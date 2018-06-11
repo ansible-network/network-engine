@@ -83,7 +83,7 @@ The following example runs cli command and parse output to JSON facts.
   connection: network_cli
 
   tasks:
-  - name: import cli task from network-engine
+  - name: run cli command and parse output to JSON facts
     import_role:
       name: ansible-network.network-engine
       tasks_from: cli
