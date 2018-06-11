@@ -54,6 +54,7 @@ currently supported:
 * `register`
 * `export`
 * `export_as`
+* `extend`
 
 Any of the directive options are accepted but in some cases, the option may
 provide no operation.  For instance, when using the `export_facts`
@@ -121,6 +122,15 @@ Accepted values for `export_as`:
 * `elements` that defines the structure
 
 **Note** this option requires the `register` value to be set and `export: True`.
+
+### `extend`
+
+Use the `extend` option to extend a current fact hierarchy with the new
+registered fact.  This will case the facts to be merged and returned as a
+single tree.  If the fact doesn't previously exist, this will create the entire
+structure.
+
+The default value for `extend` is `null`.
 
 ### loop
 

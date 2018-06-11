@@ -13,10 +13,11 @@ import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.six import iteritems, string_types
+from ansible.module_utils.six import iteritems, iterkeys, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
 
+from ansible.plugins.filter.core import combine
 
 try:
     from ansible.module_utils.network.common.utils import to_list
@@ -26,6 +27,7 @@ except ImportError:
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
 from network_engine.plugins import template_loader, parser_loader
+from network_engine.utils import dict_merge
 
 
 try:
@@ -66,9 +68,6 @@ class ActionModule(ActionBase):
         elif source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
-        if not isinstance(content, string_types):
-            return {'failed': True, 'msg': '`content` must be of type str, got %s' % type(content)}
-
         if source_dir:
             sources = self.get_files(to_list(source_dir))
         else:
@@ -93,6 +92,7 @@ class ActionModule(ActionBase):
                 display.vvvv('processing directive: %s' % name)
 
                 register = task.pop('register', None)
+                extend = task.pop('extend', None)
 
                 export = task.pop('export', False)
                 export_as = task.pop('export_as', 'list')
@@ -140,7 +140,10 @@ class ActionModule(ActionBase):
                             if register:
                                 self.ds[register] = res
                                 if export:
-                                    facts[register] = res
+                                    if extend:
+                                        facts.update(self.merge_facts(task_vars, extend, register, res))
+                                    else:
+                                        facts[register] = res
                             else:
                                 self.ds.update(res)
                                 if export:
@@ -149,19 +152,28 @@ class ActionModule(ActionBase):
                             self.ds[register] = res
                             if export:
                                 if export_as in ('dict', 'hash', 'object'):
-                                    if register not in facts:
-                                        facts[register] = {}
-                                    for item in res:
-                                        facts[register] = self.rec_update(facts[register], item)
+                                    if extend:
+                                        facts.update(self.merge_facts(task_vars, extend, register, res, expand=True))
+                                    else:
+                                        if register not in facts:
+                                            facts[register] = {}
+                                        for item in res:
+                                            facts[register] = self.rec_update(facts[register], item)
                                 else:
-                                    facts[register] = res
+                                    if extend:
+                                        facts.update(self.merge_facts(task_vars, extend, register, res))
+                                    else:
+                                        facts[register] = res
                 else:
                     res = self._process_directive(task)
                     if 'set_vars' in task:
                         if register:
                             self.ds[register] = res
                             if export:
-                                facts[register] = res
+                                if extend:
+                                    facts.update(self.merge_facts(task_vars, extend, register, res))
+                                else:
+                                    facts[register] = res
                         else:
                             self.ds.update(res)
                             if export:
@@ -170,7 +182,10 @@ class ActionModule(ActionBase):
                         self.ds[register] = res
                         if export:
                             if register:
-                                facts[register] = res
+                                if extend:
+                                    facts.update(self.merge_facts(task_vars, extend, register, res))
+                                else:
+                                    facts[register] = res
                             else:
                                 for r in to_list(res):
                                     for k, v in iteritems(r):
@@ -182,6 +197,44 @@ class ActionModule(ActionBase):
         })
 
         return result
+
+    def merge_facts(self, task_vars, extend, register, res, expand=False):
+        update = self.build_update(extend, register, res, expand)
+        root = extend.split('.')[0]
+        current = {root: task_vars.get(root, {})}
+        return dict_merge(current, update)
+
+    def build_update(self, path, child, value, expand=False):
+        """Build an update based on the current results
+
+        This method will take the current results and build a nested dict
+        object.  The keys for the nested dict object are identified by
+        path.
+
+        :param path: The path of the nest keys
+
+        :param child: The child key name to assign the value to
+
+        :param value: The value to assign to the child key
+
+        :param expand: When set to True, this will iterate over the value
+
+        :returns: A nest dict object
+        """
+        update_set = dict()
+        working_set = update_set
+
+        if expand is True:
+            working_set[child] = {}
+            for item in value:
+                working_set[child] = self.rec_update(working_set[child], item)
+        else:
+            for key in path.split('.'):
+                working_set[key] = dict()
+                working_set = working_set[key]
+            working_set[child] = value
+
+        return update_set
 
     def get_files(self, source_dirs):
         include_files = list()
