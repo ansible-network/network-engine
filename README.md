@@ -40,7 +40,7 @@ For module documentation see the [modules](#modules) section below.
 The following are the available tasks provided by this role for use in
 playbooks.
 
-None
+* `cli` [source](https://github.com/ansible-network/network-engine/blob/devel/tasks/cli.yaml) [docs](https://github.com/ansible-network/network-engine/blob/devel/docs/tasks/cli.md).
 
 ## Variables
 

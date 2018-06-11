@@ -1,0 +1,11 @@
+---
+- name: validate connection is network_cli
+  fail:
+    msg: "expected connection network_cli, got {{ ansible_connection }}"
+  when: ansible_connection != 'network_cli'
+
+- name: run command on remote network node and use engine to parse output into JSON facts
+  cli:
+    command: "{{ network_engine_command }}"
+    parser: "{{ network_engine_parser | default(omit) }}"
+    engine: "{{ network_engine_engine | default(omit) }}"

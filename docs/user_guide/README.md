@@ -11,6 +11,8 @@ The initial release of the Network Engine role includes two parser modules:
 
 Both modules iterate over the data definitions in your parser templates, parse command output from your network devices (structured ASCII text) to find matches, and then convert the matches into Ansible facts in a JSON data structure.
 
+The task ```cli``` provided by the role, can also be directly implemented in your playbook. The documentation can be found here [tasks/cli](https://github.com/ansible-network/network-engine/blob/devel/docs/tasks/cli.md).
+
 To manage multiple interfaces and vlans, the Network Engine role also offers [filter_plugins](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/filter_plugins.md) that turn lists of interfaces or vlans into ranges and vice versa.
 
 To use the Network Engine Role:
@@ -33,7 +35,6 @@ Additional Resources
 * [README](https://galaxy.ansible.com/ansible-network/network-engine/#readme)
 * [command_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/command_parser)
 * [textfsm_parser tests](https://github.com/ansible-network/network-engine/tree/devel/tests/textfsm_parser)
-* [yang2spec tests](https://github.com/ansible-network/network-engine/tree/devel/tests/yang2spec)
 * [Full changelog diff](https://github.com/ansible-network/network-engine/blob/devel/CHANGELOG.rst)
 
 Contributing and Reporting Feedback
