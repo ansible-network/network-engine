@@ -2,6 +2,65 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.5.2:
+
+v2.5.2
+======
+
+.. _Ansible Network network-engine_v2.5.2_Minor Changes:
+
+Minor Changes
+-------------
+
+- Add new directives extend `network-engine#91 <https://github.com/ansible-network/network-engine/pull/91>`_.
+
+- Adds conditional support to nested template objects `network-engine#55 <https://github.com/ansible-network/network-engine/pull/55>`_.
+
+
+.. _Ansible Network network-engine_v2.5.2_New Lookup Plugins:
+
+New Lookup Plugins
+------------------
+
+- New lookup plugin ``json_template``
+
+- New lookup plugin ``network_template``
+
+- New lookup plugin ``yang2spec``
+
+- New lookup plugin ``netcfg_diff``
+
+
+.. _Ansible Network network-engine_v2.5.2_New Filter Plugins:
+
+New Filter Plugins
+------------------
+
+- New filter plugin ``interface_range``
+
+- New filter plugin ``interface_split``
+
+- New filter plugin ``vlan_compress``
+
+- New filter plugin ``vlan_expand``
+
+
+.. _Ansible Network network-engine_v2.5.2_New Tasks:
+
+New Tasks
+---------
+
+- New task ``cli``
+
+
+.. _Ansible Network network-engine_v2.5.2_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix AnsibleFilterError, deprecations, and unused imports `network-engine#82 <https://github.com/ansible-network/network-engine/pull/82>`_.
+
+
 .. _Ansible Network network-engine_v2.5.1:
 
 v2.5.1
