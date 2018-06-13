@@ -52,9 +52,11 @@ _raw:
 
 import os
 import imp
+import re
 import sys
 import shutil
 import uuid
+
 
 from copy import deepcopy
 
@@ -62,6 +64,7 @@ from ansible.plugins.lookup import LookupBase
 from ansible.module_utils.six import StringIO
 from ansible.utils.path import unfrackpath, makedirs_safe
 from ansible.errors import AnsibleError
+from ansible.module_utils._text import to_bytes, to_text
 
 try:
     import pyang
@@ -129,7 +132,7 @@ class LookupModule(LookupBase):
         xml_file_path = os.path.realpath(os.path.expanduser(xml_file_path))
 
         # fill in the sys args before invoking pyang
-        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path,yang_file, '-p', search_path]
+        sys.argv = [pyang_exec_path, '-f', 'jtox', '-o', jtox_file_path, yang_file, '-p', search_path]
 
         try:
             pyang_exec.run()
@@ -167,6 +170,7 @@ class LookupModule(LookupBase):
             sys.stderr = saved_stderr
 
         try:
+            content = re.sub('<\? ?xml .*\? ?>', '', content)
             root = etree.fromstring(content)
         except Exception as e:
             raise AnsibleError('Error while reading xml document: %s' % e)

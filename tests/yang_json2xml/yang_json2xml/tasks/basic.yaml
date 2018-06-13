@@ -3,10 +3,6 @@
   set_fact:
     interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, yang_file=yang_file, search_path=search_path) }}"
 
-- name: debug
-  debug:
-    msg: "{{ interface_oc_xml }}"
-
 - assert:
     that:
       - "'<oc-if:interfaces><oc-if:interface>' in interface_oc_xml"
@@ -19,9 +15,6 @@
   set_fact:
     interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, root='data', yang_file=yang_file, search_path=search_path) }}"
 
-- name: debug
-  debug:
-    msg: "{{ interface_oc_xml }}"
 
 - assert:
     that:
@@ -57,4 +50,8 @@
 
 - assert:
     that:
-      - "'missing key \\'openconfig-interfaces:name\\'' in result.msg"
+      - "result.failed == True"
+      # Uncomment below condition after issue in pyang is fixed
+      # Issue: https://github.com/mbj4668/pyang/issues/402 #
+      # Fix: https://github.com/mbj4668/pyang/pull/403 #
+      #- "'missing key \\'openconfig-interfaces:name\\'' in result.msg"
