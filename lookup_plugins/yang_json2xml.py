@@ -170,7 +170,7 @@ class LookupModule(LookupBase):
             sys.stderr = saved_stderr
 
         try:
-            content = re.sub('<\? ?xml .*\? ?>', '', content)
+            content = re.sub(r'<\? ?xml .*\? ?>', '', content)
             root = etree.fromstring(content)
         except Exception as e:
             raise AnsibleError('Error while reading xml document: %s' % e)
