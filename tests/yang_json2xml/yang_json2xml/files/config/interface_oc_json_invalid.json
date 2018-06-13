@@ -1,0 +1,14 @@
+{
+"openconfig-interfaces:interfaces": {
+  "interface": [
+    {
+        "config":
+            {
+                "description": "test openconfig",
+                "name" : "GigabitEthernet0/0/0/2"
+            }
+
+     }
+  ]
+  }
+}

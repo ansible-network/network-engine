@@ -12,3 +12,4 @@
 - import_playbook: yang2spec/test.yml
 - import_playbook: interface_range/test.yml
 - import_playbook: interface_split/test.yml
+- import_playbook: yang_json2xml/test.yml
