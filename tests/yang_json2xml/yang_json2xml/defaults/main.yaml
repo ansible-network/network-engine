@@ -1,0 +1,4 @@
+yang_file: "{{ role_path }}/../../fixtures/files/openconfig/interfaces/openconfig-interfaces.yang"
+search_path: "{{ role_path }}/../../fixtures/files/"
+interface_valid_config: "{{ role_path}}/files/config/interface_oc_json_valid.json"
+interface_invalid_config: "{{ role_path}}/files/config/interface_oc_json_invalid.json"

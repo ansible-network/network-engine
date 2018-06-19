@@ -1,0 +1,57 @@
+---
+- name: Convert interface json config to xml
+  set_fact:
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, yang_file=yang_file, search_path=search_path) }}"
+
+- assert:
+    that:
+      - "'<oc-if:interfaces><oc-if:interface>' in interface_oc_xml"
+      - "'<oc-if:name>GigabitEthernet0/0/0/2</oc-if:name>' in interface_oc_xml"
+      - "'<oc-if:config>' in interface_oc_xml"
+      - "'<oc-if:description>test openconfig</oc-if:description>' in interface_oc_xml"
+      - "'<nc:config xmlns:nc=\"urn:ietf:params:xml:ns:netconf:base:1.0\"' in interface_oc_xml"
+
+- name: Convert interface json config to xml with data as root node
+  set_fact:
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, root='data', yang_file=yang_file, search_path=search_path) }}"
+
+
+- assert:
+    that:
+      - "'<nc:config xmlns:nc=\"urn:ietf:params:xml:ns:netconf:base:1.0\"' not in interface_oc_xml"
+      - "'<nc:data xmlns:nc=\"urn:ietf:params:xml:ns:netconf:base:1.0\"' in interface_oc_xml"
+
+- name: Wrong yang module path
+  set_fact:
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, yang_file='/test', search_path=search_path) }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "'invalid file path' in result.msg"
+
+
+- name: Wrong module search path
+  set_fact:
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_valid_config, yang_file=yang_file, search_path='/test') }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "'invalid directory path' in result.msg"
+
+- name: invalid input json configuration
+  set_fact:
+    interface_oc_xml: "{{ lookup('yang_json2xml', interface_invalid_config, yang_file=yang_file, search_path=search_path) }}"
+  ignore_errors: True
+  register: result
+
+- assert:
+    that:
+      - "result.failed == True"
+      # Uncomment below condition after issue in pyang is fixed
+      # Issue: https://github.com/mbj4668/pyang/issues/402 #
+      # Fix: https://github.com/mbj4668/pyang/pull/403 #
+      #- "'missing key \\'openconfig-interfaces:name\\'' in result.msg"
