@@ -1,0 +1,11 @@
+---
+- name: Fetch base and dependant schema data models
+  fetch_schema:
+      schema:
+        - openconfig-interfaces
+  register: result
+
+- assert: &true
+    that:
+      - 'result.changed == true'
+
