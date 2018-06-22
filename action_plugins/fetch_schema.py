@@ -1,4 +1,4 @@
-# (c) 2017, Ansible by Red Hat, inc
+# (c) 2018, Ansible by Red Hat, inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #
 # You should have received a copy of the GNU General Public License
@@ -7,10 +7,6 @@
 from __future__ import absolute_import
 import os
 import re
-import copy
-import json
-import collections
-import yaml
 import sys
 is_py2 = sys.version[0] == '2'
 if is_py2:
@@ -18,20 +14,11 @@ if is_py2:
 else:
     import queue as queue
 
-import q
-
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.network.common.utils import to_list
-from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_bytes, to_text
 from ansible.module_utils.connection import Connection, ConnectionError
 from ansible.utils.path import unfrackpath, makedirs_safe
-from ansible.errors import AnsibleError, AnsibleUndefinedVariable, AnsibleFileNotFound
-
-from ansible.module_utils.six.moves.urllib.parse import urlsplit
-from collections import OrderedDict
-
 
 try:
     from __main__ import display
@@ -55,9 +42,11 @@ try:
 except ImportError:
     HAS_JXMLEASE = False
 
+
 def warning(msg):
     if C.ACTION_WARNINGS:
         display.warning(msg)
+
 
 class SchemaStore(object):
     def __init__(self, conn, folder):
@@ -78,11 +67,11 @@ class SchemaStore(object):
             </netconf-state>
           </filter>
         '''
-        xml_request = '<%s>%s</%s>' %('get', content, 'get')
+        xml_request = '<%s>%s</%s>' % ('get', content, 'get')
         try:
-          response = self._conn.dispatch(xml_request)
+            response = self._conn.dispatch(xml_request)
         except ConnectionError as e:
-          raise ValueError(to_text(e))
+            raise ValueError(to_text(e))
         response = to_bytes(response, errors='surrogate_or_strict')
         tree = etree.ElementTree(etree.fromstring(response))
         tree_root = tree.getroot()
@@ -97,8 +86,8 @@ class SchemaStore(object):
         return
 
     def get_one_schema(self, schema_id):
-        if self._all_schema_list == None:
-	    self.get_schema_description()
+        if self._all_schema_list is None:
+            self.get_schema_description()
 
         found = False
         # Search for schema that are supported by device.
@@ -106,9 +95,9 @@ class SchemaStore(object):
         schema_cache_entry = {}
         for index, schema_list in enumerate(self._all_schema_list):
             if to_bytes(schema_id) == to_bytes(schema_list["identifier"],
-                                            errors='surrogate_or_strict'):
+                                               errors='surrogate_or_strict'):
                 schema_cache_entry["id"] = to_bytes(schema_id,
-                                 errors='surrogate_or_strict')
+                                                    errors='surrogate_or_strict')
                 schema_cache_entry["ns"] = self._all_schema_list[index]["namespace"]
                 schema_cache_entry["format"] = self._all_schema_list[index]["format"]
                 found = True
@@ -117,8 +106,8 @@ class SchemaStore(object):
         if found:
             content = ("<identifier> %s </identifier>" % (schema_cache_entry["id"]))
             xmlns = "urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"
-            xml_request = '<%s xmlns="%s"> %s </%s>' %('get-schema',
-                                        xmlns, content, 'get-schema')
+            xml_request = '<%s xmlns="%s"> %s </%s>' % ('get-schema', xmlns,
+                                                        content, 'get-schema')
             try:
                 response = self._conn.dispatch(xml_request)
             except ConnectionError as e:
@@ -153,7 +142,7 @@ class SchemaStore(object):
 
     def get_dependant_schema_from_yang_file(self, yang_fname):
         if not os.path.exists(yang_fname):
-           raise ValueError('path specified in src not found')
+            raise ValueError('path specified in src not found')
 
         with open(yang_fname, 'r') as f:
             data_model = to_text(f.read(), errors='surrogate_or_strict')
@@ -185,23 +174,22 @@ class SchemaStore(object):
         sq = queue.Queue()
         sq.put(schema_id)
 
-        while (sq.empty() != True):
+        while sq.empty() is not True:
             schema_id = sq.get()
             if self.check_schema_exist(schema_id):
-               q('found %s' % schema_id)
-               continue
+                continue
             try:
                 schema_dlist = self.get_schema_and_dependants(schema_id)
             except ValueError as e:
                 raise ValueError(e)
             for schema in schema_dlist:
                 if not self.check_schema_exist(schema):
-                    q('not found %s' % schema)
                     sq.put(schema)
                     changed = True
                     counter = counter + 1
 
         return (changed, counter)
+
 
 class ActionModule(ActionBase):
 
@@ -212,13 +200,13 @@ class ActionModule(ActionBase):
         result = super(ActionModule, self).run(tmp, task_vars)
 
         try:
-           schemas = self._task.args.get('schema')
+            schemas = self._task.args.get('schema')
         except ValueError as exc:
-           return dict(failed=True, msg="schema: mandatory agrgument")
+            return dict(failed=True, msg="schema: mandatory agrgument")
 
-        #Optional Arguments Handling
+        # Optional Arguments Handling
         dest_folder = self._task.args.get('destination')
-        if dest_folder == None:
+        if dest_folder is None:
             dest_folder = self._get_default_folder()
         else:
             dest_folder = to_bytes(dest_folder, errors='surrogate_or_strict')
@@ -231,18 +219,17 @@ class ActionModule(ActionBase):
 
         result_list = []
         try:
-           for schema in schemas:
-              changed, counter = ss.run(schema)
-              q(changed, counter)
-              result_list.append((changed, counter))
+            for schema in schemas:
+                changed, counter = ss.run(schema)
+                result_list.append((changed, counter))
         except ValueError as exc:
-           return dict(failed=True, msg=to_text(exc))
+            return dict(failed=True, msg=to_text(exc))
 
         final_re = False
         final_count = 0
         for re, counter in result_list:
-            if re == True:
-               final_re = True
+            if re is True:
+                final_re = True
             final_count = final_count + counter
 
         result["changed"] = final_re
@@ -261,4 +248,3 @@ class ActionModule(ActionBase):
         default_folder = cwd + '/yang_schemas'
         makedirs_safe(default_folder)
         return default_folder
-
