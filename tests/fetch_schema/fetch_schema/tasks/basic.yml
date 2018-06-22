@@ -3,9 +3,36 @@
   fetch_schema:
       schema:
         - openconfig-interfaces
+        - openconfig-bgp
   register: result
 
-- assert: &true
+- assert:
     that:
       - 'result.changed == true'
+      - 'result.number_schema_fetched == 15'
+
+- name: Idempotent check
+  fetch_schema:
+      schema:
+        - openconfig-interfaces
+        - openconfig-bgp
+  register: result
+
+- assert:
+    that:
+      - 'result.changed == false'
+      - 'result.number_schema_fetched == 0'
+
+- name: User specified destination folder
+  fetch_schema:
+      schema:
+        - openconfig-interfaces
+        - openconfig-bgp
+      destination: '~/.ansible/tmp/'
+  register: result
+
+- assert:
+    that:
+      - 'result.changed == true'
+      - 'result.number_schema_fetched == 15'
 
