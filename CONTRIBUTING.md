@@ -74,9 +74,10 @@ NOTES` section.
 
 # Note
 The release cadence for the network-engine role is two weeks and it will be
-released on every second Tuesday at 12:00 PM (GMT). For the PR to be available
-in the upcoming release it should be in a mergeable state that is CI is passing
-and all review comments fixed two days prior to scheduled date of release.
+released on every second Tuesday at 12:00 PM (GMT) from the date of prior release.
+For the PR to be available in the upcoming release it should be in a mergeable state
+that is CI is passing and all review comments fixed two days prior to scheduled date
+of release.
 
 ## Bug Reporting
 
