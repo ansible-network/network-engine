@@ -20,7 +20,7 @@ Minor Changes
 Removed Features (previously deprecated)
 ----------------------------------------
 
-- Move yang2spec lookup to feature branch, till the right location for this plugin is identified `network-engine#97 <https://github.com/ansible-network/network-engine/pull/100>`_.
+- Move yang2spec lookup to feature branch, till the right location for this plugin is identified `network-engine#100 <https://github.com/ansible-network/network-engine/pull/100>`_.
 
 
 .. _Ansible Network network-engine_v2.5.2:
