@@ -358,6 +358,7 @@ class ActionModule(ActionBase):
 
     def do_pattern_match(self, regex, content=None, match_all=None, match_until=None, match_greedy=None):
         content = self.template(content, self.ds) or self.template("{{ content }}", self.ds)
+        regex = self.template(regex, self.ds)
         parser = parser_loader.get('pattern_match', content)
         return parser.match(regex, match_all, match_until, match_greedy)
 

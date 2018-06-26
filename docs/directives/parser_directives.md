@@ -198,6 +198,14 @@ The following arguments are supported for this directive:
 * `match_all`
 * `match_greedy`
 
+The `regex` argument templates the value given to it so variables and filters can be used.
+Example :
+```yaml
+- name: Use a variable and a filter
+  pattern_match:
+    regex: "{{ inventory_hostname | lower }} (.+)"
+```
+
 ### `pattern_group`
 
 Use the `pattern_group` directive to group multiple
