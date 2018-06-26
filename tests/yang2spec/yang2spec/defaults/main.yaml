@@ -1,2 +1,0 @@
-yang_file: "{{ role_path }}/../../fixtures/files/openconfig/interfaces/openconfig-interfaces.yang"
-search_path: "{{ role_path }}/../../fixtures/files/"

@@ -1,3 +1,0 @@
----
-- name: yang2spec test
-  import_tasks: basic.yaml
