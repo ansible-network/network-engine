@@ -2,6 +2,27 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.5.3:
+
+v2.5.3
+========
+
+.. _Ansible Network network-engine_v2.5.3_Minor Changes:
+
+Minor Changes
+-------------
+
+- Templating the regex sent to the parser to allow us to use ansible variables in the regex string `network-engine#97 <https://github.com/ansible-network/network-engine/pull/97>`_.
+
+
+.. _Ansible Network network-engine_v2.5.3_Removed Features (previously deprecated):
+
+Removed Features (previously deprecated)
+----------------------------------------
+
+- Move yang2spec lookup to feature branch, till the right location for this plugin is identified `network-engine#100 <https://github.com/ansible-network/network-engine/pull/100>`_.
+
+
 .. _Ansible Network network-engine_v2.5.2:
 
 v2.5.2
