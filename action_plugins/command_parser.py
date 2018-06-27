@@ -72,14 +72,26 @@ class ActionModule(ActionBase):
             if source_file:
                 sources = to_list(source_file)
             else:
-                if 'parser_templates' in os.listdir('.'):
-                    if task_vars['ansible_network_os'] in os.listdir('parser_templates'):
-                        path = 'parser_templates/%s' % task_vars['ansible_network_os']
-                        sources = self.get_default_parser(path=path)
+                searchpath = []
+                searchpath = task_vars.get('ansible_search_path', [])
+                if not searchpath:
+                    searchpath.append(self._loader._basedir)
+
+                if 'parser_templates' in os.listdir(searchpath[0]):
+                    subdir_searchpath = os.path.join(searchpath[0], 'parser_templates')
+
+                    # parser in {{ playbook_dir }}/parser_templates/{{ ansible_network_os }}
+                    if task_vars['ansible_network_os'] in os.listdir(subdir_searchpath):
+                        newsearchpath = os.path.join(subdir_searchpath, task_vars['ansible_network_os'])
+                        sources = self.get_parser(path=newsearchpath)
+
+                    # parser in {{ playbook_dir }}/parser_templates
                     else:
-                        sources = self.get_default_parser(path='parser_templates')
+                        sources = self.get_parser(path=subdir_searchpath)
+
+                # parser in {{ playbook_dir }}
                 else:
-                    sources = self.get_default_parser(path='.')
+                    sources = self.get_parser(path=searchpath[0])
 
         facts = {}
 
@@ -244,25 +256,22 @@ class ActionModule(ActionBase):
 
         return update_set
 
-    def get_default_parser(self, path):
+    def get_parser(self, path):
         sources = list()
         src_file = list()
-        cwd = os.getcwd()
 
         for i in os.listdir(path):
             if i.startswith('show_'):
-                src_file.append(i)
+                f, ext = os.path.splitext(i)
+                if ext in self.VALID_FILE_EXTENSIONS:
+                    src_file.append(i)
 
         if len(src_file) == 1:
-            f, ext = os.path.splitext(src_file[0])
-            if ext in self.VALID_FILE_EXTENSIONS:
-                sources = ["%s/%s" % (path, src_file[0])]
-            else:
-                raise AnsibleError("invalid file format {0} in default parser path {1}".format(ext, cwd + '/' + path))
+            sources.append(os.path.join(path, src_file[0]))
         elif len(src_file) == 0:
-            raise AnsibleError("no file found in {0}, please create parser file".format(cwd + '/' + path))
+            raise AnsibleError("no parser file found in {0}, please create a parser".format(path))
         else:
-            raise AnsibleError("too many files in {0}, use `source_dir` instead".format(cwd + '/' + path))
+            raise AnsibleError("too many files in {0}, please use `file` or `dir` parameter".format(path))
 
         return sources
 
