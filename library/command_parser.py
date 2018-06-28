@@ -37,7 +37,7 @@ options:
         This argument is mutually exclusive with C(dir).
         Default path is {{ playbook_dir }}/parser_templates/{{ ansible_network_os }}
         or {{ playbook_dir }}/parser_templates or {{ playbook_dir }}
-    default: {{ playbook_dir }}/parser_templates/{{ ansible_network_os }}
+    default: "{{ playbook_dir }}/parser_templates/{{ ansible_network_os }}"
   content:
     description:
       - The text content to pass to the parser engine.  This argument provides
