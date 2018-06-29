@@ -116,6 +116,7 @@ class ActionModule(ActionBase):
 
                 export = task.pop('export', False)
                 export_as = task.pop('export_as', 'list')
+                export_as = self.template(export_as, self.ds)
                 if export_as not in self.VALID_EXPORT_AS:
                     raise AnsibleError('invalid value for export_as, got %s' % export_as)
 
