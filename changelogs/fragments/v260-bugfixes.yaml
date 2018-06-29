@@ -1,0 +1,2 @@
+bugfixes:
+- Fix cli task parser undefined issue when only command is used `network-engine#103 <https://github.com/ansible-network/network-engine/pull/103>`_.
