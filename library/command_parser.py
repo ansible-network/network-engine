@@ -35,7 +35,9 @@ options:
       - The path to the parser to load from disk on the Ansible
         controller.  This can be either the absolute path or relative path.
         This argument is mutually exclusive with C(dir).
-    default: null
+        Default path is {{ playbook_dir }}/parser_templates/{{ ansible_network_os }}
+        or {{ playbook_dir }}/parser_templates or {{ playbook_dir }}
+    default: "{{ playbook_dir }}/parser_templates/{{ ansible_network_os }}"
   content:
     description:
       - The text content to pass to the parser engine.  This argument provides

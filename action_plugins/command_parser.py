@@ -63,15 +63,35 @@ class ActionModule(ActionBase):
         except KeyError as exc:
             return {'failed': True, 'msg': 'missing required argument: %s' % exc}
 
-        if not source_dir and not source_file:
-            return {'failed': True, 'msg': 'one of `dir` or `file` must be specified'}
-        elif source_dir and source_file:
+        if source_dir and source_file:
             return {'failed': True, 'msg': '`dir` and `file` are mutually exclusive arguments'}
 
         if source_dir:
             sources = self.get_files(to_list(source_dir))
         else:
-            sources = to_list(source_file)
+            if source_file:
+                sources = to_list(source_file)
+            else:
+                searchpath = []
+                searchpath = task_vars.get('ansible_search_path', [])
+                if not searchpath:
+                    searchpath.append(self._loader._basedir)
+
+                if 'parser_templates' in os.listdir(searchpath[0]):
+                    subdir_searchpath = os.path.join(searchpath[0], 'parser_templates')
+
+                    # parser in {{ playbook_dir }}/parser_templates/{{ ansible_network_os }}
+                    if task_vars['ansible_network_os'] in os.listdir(subdir_searchpath):
+                        newsearchpath = os.path.join(subdir_searchpath, task_vars['ansible_network_os'])
+                        sources = self.get_parser(path=newsearchpath)
+
+                    # parser in {{ playbook_dir }}/parser_templates
+                    else:
+                        sources = self.get_parser(path=subdir_searchpath)
+
+                # parser in {{ playbook_dir }}
+                else:
+                    sources = self.get_parser(path=searchpath[0])
 
         facts = {}
 
@@ -235,6 +255,25 @@ class ActionModule(ActionBase):
             working_set[child] = value
 
         return update_set
+
+    def get_parser(self, path):
+        sources = list()
+        src_file = list()
+
+        for i in os.listdir(path):
+            if i.startswith('show_'):
+                f, ext = os.path.splitext(i)
+                if ext in self.VALID_FILE_EXTENSIONS:
+                    src_file.append(i)
+
+        if len(src_file) == 1:
+            sources.append(os.path.join(path, src_file[0]))
+        elif len(src_file) == 0:
+            raise AnsibleError("no parser file found in {0}, please create a parser".format(path))
+        else:
+            raise AnsibleError("too many files in {0}, please use `file` or `dir` parameter".format(path))
+
+        return sources
 
     def get_files(self, source_dirs):
         include_files = list()
