@@ -245,6 +245,9 @@ class ActionModule(ActionBase):
         working_set = update_set
 
         if expand is True:
+            for key in path.split('.'):
+                working_set[key] = dict()
+                working_set = working_set[key]
             working_set[child] = {}
             for item in value:
                 working_set[child] = self.rec_update(working_set[child], item)
