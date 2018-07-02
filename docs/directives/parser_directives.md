@@ -122,6 +122,19 @@ Accepted values for `export_as`:
 * `elements` that defines the structure
 
 **Note** this option requires the `register` value to be set and `export: True`.
+Variables can also be used with `export_as`.
+How to use variable with `export_as` is as follows:
+
+Variable should be defined in vars or defaults or in playbook.
+```yaml
+  vars:
+    export_type: "list"
+```
+
+Parser file needs to have the variable set to `export_as`.
+```
+export_as: "{{ export_type }}"
+```
 
 ### `extend`
 
