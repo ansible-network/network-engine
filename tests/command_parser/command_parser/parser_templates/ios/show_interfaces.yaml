@@ -57,4 +57,5 @@
               value: "{{ item.description.matches.0 }}"
   loop: "{{ interfaces }}"
   export: yes
+  export_as: "{{ export_type }}"
   register: interface_facts
