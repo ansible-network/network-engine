@@ -2,12 +2,10 @@
     check:
       jobs:
         - ansible-test-sanity
-        - ansible-role-tests-devel-py2
-        - ansible-role-tests-2.6-py2
-        - ansible-role-tests-2.6-py3
+        - ansible-role-tests-2.5-py2
+        - ansible-role-tests-2.5-py3
     gate:
       jobs:
         - ansible-test-sanity
-        - ansible-role-tests-devel-py2
-        - ansible-role-tests-2.6-py2
-        - ansible-role-tests-2.6-py3
+        - ansible-role-tests-2.5-py2
+        - ansible-role-tests-2.5-py3
