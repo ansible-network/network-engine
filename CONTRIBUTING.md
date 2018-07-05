@@ -72,6 +72,14 @@ fictitious platform call `foo`.  Create a new file `docs/foo.md` and
 then add a link to [README](README.md) pointing to `docs/foo.md` in the `PLATFORM
 NOTES` section.
 
+# Note
+
+The release cadence for the network-engine role is two weeks and it will be
+released on every second Tuesday at 12:00 PM (GMT) from the date of prior release.
+For the PR to be available in the upcoming release it should be in a mergeable state
+that is CI is passing and all review comments fixed at least two days prior to scheduled date
+of release.
+
 ## Bug Reporting
 
 If you have found a bug in the with the current role please open a [GitHub
