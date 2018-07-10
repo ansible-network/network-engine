@@ -2,10 +2,35 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.5.4:
+
+v2.5.4
+======
+
+.. _Ansible Network network-engine_v2.5.4_Minor Changes:
+
+Minor Changes
+-------------
+
+- Add parsers to search path `network-engine#89 <https://github.com/ansible-network/network-engine/pull/89>`_.
+
+- Fix export_as templating vars `network-engine#104 <https://github.com/ansible-network/network-engine/pull/104>`_.
+
+
+.. _Ansible Network network-engine_v2.5.4_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix cli task parser undefined issue when only command is used `network-engine#103 <https://github.com/ansible-network/network-engine/pull/103>`_.
+
+- Fix an issue with using the extend directive with a loop `network-engine#105 <https://github.com/ansible-network/network-engine/pull/105>`_.
+
+
 .. _Ansible Network network-engine_v2.5.3:
 
 v2.5.3
-========
+======
 
 .. _Ansible Network network-engine_v2.5.3_Minor Changes:
 
