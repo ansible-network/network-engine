@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.0:
+
+v2.6.0
+======
+
+.. _Ansible Network network-engine_v2.6.0_Major Changes:
+
+Major Changes
+-------------
+
+- Initial release of 2.6.0 ``network-engine`` Ansible role that is supported with Ansible 2.6.0
+
+
 .. _Ansible Network network-engine_v2.5.4:
 
 v2.5.4
