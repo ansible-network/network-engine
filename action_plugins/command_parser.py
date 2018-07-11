@@ -212,6 +212,8 @@ class ActionModule(ActionBase):
                                     for k, v in iteritems(r):
                                         facts.update({to_text(k): v})
 
+                task_vars.update(facts)
+
         result.update({
             'ansible_facts': facts,
             'included': sources
