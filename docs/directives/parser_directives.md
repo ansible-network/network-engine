@@ -210,6 +210,7 @@ The following arguments are supported for this directive:
 * `content`
 * `match_all`
 * `match_greedy`
+* `match_until`
 
 The `regex` argument templates the value given to it so variables and filters can be used.
 Example :
