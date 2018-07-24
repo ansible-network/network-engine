@@ -2,6 +2,27 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.1:
+
+v2.6.1
+======
+
+.. _Ansible Network network-engine_v2.6.1_Documentation Updates:
+
+Documentation Updates
+---------------------
+
+- The argument to end a block of text when searching with match_greedy was missing `network-engine#116 <https://github.com/ansible-network/network-engine/pull/116>`_.
+
+
+.. _Ansible Network network-engine_v2.6.1_Bugfixes:
+
+Bugfixes
+--------
+
+- Fixes bug when loading a dir of parsers `network-engine#113 <https://github.com/ansible-network/network-engine/pull/113>`_.
+
+
 .. _Ansible Network network-engine_v2.6.0:
 
 v2.6.0
