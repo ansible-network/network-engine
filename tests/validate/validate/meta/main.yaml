@@ -1,0 +1,3 @@
+---
+dependencies:
+  - "{{ role_pathsplit('/tests/validate/validate')[0] }}"
