@@ -1,3 +1,7 @@
 ---
+- name: import dependency role for test
+  import_role:
+    name: "{{ role_path.split('/tests/textfsm/textfsm')[0] }}"
+
 - name: ios textfsm test
   import_tasks: ios.yaml
