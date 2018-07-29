@@ -101,6 +101,14 @@ def vlan_expand(vlan):
     return ['%d' % int(index) for index in indices]
 
 
+def to_lines(value):
+    if isinstance(value, (list, set, tuple)):
+        return value
+    elif isinstance(value, string_types):
+        return value.split('\n')
+    raise AnsibleFilterError('cannot convert value to lines')
+
+
 class FilterModule(object):
     ''' Network interface filter '''
 
@@ -109,5 +117,6 @@ class FilterModule(object):
             'interface_split': interface_split,
             'interface_range': interface_range,
             'vlan_compress': vlan_compress,
-            'vlan_expand': vlan_expand
+            'vlan_expand': vlan_expand,
+            'to_lines': to_lines
         }
