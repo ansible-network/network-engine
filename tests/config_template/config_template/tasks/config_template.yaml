@@ -10,4 +10,3 @@
     that:
       - "'test string' in test_pass"
       - "'test string' not in test_fail"
-

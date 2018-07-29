@@ -9,7 +9,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 lookup: config_template
-author: Peter Sprygada (private)
+author: Peter Sprygada (privateip)
 version_added: "2.7"
 short_description: retrieve contents of file after templating with Jinja2
 description:
