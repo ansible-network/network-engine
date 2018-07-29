@@ -1,3 +1,0 @@
----
-dependencies:
-  - "{{ role_path.split('/tets/config_template/config_template')[0] }}"
