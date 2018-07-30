@@ -93,7 +93,7 @@ class ActionModule(ActionBase):
             elif attrs:
                 if 'aliases' in attrs:
                     for item in attrs['aliases']:
-                        if alias in task_vars:
+                        if item in task_vars:
                             args[key] = self._templar.do_template(task_vars[key])
                 elif 'default' in attrs and key not in args:
                     args[key] = attrs['default']
