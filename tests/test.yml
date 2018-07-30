@@ -12,4 +12,3 @@
 - import_playbook: interface_range/test.yml
 - import_playbook: interface_split/test.yml
 - import_playbook: fetch_schema/test.yml
-

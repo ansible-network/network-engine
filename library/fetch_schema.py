@@ -39,7 +39,7 @@ author:
 
 EXAMPLES = '''
 - fetch_schema:
-    schemas: 
+    schemas:
        - openconfig-interface
        - openconfig-bgp
     desctination: ~/.ansible/tmp/yang

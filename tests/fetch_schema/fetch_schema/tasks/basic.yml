@@ -35,4 +35,3 @@
     that:
       - 'result.changed == true'
       - 'result.number_schema_fetched == 15'
-
