@@ -1,4 +1,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - validate
+    - validate_role_spec

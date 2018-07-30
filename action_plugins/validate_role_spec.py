@@ -13,7 +13,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = """
 ---
-module: validate
+module: validate_role_spec
 author: Ansible Network Team
 short_description: Validate required arguments are set from facts
 description:
@@ -32,7 +32,7 @@ options:
 
 EXAMPLES = """
 - name: use spec file for role validation
-  validate:
+  validate_role_spec:
     spec: args.yaml
 """
 
@@ -97,8 +97,6 @@ class ActionModule(ActionBase):
                             args[key] = self._templar.do_template(task_vars[key])
                 elif 'default' in attrs and key not in args:
                     args[key] = attrs['default']
-
-        display.display('%s' % args)
 
         basic._ANSIBLE_ARGS = to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args}))
         basic.AnsibleModule.fail_json = self.fail_json

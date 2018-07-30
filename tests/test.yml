@@ -13,4 +13,4 @@
 - import_playbook: interface_split/test.yml
 - import_playbook: config_template/test.yml
 - import_playbook: yang_json2xml/test.yml
-- import_playbook: validate/test.yml
+- import_playbook: validate_role_spec/test.yml

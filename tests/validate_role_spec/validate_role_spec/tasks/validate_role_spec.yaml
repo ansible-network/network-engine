@@ -5,5 +5,5 @@
     bool_arg: true
     optional_arg: value
 
-- validate:
+- validate_role_spec:
     spec: test.yaml
