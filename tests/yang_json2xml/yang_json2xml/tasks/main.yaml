@@ -1,0 +1,7 @@
+---
+- name: import dependency role for test
+  import_role:
+    name: "{{ role_path.split('/tests/yang_json2xml/yang_json2xml')[0] }}"
+
+- name: yang_json2xml test
+  import_tasks: basic.yaml
