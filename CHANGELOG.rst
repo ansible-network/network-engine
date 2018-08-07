@@ -2,6 +2,45 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.2:
+
+v2.6.2
+======
+
+.. _Ansible Network network-engine_v2.6.2_New Lookup Plugins:
+
+New Lookup Plugins
+------------------
+
+- NEW ``config_template`` lookup plugin
+
+- NEW ``yang_json2xml`` lookup plugin
+
+
+.. _Ansible Network network-engine_v2.6.2_New Filter Plugins:
+
+New Filter Plugins
+------------------
+
+- NEW ``to_lines`` filter plugin
+
+
+.. _Ansible Network network-engine_v2.6.2_New Modules:
+
+New Modules
+-----------
+
+- NEW ``validate_role_spec`` handle validating facts required by the role
+
+
+.. _Ansible Network network-engine_v2.6.2_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix role path test dependency `network-engine#121 <https://github.com/ansible-network/network-engine/pull/121>`_.
+
+
 .. _Ansible Network network-engine_v2.6.1:
 
 v2.6.1
