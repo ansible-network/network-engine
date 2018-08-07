@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.5.5:
+
+v2.5.5
+======
+
+.. _Ansible Network network-engine_v2.5.5_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix role path test dependency `network-engine#121 <https://github.com/ansible-network/network-engine/pull/121>`_.
+
+
 .. _Ansible Network network-engine_v2.5.4:
 
 v2.5.4
