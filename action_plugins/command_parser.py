@@ -113,6 +113,8 @@ class ActionModule(ActionBase):
 
                 register = task.pop('register', None)
                 extend = task.pop('extend', None)
+                if extend:
+                    extend = self.template(extend, self.ds)
 
                 export = task.pop('export', False)
                 export_as = task.pop('export_as', 'list')
