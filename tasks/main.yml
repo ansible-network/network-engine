@@ -1,2 +1,17 @@
 ---
 # tasks file for network-engine
+#
+- name: set role supported functions
+  set_fact:
+    network_engine_functions:
+      - cli
+
+- name: validate the requested function is supported
+  fail:
+    msg: "invalid function specified, expected one of {{ network_engine_functions }}, got {{ function }}"
+  when: function is defined and function not in network_engine_functions
+
+- name: include function specific tasks and run
+  include_tasks: "{{ function }}.yaml"
+  when: function is defined
+

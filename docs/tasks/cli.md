@@ -52,13 +52,9 @@ The following example runs CLI command on the network node.
 - hosts: ios01
   connection: network_cli
 
-  tasks:
-  - name: run cli command with cli task
-    import_role:
-      name: ansible-network.network-engine
-      tasks_from: cli
-    vars:
-      ansible_network_os: ios
+  roles:
+    - name: ansible-network.network-engine
+      function: cli
       command: show version
 
 ```
@@ -82,13 +78,10 @@ The following example runs cli command and parse output to JSON facts.
 - hosts: ios01
   connection: network_cli
 
-  tasks:
-  - name: run cli command and parse output to JSON facts
-    import_role:
-      name: ansible-network.network-engine
-      tasks_from: cli
-    vars:
-      ansible_network_os: ios
+
+  roles:
+    - name: ansible-network.network-engine
+      function: cli
       command: show version
       parser: parser_templates/ios/show_version.yaml
       engine: command_parser
