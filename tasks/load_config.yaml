@@ -1,5 +1,4 @@
 ---
-
 - name: run provider
   include_role:
     name: "{{ ansible_network_provider }}"
