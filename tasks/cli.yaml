@@ -1,6 +1,6 @@
 ---
 - name: initialize function
-    include_tasks: includes/init.yaml
+  include_tasks: includes/init.yaml
 
 - name: run command on remote network node and use engine to parse output into JSON facts
   cli:
