@@ -14,4 +14,3 @@
 - name: include function specific tasks and run
   include_tasks: "{{ function }}.yaml"
   when: function is defined
-
