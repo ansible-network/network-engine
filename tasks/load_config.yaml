@@ -1,6 +1,0 @@
----
-- name: run provider
-  include_role:
-    name: "{{ ansible_network_provider }}"
-    tasks_from: load_config
-  when: ansible_network_provider is defined
