@@ -2,6 +2,27 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.3:
+
+v2.6.3
+======
+
+.. _Ansible Network network-engine_v2.6.3_Minor Changes:
+
+Minor Changes
+-------------
+
+- Makes parser directive extend templatable `network-engine#132 <https://github.com/ansible-network/network-engine/pull/132>`_.
+
+
+.. _Ansible Network network-engine_v2.6.3_Bugfixes:
+
+Bugfixes
+--------
+
+- Task to fail if ansible_min_version isn't met `network-engine#130 <https://github.com/ansible-network/network-engine/pull/130>`_.
+
+
 .. _Ansible Network network-engine_v2.6.2:
 
 v2.6.2
