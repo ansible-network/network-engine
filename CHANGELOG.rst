@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.5.6:
+
+v2.5.6
+======
+
+.. _Ansible Network network-engine_v2.5.6_Bugfixes:
+
+Bugfixes
+--------
+
+- Task to fail if ansible_min_version isn't met `network-engine#136 <https://github.com/ansible-network/network-engine/pull/136>`_.
+
+
 .. _Ansible Network network-engine_v2.5.5:
 
 v2.5.5
