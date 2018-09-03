@@ -3,11 +3,12 @@
       jobs:
         - ansible-test-sanity
         - ansible-role-tests-devel-py2
+        - ansible-role-tests-2.7-py3
         - ansible-role-tests-2.6-py2
-        - ansible-role-tests-2.6-py3
     gate:
       jobs:
+        # inverted Python version compared to `check`
         - ansible-test-sanity
-        - ansible-role-tests-devel-py2
-        - ansible-role-tests-2.6-py2
+        - ansible-role-tests-devel-py3
+        - ansible-role-tests-2.7-py2
         - ansible-role-tests-2.6-py3
