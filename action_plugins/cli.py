@@ -41,7 +41,6 @@ options:
     description:
       - Defines the engine to use when parsing the output.  This argument
         accepts one of two valid values, C(command_parser) or C(textfsm_parser).
-        C(text_parser) and C(textfsm) are deprecated. Will be removed in Ansible version 2.6.
     default: command_parser
     choices:
       - command_parser
@@ -125,17 +124,8 @@ class ActionModule(ActionBase):
         result['json'] = json_data
 
         if parser:
-            if engine not in ('command_parser', 'textfsm_parser', 'text_parser', 'textfsm'):
+            if engine not in ('command_parser', 'textfsm_parser'):
                 raise AnsibleError('missing or invalid value for argument engine')
-
-            if engine == 'text_parser':
-                display.deprecated(msg='the `text_parser` module has been deprecated, please use `command_parser` instead',
-                                   version='2.6',
-                                   removed=False)
-            if engine == 'textfsm':
-                display.deprecated(msg='the `textfsm` module has been deprecated, please use `textfsm_parser` instead',
-                                   version='2.6',
-                                   removed=False)
 
             new_task = self._task.copy()
             new_task.args = {
