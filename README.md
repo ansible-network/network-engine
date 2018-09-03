@@ -21,13 +21,13 @@ Interested in contributing to this role? Check out [CONTRIBUTING](https://github
 ## Functions
 
 This section provides a list of the available functions that are included in
-this role.  Any of the provided functions can be implemented in Ansibel
+this role.  Any of the provided functions can be implemented in Ansible
 playbooks directly.  To use a particular function, please see the `docs` link
-assoicated with the function.
+associated with the function.
 
 * `cli` [[source]](https://github.com/ansible-network/network-engine/blob/devel/tasks/cli.yaml) [[docs]](https://github.com/ansible-network/network-engine/blob/devel/docs/tasks/cli.md).
 
-## Devleoper Guide
+## Developer Guide
 
 - [How to use](https://github.com/ansible-network/network-engine/blob/devel/docs/user_guide/README.md)
 - [Parser Directives](https://github.com/ansible-network/network-engine/blob/devel/docs/directives/parser_directives.md)
