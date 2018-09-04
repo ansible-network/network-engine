@@ -2,6 +2,37 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.4:
+
+v2.6.4
+======
+
+.. _Ansible Network network-engine_v2.6.4_Removed Features (previously deprecated):
+
+Removed Features (previously deprecated)
+----------------------------------------
+
+- Remove deprecated module ``text_parser``.
+
+- Remove deprecated module ``textfsm``.
+
+
+.. _Ansible Network network-engine_v2.6.4_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix repeat_for in json_template `network-engine#139 <https://github.com/ansible-network/network-engine/pull/139>`_.
+
+
+.. _Ansible Network network-engine_v2.6.4_Documentation Updates:
+
+Documentation Updates
+---------------------
+
+- Removes unnecessary details from README `network-engine#126 <https://github.com/ansible-network/network-engine/pull/126>`_.
+
+
 .. _Ansible Network network-engine_v2.6.3:
 
 v2.6.3
