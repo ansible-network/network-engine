@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.5:
+
+v2.6.5
+======
+
+.. _Ansible Network network-engine_v2.6.5_Bugfixes:
+
+Bugfixes
+--------
+
+- Remove GenericLinux from supported platforms `network-engine#145 <https://github.com/ansible-network/network-engine/pull/145>`_.
+
+
 .. _Ansible Network network-engine_v2.6.4:
 
 v2.6.4
