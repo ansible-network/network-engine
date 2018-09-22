@@ -56,6 +56,11 @@ except ImportError:
 
 class ActionModule(ActionBase):
 
+    VALID_MODULE_KWARGS = (
+        'argument_spec', 'mutually_exclusive', 'required_if',
+        'required_one_of', 'requred_together'
+    )
+
     def run(self, tmp=None, task_vars=None):
         ''' handler for cli operations '''
 
@@ -101,6 +106,7 @@ class ActionModule(ActionBase):
         basic._ANSIBLE_ARGS = to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args}))
         basic.AnsibleModule.fail_json = self.fail_json
 
+        spec = dict([(k, v) for k, v in iteritems(spec) if k in self.VALID_MODULE_KWARGS])
         basic.AnsibleModule(**spec)
 
         self._remove_tmp_path(self._connection._shell.tmpdir)
