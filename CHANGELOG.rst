@@ -2,6 +2,27 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.6:
+
+v2.6.6
+======
+
+.. _Ansible Network network-engine_v2.6.6_Minor Changes:
+
+Minor Changes
+-------------
+
+- Capability to filter AnsibleModule kwargs `network-engine#149 <https://github.com/ansible-network/network-engine/pull/149>`_.
+
+
+.. _Ansible Network network-engine_v2.6.6_Removed Features (previously deprecated):
+
+Removed Features (previously deprecated)
+----------------------------------------
+
+- Remove deprecated module ``cli_get``
+
+
 .. _Ansible Network network-engine_v2.6.5:
 
 v2.6.5
