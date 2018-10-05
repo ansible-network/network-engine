@@ -10,7 +10,6 @@ __metaclass__ = type
 import collections
 
 from ansible.module_utils.six import string_types
-
 from network_engine.plugins.template import TemplateBase
 
 
@@ -29,10 +28,12 @@ class TemplateEngine(TemplateBase):
                 if not self._check_conditional(when, variables):
                     continue
 
+            value_type = None
             if 'value' in item:
                 value = item.get('value')
                 items = None
                 item_type = None
+                value_type = item.get('type')
 
             elif 'object' in item:
                 items = item.get('object')
@@ -78,7 +79,7 @@ class TemplateEngine(TemplateBase):
                     templated_items[key] = templated_value
 
             else:
-                templated_value = self.template(value, variables)
+                templated_value = self.template(value, variables, convert_type=value_type)
                 templated_items[key] = templated_value
 
         return templated_items
