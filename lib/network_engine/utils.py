@@ -78,6 +78,7 @@ def dict_merge(base, other):
 
     return combined
 
+
 def _handle_type_str(value):
     if isinstance(value, string_types):
         return value
@@ -117,14 +118,14 @@ def _handle_type_float(value):
 
 def handle_type(value, want):
     type_checker = {
-            'str': _handle_type_str,
-            'bool': _handle_type_bool,
-            'int': _handle_type_int,
-            'float': _handle_type_float,
-        }.get(want)
+        'str': _handle_type_str,
+        'bool': _handle_type_bool,
+        'int': _handle_type_int,
+        'float': _handle_type_float,
+    }.get(want)
 
     try:
         return type_checker(value)
     except (TypeError, ValueError) as e:
         raise AssertionError("Value %s is of type %s and we were unable to convert to %s: %s" %
-                       (value, type(value), want, to_native(e)))
+                             (value, type(value), want, to_native(e)))
