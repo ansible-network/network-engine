@@ -11,6 +11,7 @@ import collections
 
 from ansible.module_utils.six import iteritems, string_types
 from ansible.errors import AnsibleUndefinedVariable
+from network_engine.utils import handle_type
 
 
 class TemplateBase(object):
@@ -24,7 +25,7 @@ class TemplateBase(object):
     def run(self, template, variables):
         pass
 
-    def template(self, data, variables, convert_bare=False):
+    def template(self, data, variables, convert_bare=False, convert_type=None):
 
         if isinstance(data, collections.Mapping):
             templated_data = {}
@@ -43,7 +44,10 @@ class TemplateBase(object):
             self._templar.set_available_variables(variables)
             try:
                 resp = self._templar.template(data, convert_bare=convert_bare)
-                resp = self._coerce_to_native(resp)
+                if convert_type:
+                    resp = handle_type(resp, convert_type)
+                else:
+                    resp = self._coerce_to_native(resp)
             except AnsibleUndefinedVariable:
                 resp = None
                 pass
