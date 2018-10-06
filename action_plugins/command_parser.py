@@ -380,7 +380,7 @@ class ActionModule(ActionBase):
     def _process_directive(self, task):
         for directive, args in iteritems(task):
             if directive == 'block':
-                display.deprecated('`block` is not longer supported, use `pattern_group` instead')
+                display.deprecated('`block` is not longer supported, use `pattern_group` instead', version=2.6)
                 directive = 'pattern_group'
 
             if directive not in self.VALID_DIRECTIVES:
