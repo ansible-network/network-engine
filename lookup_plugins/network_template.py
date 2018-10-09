@@ -36,6 +36,7 @@ _raw:
 import collections
 
 from ansible.plugins.lookup import LookupBase, display
+from ansible.module_utils.common._collections_compat import Mapping
 from ansible.module_utils.network.common.utils import to_list
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_text, to_bytes
@@ -82,7 +83,7 @@ class LookupModule(LookupBase):
                             loop = self.template(loop, self.ds)
                             loop_result = list()
 
-                            if isinstance(loop, collections.Mapping):
+                            if isinstance(loop, Mapping):
                                 for loop_key, loop_value in iteritems(loop):
                                     self.ds['item'] = {'key': loop_key, 'value': loop_value}
                                     res = self._process_directive(task)
@@ -138,7 +139,7 @@ class LookupModule(LookupBase):
                 if res:
                     results.extend(res)
 
-            elif isinstance(loop, collections.Mapping):
+            elif isinstance(loop, Mapping):
                 loop_result = list()
                 for loop_key, loop_value in iteritems(loop):
                     self.ds['item'] = {'key': loop_key, 'value': loop_value}
@@ -225,7 +226,7 @@ class LookupModule(LookupBase):
 
     def template(self, data, variables, convert_bare=False):
 
-        if isinstance(data, collections.Mapping):
+        if isinstance(data, Mapping):
             templated_data = {}
             for key, value in iteritems(data):
                 templated_key = self.template(key, variables, convert_bare=convert_bare)
