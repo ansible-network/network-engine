@@ -1,0 +1,2 @@
+minor_changes:
+- Update ``cli`` task to use ``cli_command`` module from Ansible 2.7

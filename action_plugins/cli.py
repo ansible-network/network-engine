@@ -15,6 +15,10 @@ DOCUMENTATION = """
 ---
 module: cli
 author: Ansible Network Team
+deprecated:
+  removed_in: "2.7.4"
+  why: Replaced with C(cli_command) network module.
+  alternative: Use M(cli_command) instead.
 short_description: Runs the specific command and returns the output
 description:
   - The command specified in C(command) will be executed on the remote
