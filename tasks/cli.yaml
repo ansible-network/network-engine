@@ -2,8 +2,28 @@
 - name: initialize function
   include_tasks: includes/init.yaml
 
-- name: run command on remote network node and use engine to parse output into JSON facts
-  cli:
+- name: validate required argument
+  fail:
+    msg: "missing required argument: command"
+  when: network_engine_command == None
+
+- name: run command on remote network node
+  cli_command:
     command: "{{ network_engine_command }}"
-    parser: "{{ network_engine_parser | default(omit) }}"
-    engine: "{{ network_engine_engine | default(omit) }}"
+  register: command_output
+
+- name: set command output fact
+  set_fact:
+    output: "{{ command_output.stdout }}"
+
+- name: use command_parser engine to parser output into JSON facts
+  command_parser:
+    file: "{{ network_engine_parser }}"
+    content: "{{ output }}"
+  when: network_engine_engine is match("command_parser") and network_engine_parser != None
+
+- name: use textfsm_parser engine to parser output into JSON facts
+  textfsm_parser:
+    file: "{{ network_engine_parser }}"
+    content: "{{ output }}"
+  when: network_engine_engine is match("textfsm_parser") and network_engine_parser != None
