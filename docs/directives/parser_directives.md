@@ -241,6 +241,11 @@ The following arguments are supported for this directive:
 
 * `template`
 
+
+**Note**
+Native jinja2 datatype (eg. 'int', 'float' etc.) rendering is supported with Ansible version >= 2.7
+and jinja2 library version >= 2.10
+
 ### `set_vars`
 
 Use the `set_vars` directive to set variables to the values like key / value pairs
