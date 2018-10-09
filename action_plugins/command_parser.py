@@ -13,6 +13,7 @@ import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
+from ansible.module_utils.common._collections_compat import Mapping
 from ansible.module_utils.six import iteritems, iterkeys, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
@@ -146,7 +147,7 @@ class ActionModule(ActionBase):
 
                     if loop:
                         # loop is a hash so break out key and value
-                        if isinstance(loop, collections.Mapping):
+                        if isinstance(loop, Mapping):
                             for loop_key, loop_value in iteritems(loop):
                                 self.ds[loop_var] = {'key': loop_key, 'value': loop_value}
                                 resp = self._process_directive(task)
@@ -307,7 +308,7 @@ class ActionModule(ActionBase):
 
     def rec_update(self, d, u):
         for k, v in iteritems(u):
-            if isinstance(v, collections.Mapping):
+            if isinstance(v, Mapping):
                 d[k] = self.rec_update(d.get(k, {}), v)
             else:
                 d[k] = v
