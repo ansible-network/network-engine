@@ -241,6 +241,36 @@ The following arguments are supported for this directive:
 
 * `template`
 
+
+**Note**
+Native jinja2 datatype (eg. 'int', 'float' etc.) rendering is supported with Ansible version >= 2.7
+and jinja2 library version >= 2.10. To enable native jinja2 config add below configuration in active
+ansible configuration file.
+```
+[defaults]
+jinja2_native= True
+```
+
+Usage example:
+```yaml
+  - set_fact:
+      count: "1"
+
+  - name: print count
+    debug:
+      msg: "{{ count|int }}"
+```
+
+With jinja2_native configuration enabled the output of above example task will have
+```
+"msg": 1
+```
+
+and with jinja2_native configuration disabled (default) output of above example task will have
+```
+"msg": "1"
+```
+
 ### `set_vars`
 
 Use the `set_vars` directive to set variables to the values like key / value pairs

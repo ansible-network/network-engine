@@ -43,23 +43,12 @@ class TemplateBase(object):
             self._templar.set_available_variables(variables)
             try:
                 resp = self._templar.template(data, convert_bare=convert_bare)
-                resp = self._coerce_to_native(resp)
             except AnsibleUndefinedVariable:
                 resp = None
                 pass
             finally:
                 self._templar.set_available_variables(tmp_avail_vars)
             return resp
-
-    def _coerce_to_native(self, value):
-        if not isinstance(value, bool):
-            try:
-                value = int(value)
-            except Exception:
-                if value is None or len(value) == 0:
-                    return None
-                pass
-        return value
 
     def _update(self, d, u):
         for k, v in iteritems(u):
