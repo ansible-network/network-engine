@@ -33,7 +33,6 @@ _raw:
 """
 
 
-
 from ansible.plugins.lookup import LookupBase, display
 from ansible.module_utils.common._collections_compat import Iterable, Mapping
 from ansible.module_utils.network.common.utils import to_list
