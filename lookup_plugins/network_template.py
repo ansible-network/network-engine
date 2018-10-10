@@ -46,10 +46,6 @@ from ansible.errors import AnsibleError, AnsibleUndefinedVariable
 class LookupModule(LookupBase):
 
     def run(self, terms, variables, **kwargs):
-
-        convert_data_p = kwargs.get('convert_data', True)
-        lookup_template_vars = kwargs.get('template_vars', {})
-
         self.ds = variables.copy()
 
         config_lines = list()
@@ -61,14 +57,11 @@ class LookupModule(LookupBase):
             display.vvvv("File lookup using %s as file" % lookupfile)
 
             if lookupfile:
-                with open(to_bytes(lookupfile, errors='surrogate_or_strict'), 'rb') as f:
-                    template_data = to_text(f.read(), errors='surrogate_or_strict')
-
+                with open(to_bytes(lookupfile, errors='surrogate_or_strict'), 'rb'):
                     tasks = self._loader.load_from_file(lookupfile)
 
                     for task in tasks:
-                        name = task.pop('name', None)
-
+                        task.pop('name', None)
                         register = task.pop('register', None)
 
                         when = task.pop('when', None)
@@ -120,9 +113,8 @@ class LookupModule(LookupBase):
 
         for entry in block:
             task = entry.copy()
-
-            name = task.pop('name', None)
-            register = task.pop('register', None)
+            task.pop('name', None)
+            task.pop('register', None)
 
             when = task.pop('when', None)
             if when is not None:
