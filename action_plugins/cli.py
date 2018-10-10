@@ -118,7 +118,7 @@ class ActionModule(ActionBase):
         # try to convert the cli output to native json
         try:
             json_data = json.loads(output)
-        except:
+        except Exception:
             json_data = None
 
         result['json'] = json_data
