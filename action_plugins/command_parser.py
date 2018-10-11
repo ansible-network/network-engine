@@ -9,11 +9,10 @@ __metaclass__ = type
 
 import os
 import sys
-import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.common._collections_compat import Mapping
+from ansible.module_utils.common._collections_compat import Iterable, Mapping
 from ansible.module_utils.six import iteritems, iterkeys, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
@@ -344,7 +343,7 @@ class ActionModule(ActionBase):
                 raise AnsibleError('invalid directive specified')
 
             if 'pattern_group' in task:
-                if loop and isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+                if loop and isinstance(loop, Iterable) and not isinstance(loop, string_types):
                     res = list()
                     for loop_item in loop:
                         self.ds[loop_var] = loop_item
@@ -357,7 +356,7 @@ class ActionModule(ActionBase):
                 if register:
                     registers[register] = res
 
-            elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+            elif isinstance(loop, Iterable) and not isinstance(loop, string_types):
                 loop_result = list()
 
                 for loop_item in loop:

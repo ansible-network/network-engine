@@ -33,10 +33,8 @@ _raw:
 """
 
 
-import collections
-
 from ansible.plugins.lookup import LookupBase, display
-from ansible.module_utils.common._collections_compat import Mapping
+from ansible.module_utils.common._collections_compat import Iterable, Mapping
 from ansible.module_utils.network.common.utils import to_list
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_text, to_bytes
@@ -83,7 +81,7 @@ class LookupModule(LookupBase):
                                     if res:
                                         loop_result.extend(to_list(res))
 
-                            elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+                            elif isinstance(loop, Iterable) and not isinstance(loop, string_types):
                                 for loop_item in loop:
                                     self.ds['item'] = loop_item
                                     res = self._process_directive(task)
@@ -138,7 +136,7 @@ class LookupModule(LookupBase):
                     loop_result.extend(to_list(self._process_directive(task)))
                 results.extend(loop_result)
 
-            elif isinstance(loop, collections.Iterable) and not isinstance(loop, string_types):
+            elif isinstance(loop, Iterable) and not isinstance(loop, string_types):
                 loop_result = list()
                 for loop_item in loop:
                     self.ds['item'] = loop_item
@@ -225,7 +223,7 @@ class LookupModule(LookupBase):
                 templated_data[templated_key] = self.template(value, variables, convert_bare=convert_bare)
             return templated_data
 
-        elif isinstance(data, collections.Iterable) and not isinstance(data, string_types):
+        elif isinstance(data, Iterable) and not isinstance(data, string_types):
             return [self.template(i, variables, convert_bare=convert_bare) for i in data]
 
         else:
