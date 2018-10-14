@@ -13,7 +13,13 @@ Both modules iterate over the data definitions in your parser templates, parse c
 
 The task ```cli``` provided by the role, can also be directly implemented in your playbook. The documentation can be found here [tasks/cli](https://github.com/ansible-network/network-engine/blob/devel/docs/tasks/cli.md).
 
-To manage multiple interfaces and vlans, the Network Engine role also offers [filter_plugins](https://github.com/ansible-network/network-engine/blob/devel/docs/plugins/filter_plugins.md) that turn lists of interfaces or vlans into ranges and vice versa.
+To manage multiple interfaces and vlans, the Network Engine role also offers [filter_plugins](https://github.com/ansible-network/network-engine/blob/devel/docs/plugins/filter_plugins.md) that turn lists of Interfaces or VLANs into ranges and vice versa.
+
+Modules:
+--------
+- `command_parser`
+- `textfsm_parser`
+- `net_facts`
 
 To use the Network Engine Role:
 ----------------------------------------
