@@ -3,11 +3,9 @@
       jobs:
         - ansible-test-sanity:
             voting: False
-        - ansible-role-tests-devel-py2
-        - ansible-role-tests-2.7-py2
-        - ansible-role-tests-2.7-py3
+        - tox-py27
+        - tox-py36
     gate:
       jobs:
-        - ansible-role-tests-devel-py3
-        - ansible-role-tests-2.7-py2
-        - ansible-role-tests-2.7-py3
+        - tox-py27
+        - tox-py36
