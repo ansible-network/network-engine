@@ -1,13 +1,13 @@
 - project:
     check:
       jobs:
-        - ansible-test-sanity:
-            voting: False
+        - ansible-test-sanity
         - ansible-role-tests-devel-py2
         - ansible-role-tests-2.7-py2
         - ansible-role-tests-2.7-py3
     gate:
       jobs:
+        - ansible-test-sanity
         - ansible-role-tests-devel-py3
         - ansible-role-tests-2.7-py2
         - ansible-role-tests-2.7-py3
