@@ -3,9 +3,3 @@
       jobs:
         - ansible-test-sanity:
             voting: False
-        - tox-py27
-        - tox-py36
-    gate:
-      jobs:
-        - tox-py27
-        - tox-py36
