@@ -13,11 +13,9 @@ import collections
 
 from ansible import constants as C
 from ansible.plugins.action import ActionBase
-from ansible.module_utils.six import iteritems, iterkeys, string_types
+from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
-
-from ansible.plugins.filter.core import combine
 
 try:
     from ansible.module_utils.network.common.utils import to_list

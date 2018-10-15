@@ -1,6 +1,8 @@
 - project:
     check:
       jobs:
+        - ansible-test-sanity:
+            voting: False
         - ansible-role-tests-2.6-py2
         - ansible-role-tests-2.6-py3
     gate:
