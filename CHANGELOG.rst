@@ -2,6 +2,21 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.7:
+
+v2.6.7
+======
+
+.. _Ansible Network network-engine_v2.6.7_New Modules:
+
+New Modules
+-----------
+
+- Add ``net_facts`` module.
+
+- Add ``net_facts`` module.
+
+
 .. _Ansible Network network-engine_v2.6.6:
 
 v2.6.6
@@ -140,14 +155,6 @@ Documentation Updates
 - The argument to end a block of text when searching with match_greedy was missing `network-engine#116 <https://github.com/ansible-network/network-engine/pull/116>`_.
 
 
-.. _Ansible Network network-engine_v2.6.1_Bugfixes:
-
-Bugfixes
---------
-
-- Fixes bug when loading a dir of parsers `network-engine#113 <https://github.com/ansible-network/network-engine/pull/113>`_.
-
-
 .. _Ansible Network network-engine_v2.6.0:
 
 v2.6.0
@@ -184,6 +191,8 @@ Bugfixes
 - Fix cli task parser undefined issue when only command is used `network-engine#103 <https://github.com/ansible-network/network-engine/pull/103>`_.
 
 - Fix an issue with using the extend directive with a loop `network-engine#105 <https://github.com/ansible-network/network-engine/pull/105>`_.
+
+- Fixes bug when loading a dir of parsers `network-engine#113 <https://github.com/ansible-network/network-engine/pull/113>`_.
 
 
 .. _Ansible Network network-engine_v2.5.3:
