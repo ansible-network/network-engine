@@ -2,19 +2,25 @@
 Ansible Network network-engine
 ==============================
 
-.. _Ansible Network network-engine_v2.6.7:
+.. _Ansible Network network-engine_v2.6.8:
 
-v2.6.7
+v2.6.8
 ======
 
-.. _Ansible Network network-engine_v2.6.7_New Modules:
+.. _Ansible Network network-engine_v2.6.8_New Modules:
 
 New Modules
 -----------
 
 - Add ``net_facts`` module.
 
-- Add ``net_facts`` module.
+
+.. _Ansible Network network-engine_v2.6.8_Bugfixes:
+
+Bugfixes
+--------
+
+- There was a release problem with our v2.6.7 release which required us to release v2.6.8.
 
 
 .. _Ansible Network network-engine_v2.6.6:
