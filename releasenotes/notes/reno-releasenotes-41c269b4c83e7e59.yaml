@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Release notes are now generated per commit. This allows for easier and
+    better automation around our release process.
