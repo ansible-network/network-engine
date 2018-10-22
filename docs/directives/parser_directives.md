@@ -47,9 +47,7 @@ currently supported:
 * `block`
 * `loop`
 * `loop_control`
-
-  * `loop_var`
-
+* `loop_var`
 * `when`
 * `register`
 * `export`
@@ -81,12 +79,12 @@ The default value for `name` is `null`.
 ### `register`
 
 Use the `register` option to register the results of a directive operation
-temporarily into the variable name you specify 
-so you can retrieve it later in your parser template. You use `register` in 
+temporarily into the variable name you specify
+so you can retrieve it later in your parser template. You use `register` in
 a parser template just as you would in an Ansible playbook.
 
 Variables created with `register` alone are not available outside of the parser context.
-Any values registered are only available within the scope of the parser activities. 
+Any values registered are only available within the scope of the parser activities.
 If you want to provide values back to the playbook, you must also define the [export](#export) option.
 
 Typically you will use `register` alone for parsing each individual part of the
@@ -211,6 +209,7 @@ The following arguments are supported for this directive:
 * `match_all`
 * `match_greedy`
 * `match_until` : Sets a ending boundary for `match_greedy`.
+* `meta`: A dictionary of metadata returned with the extraction. Not for use with match_greedy.
 
 The `regex` argument templates the value given to it so variables and filters can be used.
 Example :
@@ -218,6 +217,16 @@ Example :
 - name: Use a variable and a filter
   pattern_match:
     regex: "{{ inventory_hostname | lower }} (.+)"
+```
+
+The `meta` argument provides additional metadata that will be returned with the extraction.
+Example :
+```yaml
+- name: Extract the ospf process id and area
+  pattern_match:
+    regex: ^\s*ip router ospf (?P<process_id>\d+) area (?P<area>\S+)$
+    meta:
+      example: '  ip router ospf 100 area 10.10.128.0'
 ```
 
 ### `pattern_group`

@@ -21,7 +21,7 @@ class ParserEngine(object):
     def __init__(self, text):
         self.text = text
 
-    def match(self, regex, match_all=None, match_until=None, match_greedy=None):
+    def match(self, regex, match_all=None, match_until=None, match_greedy=None, meta=None):
         """ Perform the regular expression match against the content
 
         :args regex: The regular expression pattern to use
@@ -36,17 +36,17 @@ class ParserEngine(object):
         if match_greedy:
             return self._match_greedy(content, regex, end=match_until, match_all=match_all)
         elif match_all:
-            return self._match_all(content, regex)
+            return self._match_all(content, meta, regex)
         else:
-            return self._match(content, regex)
+            return self._match(content, meta, regex)
 
-    def _match_all(self, content, pattern):
-        match = self.re_matchall(pattern, content)
+    def _match_all(self, content, meta, pattern):
+        match = self.re_matchall(pattern, content, meta)
         if match:
             return match
 
-    def _match(self, content, pattern):
-        match = self.re_search(pattern, content)
+    def _match(self, content, meta, pattern):
+        match = self.re_search(pattern, content, meta)
         return match
 
     def _match_greedy(self, content, start, end=None, match_all=None):
@@ -136,8 +136,8 @@ class ParserEngine(object):
 
         return context_data
 
-    def re_search(self, regex, value):
-        obj = {'matches': []}
+    def re_search(self, regex, value, meta):
+        obj = {'matches': [], 'meta': meta}
         regex = re.compile(regex, re.M)
         match = regex.search(value)
         if match:
@@ -148,12 +148,11 @@ class ParserEngine(object):
             obj['matches'] = items
         return obj
 
-    def re_matchall(self, regex, value):
+    def re_matchall(self, regex, value, meta):
         objects = list()
         regex = re.compile(regex)
         for match in re.findall(regex.pattern, value, re.M):
-            obj = {}
-            obj['matches'] = match
+            obj = {'matches': match, 'meta': meta}
             if regex.groupindex:
                 for name, index in iteritems(regex.groupindex):
                     if len(regex.groupindex) == 1:

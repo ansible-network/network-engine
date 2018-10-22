@@ -402,11 +402,12 @@ class ActionModule(ActionBase):
         if network_os not in (None, self.ds['ansible_network_os']):
             raise AnsibleError('parser expected %s, got %s' % (network_os, self.ds['ansible_network_os']))
 
-    def do_pattern_match(self, regex, content=None, match_all=None, match_until=None, match_greedy=None):
+    def do_pattern_match(self, regex, content=None, match_all=None, match_until=None, match_greedy=None, meta=None):
+        meta = meta or {}
         content = self.template(content, self.ds) or self.template("{{ content }}", self.ds)
         regex = self.template(regex, self.ds)
         parser = parser_loader.get('pattern_match', content)
-        return parser.match(regex, match_all, match_until, match_greedy)
+        return parser.match(regex, match_all, match_until, match_greedy, meta)
 
     def do_json_template(self, template):
         return self.template.run(template, self.ds)
