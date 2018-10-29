@@ -243,7 +243,7 @@ class LookupModule(LookupBase):
         if not isinstance(value, bool):
             try:
                 value = int(value)
-            except Exception as exc:
+            except Exception:
                 if value is None or len(value) == 0:
                     return None
         return value
