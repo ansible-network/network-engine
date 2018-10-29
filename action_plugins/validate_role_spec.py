@@ -58,7 +58,7 @@ class ActionModule(ActionBase):
 
     VALID_MODULE_KWARGS = (
         'argument_spec', 'mutually_exclusive', 'required_if',
-        'required_one_of', 'requred_together'
+        'required_one_of', 'required_together'
     )
 
     def run(self, tmp=None, task_vars=None):
