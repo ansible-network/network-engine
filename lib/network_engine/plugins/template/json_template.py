@@ -53,7 +53,10 @@ class TemplateEngine(TemplateBase):
 
                         for loop_item in loop_data:
                             variables[loop_var] = loop_item
-                            templated_value.append(self.template(items, variables))
+                            if isinstance(items, string_types):
+                                templated_value.append(self.template(items, variables))
+                            else:
+                                templated_value.append(self.run(items, variables))
 
                         if item_type == 'list':
                             templated_items[key] = templated_value
