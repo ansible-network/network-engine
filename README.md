@@ -18,7 +18,6 @@ Any open bugs and/or feature requests are tracked in [GitHub issues](https://git
 
 Interested in contributing to this role? Check out [CONTRIBUTING](https://github.com/ansible-network/network-engine/blob/devel/CONTRIBUTING.md) before submitting a pull request.
 
-**Note** that this role will be renamed to `network_engine` in `2.7.0` release.
 
 ## Functions
 

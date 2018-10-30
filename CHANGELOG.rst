@@ -2,6 +2,21 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.6.9:
+
+v2.6.9
+======
+
+.. _Ansible Network network-engine_v2.6.9_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix templating repeat_for `network-engine#190 <https://github.com/ansible-network/network-engine/pull/190>`_.
+
+- Add missing boilerplate for net_facts module `network-engine#194 <https://github.com/ansible-network/network-engine/pull/194>`_.
+
+
 .. _Ansible Network network-engine_v2.6.8:
 
 v2.6.8
