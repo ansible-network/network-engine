@@ -40,12 +40,16 @@ RETURN = """
 """
 import os
 import json
+import sys
 
 from ansible.plugins.action import ActionBase
 from ansible.module_utils._text import to_text, to_bytes
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils import basic
 from ansible.errors import AnsibleModuleError
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
+from network_engine.utils import dict_merge
 
 try:
     from __main__ import display
@@ -102,6 +106,10 @@ class ActionModule(ActionBase):
                             args[key] = self._templar.do_template(task_vars[key])
                 elif 'default' in attrs and key not in args:
                     args[key] = attrs['default']
+                else:
+                    for k, v in iteritems(attrs):
+                        if isinstance(v, dict):
+                            args.update(dict_merge(args, attrs[k]))
 
         basic._ANSIBLE_ARGS = to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args}))
         basic.AnsibleModule.fail_json = self.fail_json
@@ -110,6 +118,7 @@ class ActionModule(ActionBase):
         basic.AnsibleModule(**spec)
 
         self._remove_tmp_path(self._connection._shell.tmpdir)
+        result.update({'ansible_facts': {'spec': args}})
 
         return result
 

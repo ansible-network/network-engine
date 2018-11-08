@@ -1,4 +1,6 @@
 - hosts: localhost
   connection: local
+  gather_facts: no
+
   roles:
     - validate_role_spec
