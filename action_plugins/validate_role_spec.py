@@ -85,9 +85,32 @@ class ActionModule(ActionBase):
         argument_spec = spec.get('argument_spec') or {}
 
         args = {}
-        for key, attrs in iteritems(argument_spec):
+        self._handle_options(task_vars, args, argument_spec)
+
+        basic._ANSIBLE_ARGS = to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args}))
+        basic.AnsibleModule.fail_json = self.fail_json
+
+        spec = dict([(k, v) for k, v in iteritems(spec) if k in self.VALID_MODULE_KWARGS])
+        validated_spec = basic.AnsibleModule(**spec)
+
+        result['role_params'] = validated_spec.params
+        result['changed'] = False
+        self._remove_tmp_path(self._connection._shell.tmpdir)
+
+        return result
+
+    def fail_json(self, msg):
+        raise AnsibleModuleError(msg)
+
+    def _handle_options(self, task_vars, args, spec):
+        for key, attrs in iteritems(spec):
             if attrs is None:
-                argument_spec[key] = {'type': 'str'}
+                spec[key] = {'type': 'str'}
+            elif isinstance(attrs, dict):
+                suboptions_spec = attrs.get('options')
+                if suboptions_spec:
+                    args[key] = dict()
+                    self._handle_options(task_vars, args[key], suboptions_spec)
             if key in task_vars:
                 if isinstance(task_vars[key], string_types):
                     value = self._templar.do_template(task_vars[key])
@@ -99,19 +122,6 @@ class ActionModule(ActionBase):
                 if 'aliases' in attrs:
                     for item in attrs['aliases']:
                         if item in task_vars:
-                            args[key] = self._templar.do_template(task_vars[key])
-                elif 'default' in attrs and key not in args:
-                    args[key] = attrs['default']
-
-        basic._ANSIBLE_ARGS = to_bytes(json.dumps({'ANSIBLE_MODULE_ARGS': args}))
-        basic.AnsibleModule.fail_json = self.fail_json
-
-        spec = dict([(k, v) for k, v in iteritems(spec) if k in self.VALID_MODULE_KWARGS])
-        basic.AnsibleModule(**spec)
-
-        self._remove_tmp_path(self._connection._shell.tmpdir)
-
-        return result
-
-    def fail_json(self, msg):
-        raise AnsibleModuleError(msg)
+                            args[key] = self._templar.do_template(task_vars[item])
+            else:
+                args[key] = None
