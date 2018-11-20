@@ -1,5 +1,3 @@
-*.py[co]
-*.swp
-*.swo
-*.bak
+*.pyc
+releasenotes/build
 .tox

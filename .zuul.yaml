@@ -3,3 +3,4 @@
       jobs:
         - ansible-test-sanity:
             voting: False
+        - build-reno-releasenotes
