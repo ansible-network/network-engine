@@ -98,6 +98,7 @@ class ActionModule(ActionBase):
             command = self._task.args['command']
             parser = self._task.args.get('parser')
             engine = self._task.args.get('engine', 'command_parser')
+            key_name = self._task.args.get('key_name')
         except KeyError as exc:
             raise AnsibleError(to_text(exc))
 
@@ -130,7 +131,8 @@ class ActionModule(ActionBase):
             new_task = self._task.copy()
             new_task.args = {
                 'file': parser,
-                'content': (json_data or output)
+                'content': (json_data or output),
+                'name': key_name,
             }
 
             kwargs = {
