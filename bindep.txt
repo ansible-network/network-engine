@@ -2,3 +2,6 @@
 # see http://docs.openstack.org/infra/bindep/ for additional information.
 
 gcc-c++ [test platform:rpm]
+python3-devel [test platform:rpm]
+python3 [test platform:rpm]
+python36 [test !platform:fedora-28]
