@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.7.1:
+
+v2.7.1
+======
+
+.. _Ansible Network network-engine_v2.7.1_Minor Changes:
+
+Minor Changes
+-------------
+
+- Add support for nested spec validation in validate_role_spec `network-engine#198 <https://github.com/ansible-network/network-engine/pull/198>`_.
+
+
 .. _Ansible Network network-engine_v2.7.0:
 
 v2.7.0
