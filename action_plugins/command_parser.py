@@ -17,6 +17,7 @@ from ansible.module_utils.common._collections_compat import Mapping
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
+from ansible.utils.display import Display
 
 try:
     from ansible.module_utils.network.common.utils import to_list
@@ -28,12 +29,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'
 from network_engine.plugins import template_loader, parser_loader
 from network_engine.utils import dict_merge
 
-
-try:
-    from __main__ import display
-except ImportError:
-    from ansible.utils.display import Display
-    display = Display()
+display = Display()
 
 
 def warning(msg):

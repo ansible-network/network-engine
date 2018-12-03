@@ -15,7 +15,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: textfsm_parser
-author: Ansible Network Team
+author: Peter Sprygada (@privateip)
 short_description: Parses text into JSON facts using TextFSM
 description:
   - Provides textfsm rule based templates to parse data from text.

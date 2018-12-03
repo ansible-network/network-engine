@@ -14,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = """
 ---
 module: validate_role_spec
-author: Ansible Network Team
+author: Peter Sprygada (@privateip
 short_description: Validate required arguments are set from facts
 description:
   - This module will accept an external argument spec file that will be used to
@@ -46,12 +46,9 @@ from ansible.module_utils._text import to_text, to_bytes
 from ansible.module_utils.six import iteritems, string_types
 from ansible.module_utils import basic
 from ansible.errors import AnsibleModuleError
+from ansible.utils.display import Display
 
-try:
-    from __main__ import display
-except ImportError:
-    from ansible.utils.display import Display
-    display = Display()
+display = Display()
 
 
 class ActionModule(ActionBase):
