@@ -14,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = """
 ---
 module: cli
-author: Ansible Network Team
+author: Peter Sprygada (@privateip)
 short_description: Runs the specific command and returns the output
 description:
   - The command specified in C(command) will be executed on the remote
@@ -45,6 +45,13 @@ options:
     choices:
       - command_parser
       - textfsm_parser
+  name:
+    description:
+      - The C(name) argument is used to define the top-level fact name to
+        hold the output of textfsm_engine parser. If this argument is not provided,
+        the output from parsing will not be exported. Note that this argument is
+        only considered when C(engine) is C(textfsm_parser).
+    default: null
 """
 
 EXAMPLES = """
@@ -56,6 +63,13 @@ EXAMPLES = """
   cli:
     command: show version
     parser: parser_templates/show_version.yaml
+
+- name: parse with textfsm_parser engine
+  cli:
+    command: show version
+    parser: parser_templates/show_version
+    engine: textfsm_parser
+    name: system_facts
 """
 
 RETURN = """
@@ -75,12 +89,9 @@ from ansible.plugins.action import ActionBase
 from ansible.module_utils.connection import Connection, ConnectionError
 from ansible.module_utils._text import to_text
 from ansible.errors import AnsibleError
+from ansible.utils.display import Display
 
-try:
-    from __main__ import display
-except ImportError:
-    from ansible.utils.display import Display
-    display = Display()
+display = Display()
 
 
 class ActionModule(ActionBase):
@@ -98,7 +109,11 @@ class ActionModule(ActionBase):
             command = self._task.args['command']
             parser = self._task.args.get('parser')
             engine = self._task.args.get('engine', 'command_parser')
-            name = self._task.args.get('name')
+            if engine == 'textfsm_parser':
+                name = self._task.args.get('name')
+            elif engine == 'command_parser' and self._task.args.get('name'):
+                display.warning('name is unnecessary when using command_parser and will be ignored')
+                del self._task.args['name']
         except KeyError as exc:
             raise AnsibleError(to_text(exc))
 
@@ -131,9 +146,10 @@ class ActionModule(ActionBase):
             new_task = self._task.copy()
             new_task.args = {
                 'file': parser,
-                'content': (json_data or output),
-                'name': name,
+                'content': (json_data or output)
             }
+            if engine == 'textfsm_parser':
+                new_task.args.update({'name': name})
 
             kwargs = {
                 'task': new_task,

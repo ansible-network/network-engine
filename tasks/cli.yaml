@@ -7,3 +7,4 @@
     command: "{{ network_engine_command }}"
     parser: "{{ network_engine_parser | default(omit) }}"
     engine: "{{ network_engine_engine | default(omit) }}"
+    name: "{{ network_engine_name | default(omit) }}"

@@ -44,7 +44,7 @@ options:
         the input to the text parser for generating the JSON data.
     required: true
 author:
-  - Ansible Network Team
+  - Peter Sprygada (@privateip)
 '''
 
 EXAMPLES = '''

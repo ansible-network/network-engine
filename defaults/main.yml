@@ -14,3 +14,6 @@ network_engine_parser: "{{ parser | default(None) }}"
 
 # engine to use for parsing output to JSON facts
 network_engine_engine: "{{ engine | default('command_parser') }}"
+
+# name to display facts for textfsm_parser
+network_engine_name: "{{ name | default(None) }}"
