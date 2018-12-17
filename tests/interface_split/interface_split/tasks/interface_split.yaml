@@ -1,3 +1,4 @@
+---
 - name: interface_split Ethernet1
   debug:
     msg: "{{ 'Ethernet1' | interface_split }}"

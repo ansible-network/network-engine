@@ -1,3 +1,4 @@
+---
 - name: vlan_expand single vlan
   debug:
     msg: "{{ 'vlan1' | vlan_expand }}"
