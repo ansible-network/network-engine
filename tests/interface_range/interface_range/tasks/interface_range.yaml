@@ -31,4 +31,4 @@
       - "'Ethernet1/3' in result.msg"
       - "'Ethernet1/4' in result.msg"
       - "'Ethernet1/5' in result.msg"
-      - "'Ethernet1/8' in result.msg" 
+      - "'Ethernet1/8' in result.msg"
