@@ -8,8 +8,8 @@
 - name: match sections
   pattern_match:
     regex: "^(\\S+) is up,"
-    match_all: yes
-    match_greedy: yes
+    match_all: true
+    match_greedy: true
   register: section
 
 - name: match interface values
@@ -56,6 +56,6 @@
               - key: description
                 value: "{{ item.description.matches.0 }}"
   loop: "{{ interfaces }}"
-  export: yes
+  export: true
   export_as: "{{ export_type }}"
   register: interface_facts
