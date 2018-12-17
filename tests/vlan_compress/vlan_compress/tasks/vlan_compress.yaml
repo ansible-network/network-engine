@@ -1,3 +1,4 @@
+---
 - name: vlan_compress single vlan
   debug:
     msg: "{{ [1] | vlan_compress }}"

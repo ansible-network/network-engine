@@ -44,6 +44,6 @@
     memory:
       total: "{{ total_mem.matches.0 }}"
       free: "{{ free_mem.matches.0 }}"
-  export: yes
+  export: true
   register: system_facts
   extend: test.extension

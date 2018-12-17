@@ -1,3 +1,4 @@
+---
 - name: interface_range Ethernet1-3
   debug:
     msg: "{{ 'Ethernet1-3' | interface_range }}"

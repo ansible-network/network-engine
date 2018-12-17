@@ -1,3 +1,4 @@
+---
 - name: "config diff test for {{ ansible_network_os }} with default"
   set_fact:
     diff: "{{ lookup('netcfg_diff', want, have=have) }}"
