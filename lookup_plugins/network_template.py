@@ -17,6 +17,8 @@ short_description: template device configuration
 description:
   - This plugin will lookup the file and template it into a network
     configuration.
+deprecated:
+  removed_in: "2.7.7"
 options:
   _terms:
     description: list of files to template

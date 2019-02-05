@@ -1,5 +1,8 @@
 # CLI Template Directives
 
+**Note** `network_template` lookup plugin is deprecated in v2.7.3 and will be removed
+in version v2.7.7 i.e, four releases from the deprecation version.
+
 The `network_template` module supports a number of keyword based objectives that
 handle how to process the template.  Templates are broken up into a series
 of blocks that process lines.  Blocks are logical groups that have a common
