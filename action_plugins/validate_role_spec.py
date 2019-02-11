@@ -79,7 +79,10 @@ class ActionModule(ActionBase):
         display.vvv('using role spec %s' % spec_fp)
         spec = self._loader.load_from_file(spec_fp)
 
-        argument_spec = spec.get('argument_spec') or {}
+        if 'argument_spec' not in spec:
+            spec.update({'argument_spec': {}})
+
+        argument_spec = spec['argument_spec']
 
         args = {}
         self._handle_options(task_vars, args, argument_spec)
