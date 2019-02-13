@@ -82,7 +82,10 @@ class ActionModule(ActionBase):
         display.vvv('using role spec %s' % spec_fp)
         spec = self._loader.load_from_file(spec_fp)
 
-        argument_spec = spec.get('argument_spec') or {}
+        if 'argument_spec' not in spec:
+            return {'failed': True, 'msg': 'missing required field in specification file: argument_spec'}
+
+        argument_spec = spec['argument_spec']
 
         args = {}
         for key, attrs in iteritems(argument_spec):
