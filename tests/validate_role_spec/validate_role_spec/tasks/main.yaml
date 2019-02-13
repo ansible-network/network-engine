@@ -5,3 +5,6 @@
 
 - name: validate_role_spec test
   import_tasks: validate_role_spec.yaml
+
+- name: validate_role_spec failed test
+  import_tasks: validate_role_spec_failed.yaml

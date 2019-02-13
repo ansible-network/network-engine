@@ -80,7 +80,7 @@ class ActionModule(ActionBase):
         spec = self._loader.load_from_file(spec_fp)
 
         if 'argument_spec' not in spec:
-            spec.update({'argument_spec': {}})
+            return {'failed': True, 'msg': 'missing required field in specification file: argument_spec'}
 
         argument_spec = spec['argument_spec']
 
