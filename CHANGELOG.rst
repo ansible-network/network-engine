@@ -2,6 +2,21 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.7.4:
+
+v2.7.4
+======
+
+.. _Ansible Network network-engine_v2.7.4_Bugfixes:
+
+Bugfixes
+--------
+
+- Fail validate_role_spec plugin if argument_spec is undefined `network-engine#221 <https://github.com/ansible-network/network-engine/pull/221>`_.
+
+- Fix relative path failure in command_parser when template is not present in playbook directory `network-engine#222 <https://github.com/ansible-network/network-engine/pull/222>`_.
+
+
 .. _Ansible Network network-engine_v2.7.3:
 
 v2.7.3
