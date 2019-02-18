@@ -4,10 +4,18 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
+import os
+
 from itertools import chain
 
 from ansible.module_utils.six import iteritems
+from ansible.module_utils._text import to_bytes, to_text
 from ansible.module_utils.network.common.utils import sort_list
+from ansible.utils.display import Display
+from ansible.utils.path import unfrackpath
+
+
+display = Display()
 
 
 def dict_merge(base, other):
@@ -73,3 +81,39 @@ def dict_merge(base, other):
         combined[key] = other.get(key)
 
     return combined
+
+
+def generate_source_path(paths, source):
+    """
+    Find file in first path in stack.
+
+    :param paths: A list of text strings which are the path to look for the filename in.
+    :param src: A text string which is the filename to search for.
+    :rtype: A text string.
+    :returns: An absolute path to the filename ``src`` if found.
+    """
+
+    b_source = to_bytes(source)
+
+    result = None
+    search = []
+
+    if source.startswith('~') or source.startswith(os.path.sep):
+        # path is absolute, no relative needed, check existence and return source
+        test_path = unfrackpath(b_source, follow=False)
+        if os.path.exists(to_bytes(test_path, errors='surrogate_or_strict')):
+            result = test_path
+
+    else:
+        for path in paths:
+            upath = unfrackpath(path, follow=False)
+            b_upath = to_bytes(upath, errors='surrogate_or_strict')
+            search.append(os.path.join(b_upath, b_source))
+
+        for candidate in search:
+            display.vvvvv(u'looking for "%s" at "%s"' % (source, to_text(candidate)))
+            if os.path.exists(candidate) and os.path.isfile(candidate):
+                result = to_text(candidate)
+                break
+
+    return result
