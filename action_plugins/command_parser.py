@@ -25,7 +25,7 @@ except ImportError:
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir, 'lib'))
 from network_engine.plugins import template_loader, parser_loader
-from network_engine.utils import dict_merge
+from network_engine.utils import dict_merge, generate_source_path
 
 
 try:
@@ -95,9 +95,10 @@ class ActionModule(ActionBase):
 
         self.template = template_loader.get('json_template', self._templar)
 
+        paths = self._task.get_search_path()
         for src in sources:
-            src_path = os.path.expanduser(src)
-            if not os.path.exists(src_path) and not os.path.isfile(src_path):
+            src_path = generate_source_path(paths, src)
+            if src_path is None:
                 raise AnsibleError("src [%s] is either missing or invalid" % src_path)
 
             tasks = self._loader.load_from_file(src)
