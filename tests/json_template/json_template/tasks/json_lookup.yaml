@@ -1,3 +1,4 @@
+---
 - name: generate config
   debug:
     msg: "{{ lookup('json_template', '{{ template_path }}/config.json') }}"

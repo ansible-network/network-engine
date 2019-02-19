@@ -19,7 +19,7 @@ galaxy_info:
   # this branch. If Travis integration is configured, only notifications for this
   # branch will be accepted. Otherwise, in all cases, the repo's default branch
   # (usually master) will be used.
-  #github_branch:
+  # github_branch:
 
   platforms:
     - name: network
