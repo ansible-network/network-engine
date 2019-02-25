@@ -94,9 +94,9 @@ class ActionModule(ActionBase):
 
         paths = self._task.get_search_path()
         for src in sources:
-            src_path = generate_source_path(paths, src)
-            if src_path is None:
-                raise AnsibleError("src [%s] is either missing or invalid" % src_path)
+            src = generate_source_path(paths, src)
+            if src is None:
+                raise AnsibleError("src [%s] is either missing or invalid" % src)
 
             tasks = self._loader.load_from_file(src)
 
