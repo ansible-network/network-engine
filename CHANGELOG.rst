@@ -2,6 +2,19 @@
 Ansible Network network-engine
 ==============================
 
+.. _Ansible Network network-engine_v2.7.5:
+
+v2.7.5
+======
+
+.. _Ansible Network network-engine_v2.7.5_Bugfixes:
+
+Bugfixes
+--------
+
+- Fix src_path to src command_parser `network-engine#230 <https://github.com/ansible-network/network-engine/pull/230>`_.
+
+
 .. _Ansible Network network-engine_v2.7.4:
 
 v2.7.4
@@ -48,9 +61,7 @@ v2.7.2
 Minor Changes
 -------------
 
-- Add name option for textfsm to create facts to key `network-engine#202 <https://github.com/ansible-network/network-engine/pull/202>`_.
-
-- Document name option for textfsm in cli plugin and update cli task `network-engine#205 <https://github.com/ansible-network/network-engine/pull/205>`_.
+- Add support for nested spec validation in validate_role_spec `network-engine#198 <https://github.com/ansible-network/network-engine/pull/198>`_.
 
 
 .. _Ansible Network network-engine_v2.7.1:
@@ -63,7 +74,9 @@ v2.7.1
 Minor Changes
 -------------
 
-- Add support for nested spec validation in validate_role_spec `network-engine#198 <https://github.com/ansible-network/network-engine/pull/198>`_.
+- Add name option for textfsm to create facts to key `network-engine#202 <https://github.com/ansible-network/network-engine/pull/202>`_.
+
+- Document name option for textfsm in cli plugin and update cli task `network-engine#205 <https://github.com/ansible-network/network-engine/pull/205>`_.
 
 
 .. _Ansible Network network-engine_v2.7.0:
