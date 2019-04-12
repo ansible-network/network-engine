@@ -1,7 +1,0 @@
-- project:
-    check:
-      jobs:
-        - ansible-test-sanity
-    gate:
-      jobs:
-        - ansible-test-sanity
