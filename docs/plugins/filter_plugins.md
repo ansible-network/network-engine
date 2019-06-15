@@ -31,11 +31,11 @@ The `interface_range` plugin expands an interface range and returns a list of th
 
 The `vlan_compress` plugin compresses a list of vlans into a range: 
 
-{{ 'vlan1,2,3,4,5' | vlan_compress }} returns ['1-5']
+{{ [1,2,3,4,5] | vlan_compress }} returns ['1-5']
 
-{{ 'vlan1,2,4,5' | vlan_compress }} returns ['1-2,4-5']
+{{ [1,2,4,5] | vlan_compress }} returns ['1-2,4-5']
 
-{{ 'vlan1,2,3,5' | vlan_compress }} returns ['1-3,5']
+{{ [1,2,3,5] | vlan_compress }} returns ['1-3,5']
 
 [vlan_compress tests](https://github.com/ansible-network/network-engine/blob/devel/tests/vlan_compress/vlan_compress/tasks/vlan_compress.yaml)
 
@@ -43,8 +43,8 @@ The `vlan_compress` plugin compresses a list of vlans into a range:
 
 The `vlan_expand` plugin expands a vlan range and returns a list of the vlans within that range:
 
-{{ 'vlan1,3-5,7' | vlan_expand }} returns [1,3,4,5,7]
+{{ [1,3-5,7] | vlan_expand }} returns [1,3,4,5,7]
 
-{{ 'vlan1-5' | vlan_expand }} returns [1,2,3,4,5]
+{{ [1-5] | vlan_expand }} returns [1,2,3,4,5]
 
 [vlan_expand tests](https://github.com/ansible-network/network-engine/blob/devel/tests/vlan_expand/vlan_expand/tasks/vlan_expand.yaml)
