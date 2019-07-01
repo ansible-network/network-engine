@@ -30,7 +30,7 @@ Points to a directory containing parser templates. Use this parameter instead of
 ## Sample Parser Templates
 
 Parser templates for the `command_parser` module in the Network Engine role use YAML syntax.
-To write a parser template, follow the [parser_directives documentation](docs/directives/parser_directives.md).
+To write a parser template, follow the [parser_directives documentation](../directives/parser_directives.md)(docs/directives/parser_directives.md).
 
 Here are two sample YAML parser templates:
 
