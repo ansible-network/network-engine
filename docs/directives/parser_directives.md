@@ -71,7 +71,7 @@ configured on any directive.
 
 ### `name`
 
-All entries in the parser template many contain a `name` directive.  The
+All entries in the parser template may contain a `name` directive.  The
 `name` directive can be used to provide an arbitrary description as to the
 purpose of the parser items.  The use of `name` is optional for all
 directives.
