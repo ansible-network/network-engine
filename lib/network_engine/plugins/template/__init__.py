@@ -40,14 +40,14 @@ class TemplateBase(object):
         else:
             data = data or {}
             tmp_avail_vars = self._templar._available_variables
-            self._templar.set_available_variables(variables)
+            self._templar.available_variables = variables
             try:
                 resp = self._templar.template(data, convert_bare=convert_bare)
             except AnsibleUndefinedVariable:
                 resp = None
                 pass
             finally:
-                self._templar.set_available_variables(tmp_avail_vars)
+                self._templar.available_variables = tmp_avail_vars
             return resp
 
     def _update(self, d, u):
